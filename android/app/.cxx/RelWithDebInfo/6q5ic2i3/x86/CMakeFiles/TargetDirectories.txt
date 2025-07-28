@@ -1,0 +1,2 @@
+E:/international_cuisine/android/app/.cxx/RelWithDebInfo/6q5ic2i3/x86/CMakeFiles/edit_cache.dir
+E:/international_cuisine/android/app/.cxx/RelWithDebInfo/6q5ic2i3/x86/CMakeFiles/rebuild_cache.dir

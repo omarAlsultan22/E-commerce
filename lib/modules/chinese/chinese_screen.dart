@@ -1,0 +1,25 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:international_cuisine/layout/countries_layout.dart';
+import 'package:international_cuisine/modules/chinese/cubit.dart';
+import '../../shared/cubit/state.dart';
+
+class ChineseScreen extends StatelessWidget {
+  ChineseScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    ChineseCubit.get(context).getData();
+    return BlocConsumer<ChineseCubit, CubitStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        final dataModelList = ChineseCubit.get(context).dataModelList;
+        return SearchableListBuilder(
+            dataModel: dataModelList,
+            context: context,
+            title: 'المطبخ الصيني');
+      },
+    );
+  }
+}
+
