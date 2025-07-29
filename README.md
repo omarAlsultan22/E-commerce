@@ -1,20 +1,20 @@
-# E-Commerce
+# E-Commerce Mobile App (Flutter & Firebase)
 
 A feature-rich e-commerce application built with Flutter and Firebase, designed to deliver seamless shopping experiences.
 
-## Key Achievements
+## 🚀 Key Features & Achievements
 - **25% increase in user retention** through Firestore query optimization and efficient data structuring
 - **Integrated payment processing** via Paymob SDK with secure transaction handling
 - **Location-based features** using Google Maps API for delivery tracking
 - **Implemented CI/CD pipeline** with GitHub Actions for automated testing and deployment
 
-## Technical Highlights
+## ⚙️ Technical Implementation
 - **State Management**: BLoC pattern for predictable state management
 - **Backend**: Firebase ecosystem (Firestore for realtime data, Storage for media)
 - **Local Persistence**: SharedPreferences for user preferences and caching
 - **DevOps**: Automated CI/CD workflow with GitHub Actions
 
-## Features
+## 📱 Core Functionality
 - User authentication (email/password, social login)
 - Product catalog with search/filter
 - Shopping cart & checkout flow
