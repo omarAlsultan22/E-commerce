@@ -22,8 +22,6 @@ A feature-rich e-commerce application built with Flutter and Firebase, designed 
 - Push notifications
 - User profile management
 
-A new Flutter project.
-
 ## Getting Started
 
 This project is a starting point for a Flutter application.
