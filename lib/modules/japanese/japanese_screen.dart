@@ -13,11 +13,16 @@ class JapaneseScreen extends StatelessWidget {
     return BlocConsumer<JapaneseCubit, CubitStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = JapaneseCubit.get(context);
+        final japaneseCubit = JapaneseCubit.get(context);
+        final dataModelList = japaneseCubit.dataModelList;
+        final isLoadingMore = japaneseCubit.isLoadingMore;
         return SearchableListBuilder(
-            dataModel: cubit.dataModelList,
+            dataModel: dataModelList,
             context: context,
-            title: 'المطبخ الياباني');
+            title: 'المطبخ الياباني',
+            onPressed: () => japaneseCubit.getData(),
+            isLoadingMore: isLoadingMore
+        );
       },
     );
   }

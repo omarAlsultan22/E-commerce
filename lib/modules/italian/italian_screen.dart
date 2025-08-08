@@ -13,11 +13,15 @@ class ItalianScreen extends StatelessWidget {
     return BlocConsumer<ItalianCubit, CubitStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        final cubit = ItalianCubit.get(context);
+        final italianCubit = ItalianCubit.get(context);
+        final dataModelList = italianCubit.dataModelList;
+        final isLoadingMore = italianCubit.isLoadingMore;
         return SearchableListBuilder(
-            dataModel: cubit.dataModelList,
+            dataModel: dataModelList,
             context: context,
-            title: 'المطبخ الايطالي');
+            title: 'المطبخ الايطالي',
+            onPressed: () => italianCubit.getData(),
+            isLoadingMore: isLoadingMore);
       },
     );
   }

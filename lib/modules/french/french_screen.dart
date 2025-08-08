@@ -13,11 +13,15 @@ class FrenchScreen extends StatelessWidget {
     return BlocConsumer<FrenchCubit, CubitStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = FrenchCubit.get(context);
+        final frenchCubit = FrenchCubit.get(context);
+        final dataModelList = frenchCubit.dataModelList;
+        final isLoadingMore = frenchCubit.isLoadingMore;
         return SearchableListBuilder(
-            dataModel: cubit.dataModelList,
+            dataModel: dataModelList,
             context: context,
-            title: 'المطبخ الفرنسي');
+            title: 'المطبخ الفرنسي',
+            onPressed: () => frenchCubit.getData(),
+            isLoadingMore: isLoadingMore);
       },
     );
   }

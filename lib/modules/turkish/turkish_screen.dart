@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:international_cuisine/modules/egyptian/cubit.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 import '../../layout/countries_layout.dart';
 import 'cubit.dart';
@@ -9,15 +10,19 @@ class TurkishScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TurkishCubit.get(context).getData();
+    EgyptianCubit.get(context).getData();
     return BlocConsumer<TurkishCubit, CubitStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = TurkishCubit.get(context);
+        final turkishCubit = TurkishCubit.get(context);
+        final dataModelList = turkishCubit.dataModelList;
+        final isLoadingMore = turkishCubit.isLoadingMore;
         return SearchableListBuilder(
-            dataModel: cubit.dataModelList,
+            dataModel: dataModelList,
             context: context,
-            title: 'المطبخ التركي');
+            title: 'المطبخ التركي',
+            onPressed: () => turkishCubit.getData(),
+            isLoadingMore: isLoadingMore);
       },
     );
   }

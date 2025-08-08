@@ -2,21 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class DataModel {
-  final String orderImage;
-  final String orderName;
+  final String? orderImage;
+  final String? orderName;
   List<String>? ordersNumber;
-  int rating;
-  int orderPrice;
+  int? rating;
+  int? orderPrice;
   bool isActive;
   int selectItem;
   bool likeIcon;
   bool dislikeIcon;
 
   DataModel({
-    required this.orderImage,
-    required this.orderName,
-    required this.orderPrice,
-    required this.rating,
+    this.orderImage,
+    this.orderName,
+    this.orderPrice,
+    this.rating,
     this.isActive = false,
     this.ordersNumber,
     this.likeIcon = false,

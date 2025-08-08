@@ -36,7 +36,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
     super.initState();
     _preloadImage();
     _sizeController = PageController();
-    _userRating = widget.dataModel.rating.toDouble();
+    _userRating = widget.dataModel.rating!.toDouble();
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -72,7 +72,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
 
   Future<void> _preloadImage() async {
     try {
-      await precacheImage(NetworkImage(widget.dataModel.orderImage), context);
+      await precacheImage(NetworkImage(widget.dataModel.orderImage!), context);
       if (mounted) {
         setState(() => _isImageLoaded = true);
       }
@@ -86,13 +86,13 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
   num _getSizePrice() {
     switch (_currentSizeIndex) {
       case 0:
-        return widget.dataModel.orderPrice * 0.8;
+        return widget.dataModel.orderPrice! * 0.8;
       case 1:
-        return widget.dataModel.orderPrice;
+        return widget.dataModel.orderPrice!;
       case 2:
-        return widget.dataModel.orderPrice * 1.2;
+        return widget.dataModel.orderPrice! * 1.2;
       default:
-        return widget.dataModel.orderPrice;
+        return widget.dataModel.orderPrice!;
     }
   }
 
@@ -137,7 +137,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                   borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(15)),
                   child: Image.network(
-                    widget.dataModel.orderImage,
+                    widget.dataModel.orderImage!,
                     height: 200,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -221,7 +221,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                 child: Column(
                   children: [
                     Text(
-                      widget.dataModel.orderName,
+                      widget.dataModel.orderName!,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -361,11 +361,16 @@ class SearchableListBuilder extends StatefulWidget {
   final List<DataModel> dataModel;
   final String title;
   final BuildContext context;
+  final bool isLoadingMore;
+  final VoidCallback onPressed;
 
   const SearchableListBuilder({
     required this.dataModel,
     required this.title,
     required this.context,
+    required this.onPressed,
+    required this.isLoadingMore,
+
     Key? key,
   }) : super(key: key);
 
@@ -375,12 +380,30 @@ class SearchableListBuilder extends StatefulWidget {
 
 class _SearchableListBuilderState extends State<SearchableListBuilder> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   List<DataModel> _filteredData = [];
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_performSearch);
+    _scrollController.addListener(_onScrollData);
+  }
+
+  void _onScrollData() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 50.0 &&
+        !widget.isLoadingMore) {
+      widget.onPressed();
+    }
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _scrollController.dispose();
+    _scrollController.removeListener(_onScrollData);
+    super.dispose();
   }
 
   void _performSearch() {
@@ -389,7 +412,7 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
       _filteredData = query.isEmpty
           ? widget.dataModel
           : widget.dataModel.where((item) =>
-          item.orderName.toLowerCase().contains(query)).toList();
+          item.orderName!.toLowerCase().contains(query)).toList();
     });
   }
 
@@ -428,12 +451,22 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                 condition: _filteredData.isNotEmpty,
                 builder: (context) =>
                     ListView.builder(
+                      controller: _scrollController,
                       padding: const EdgeInsets.all(10),
-                      itemCount: _filteredData.length,
-                      itemBuilder: (context, index) =>
-                          ItemBuilder(
+                      itemCount: _filteredData.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index < _filteredData.length) {
+                          return ItemBuilder(
                             dataModel: _filteredData[index],
-                          ),
+                          );
+                        } else {
+                          return Center(
+                            child: ! widget.isLoadingMore
+                                ? const CircularProgressIndicator()
+                                : const SizedBox(),
+                          );
+                        }
+                      }
                     ),
                 fallback: (context) =>
                     Center(

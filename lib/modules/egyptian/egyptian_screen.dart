@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:international_cuisine/modules/egyptian/cubit.dart';
 import '../../layout/countries_layout.dart';
 import '../../shared/cubit/state.dart';
-import 'cubit.dart';
 
 class EgyptianScreen extends StatelessWidget {
   EgyptianScreen({super.key});
@@ -13,11 +13,15 @@ class EgyptianScreen extends StatelessWidget {
     return BlocConsumer<EgyptianCubit, CubitStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        final cubit = EgyptianCubit.get(context);
+        final egyptianCubit = EgyptianCubit.get(context);
+        final dataModelList = egyptianCubit.dataModelList;
+        final isLoadingMore = egyptianCubit.isLoadingMore;
         return SearchableListBuilder(
-            dataModel: cubit.dataModelList,
+            dataModel: dataModelList,
             context: context,
-            title: 'المطبخ المصري');
+            title: 'المطبخ المصري',
+            onPressed: () => egyptianCubit.getData(),
+            isLoadingMore: isLoadingMore);
       },
     );
   }

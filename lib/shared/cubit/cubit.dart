@@ -34,8 +34,8 @@ class CartCubit extends Cubit<CubitStates> {
 
     final delv = OrderModel(
       order: '${dataModel.orderName} ${orderSize}',
-      image: dataModel.orderImage,
-      price: dataModel.orderPrice,
+      image: dataModel.orderImage!,
+      price: dataModel.orderPrice!,
       item: dataModel.selectItem,
     );
 
@@ -80,15 +80,6 @@ class CartCubit extends Cubit<CubitStates> {
     shoppingList.forEach((e) => totalPrice += e.price * e.item);
     return totalPrice;
   }
-
-  /*
-  void addLocation(String location) {
-    if (location.isNotEmpty) {
-      userModel!.location = location;
-      emit(CartUpdatedState());
-    }
-  }
-   */
 
   Future<void> getUserInfo({required String uId}) async {
     emit(LoadingState());

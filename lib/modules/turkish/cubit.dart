@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 import '../../modles/data_model.dart';
+import '../../shared/components/components.dart';
 
 class TurkishCubit extends Cubit<CubitStates>{
   TurkishCubit() : super(InitialState());
@@ -9,43 +10,36 @@ class TurkishCubit extends Cubit<CubitStates>{
   static TurkishCubit get(context) => BlocProvider.of(context);
 
   List<DataModel> dataModelList = [];
+  DocumentSnapshot? lastDocument;
+  bool isLoadingMore = true;
 
   Future<void> getData() async {
     emit(LoadingState());
-    dataModelList.clear();
-    final firebase = FirebaseFirestore.instance;
-    await firebase.collection('countriesData').doc('L8nSAa05FTdy6I47cOaf')
-        .collection('turkish').get()
-        .then((value) {
-      DataList dataList = DataList.fromQuerySnapshot(value);
-      dataModelList = dataList.data;
+    await getCountriesData(
+        dataModelList: dataModelList,
+        lastDocument: lastDocument,
+        collectionId: 'turkish',
+        isLoadingMore: isLoadingMore
+    ).then((dataList) {
+      dataModelList.addAll(dataList);
       emit((SuccessState()));
-    }).catchError((error) {
-      emit(ErrorState(error));
+    }).catchError((e) {
+      emit(ErrorState(e.toString()));
     });
   }
 
   Future<void> updateData({
+    required String collectionId,
     required String index,
-    required String orderImage,
-    required String orderName,
-    required int likesNumber,
-    required int dislikesNumber,
-    required int orderPrice,
     required int rating
-
   }) async {
     emit(LoadingState());
-    final firebase = FirebaseFirestore.instance;
-    DataModel dataModel = DataModel(
-      orderImage: orderImage,
-      orderName: orderName,
-      orderPrice: orderPrice,
-      rating: rating
-    );
-    await firebase.collection('countriesData').doc('L8nSAa05FTdy6I47cOaf')
-        .collection('turkish').doc(index).update(dataModel.toMap()).then((_) {
-      emit((SuccessState()));
+    updateDataModel(
+        collectionId: collectionId,
+        index: index,
+        rating: rating
+    ).then((_) {
+      emit(SuccessState());
     }).catchError((error) {
       emit(ErrorState(error));
     });

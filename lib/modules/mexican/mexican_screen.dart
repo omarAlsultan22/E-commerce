@@ -13,11 +13,15 @@ class MexicanScreen extends StatelessWidget {
     return BlocConsumer<MexicanCubit, CubitStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = MexicanCubit.get(context);
+        final mexicanCubit = MexicanCubit.get(context);
+        final dataModelList = mexicanCubit.dataModelList;
+        final isLoadingMore = mexicanCubit.isLoadingMore;
         return SearchableListBuilder(
-            dataModel: cubit.dataModelList,
+            dataModel: dataModelList,
             context: context,
-            title: 'المطبخ المكسيكي');
+            title: 'المطبخ المكسيكي',
+            onPressed: () => mexicanCubit.getData(),
+            isLoadingMore: isLoadingMore);
       },
     );
   }

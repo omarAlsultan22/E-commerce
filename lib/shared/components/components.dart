@@ -1,7 +1,46 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/modles/data_model.dart';
 import 'package:international_cuisine/shared/local/shared_preferences.dart';
 import '../../modules/home/home_screen.dart';
+
+Future<List<DataModel>> getCountriesData({
+  required List<DataModel> dataModelList,
+  required DocumentSnapshot? lastDocument,
+  required String collectionId,
+  required bool isLoadingMore,
+}) async {
+  if (dataModelList.isEmpty) {
+    dataModelList.clear();
+  }
+  final firebase = FirebaseFirestore.instance;
+  Query query = firebase.collection('countriesData').doc(
+      'L8nSAa05FTdy6I47cOaf')
+      .collection(collectionId);
+  if (lastDocument != null) {
+    query = query.startAfterDocument(lastDocument);
+  }
+  final data = await query.limit(5).get();
+    if (data.docs.isEmpty) {
+      isLoadingMore = false;
+      return [];
+    }
+    lastDocument = data.docs.last;
+    DataList dataList = DataList.fromQuerySnapshot(data);
+  return dataList.data;
+}
+
+Future<void> updateDataModel({
+  required String collectionId,
+  required String index,
+  required int rating
+
+}) async {
+  final firebase = FirebaseFirestore.instance;
+  await firebase.collection('countriesData').doc('L8nSAa05FTdy6I47cOaf')
+      .collection(collectionId).doc(index).update({'rating': rating});
+}
 
 
 SnackBar buildSnackBar(String message, Color backgroundColor) {

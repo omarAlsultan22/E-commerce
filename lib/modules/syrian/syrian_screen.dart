@@ -13,11 +13,15 @@ class SyrianScreen extends StatelessWidget {
     return BlocConsumer<SyrianCubit, CubitStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = SyrianCubit.get(context);
+        final syrianCubit = SyrianCubit.get(context);
+        final dataModelList = syrianCubit.dataModelList;
+        final isLoadingMore = syrianCubit.isLoadingMore;
         return SearchableListBuilder(
-            dataModel: cubit.dataModelList,
+            dataModel: dataModelList,
             context: context,
-            title: 'المطبخ السوري');
+            title: 'المطبخ السوري',
+            onPressed: () => syrianCubit.getData(),
+            isLoadingMore: isLoadingMore);
       },
     );
   }
