@@ -18,10 +18,14 @@ class ChineseScreen extends StatelessWidget {
         final isLoadingMore = chineseCubit.isLoadingMore;
         return SearchableListBuilder(
             dataModel: dataModelList,
+            searchData: [],
             context: context,
             title: 'المطبخ الصيني',
             onPressed: () => chineseCubit.getData(),
-            isLoadingMore: isLoadingMore,);
+            isLoadingMore: isLoadingMore,
+            clearData: () => chineseCubit.clearSearch(),
+            getData: (searchText) => chineseCubit.getDataSearch(searchText)
+        );
       },
     );
   }

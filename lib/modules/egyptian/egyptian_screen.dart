@@ -18,10 +18,14 @@ class EgyptianScreen extends StatelessWidget {
         final isLoadingMore = egyptianCubit.isLoadingMore;
         return SearchableListBuilder(
             dataModel: dataModelList,
+            searchData: egyptianCubit.searchData,
             context: context,
             title: 'المطبخ المصري',
             onPressed: () => egyptianCubit.getData(),
-            isLoadingMore: isLoadingMore);
+            isLoadingMore: isLoadingMore,
+            clearData: () => egyptianCubit.clearSearch(),
+            getData: (searchText) => egyptianCubit.getDataSearch(searchText)
+        );
       },
     );
   }

@@ -18,10 +18,13 @@ class JapaneseScreen extends StatelessWidget {
         final isLoadingMore = japaneseCubit.isLoadingMore;
         return SearchableListBuilder(
             dataModel: dataModelList,
+            searchData: japaneseCubit.searchData,
             context: context,
             title: 'المطبخ الياباني',
             onPressed: () => japaneseCubit.getData(),
-            isLoadingMore: isLoadingMore
+            isLoadingMore: isLoadingMore,
+            clearData: () => japaneseCubit.clearSearch(),
+            getData: (searchText) => japaneseCubit.getDataSearch(searchText)
         );
       },
     );

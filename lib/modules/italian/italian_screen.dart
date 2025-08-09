@@ -18,10 +18,14 @@ class ItalianScreen extends StatelessWidget {
         final isLoadingMore = italianCubit.isLoadingMore;
         return SearchableListBuilder(
             dataModel: dataModelList,
+            searchData: italianCubit.searchData,
             context: context,
             title: 'المطبخ الايطالي',
             onPressed: () => italianCubit.getData(),
-            isLoadingMore: isLoadingMore);
+            isLoadingMore: isLoadingMore,
+            clearData: () => italianCubit.clearSearch(),
+            getData: (searchText) => italianCubit.getDataSearch(searchText)
+        );
       },
     );
   }

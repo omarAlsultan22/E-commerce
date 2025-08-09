@@ -10,6 +10,7 @@ class ChineseCubit extends Cubit<CubitStates> {
   static ChineseCubit get(context) => BlocProvider.of(context);
 
   List<DataModel> dataModelList = [];
+  List<DataModel> searchData = [];
   DocumentSnapshot? lastDocument;
   bool isLoadingMore = true;
 
@@ -26,6 +27,15 @@ class ChineseCubit extends Cubit<CubitStates> {
     }).catchError((e) {
       emit(ErrorState(e.toString()));
     });
+  }
+
+  Future<void> getDataSearch(String searchText) async {
+    final _filteredData = await fetchPartialMatch(query: searchText, collectionId: 'chinese');
+    searchData = _filteredData;
+  }
+  void clearSearch() {
+    searchData.clear();
+    emit(InitialState());
   }
 
   Future<void> updateData({

@@ -18,10 +18,14 @@ class SyrianScreen extends StatelessWidget {
         final isLoadingMore = syrianCubit.isLoadingMore;
         return SearchableListBuilder(
             dataModel: dataModelList,
+            searchData: syrianCubit.searchData,
             context: context,
             title: 'المطبخ السوري',
             onPressed: () => syrianCubit.getData(),
-            isLoadingMore: isLoadingMore);
+            isLoadingMore: isLoadingMore,
+            clearData: () => syrianCubit.clearSearch(),
+            getData: (searchText) => syrianCubit.getDataSearch(searchText)
+        );
       },
     );
   }

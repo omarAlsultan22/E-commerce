@@ -18,10 +18,14 @@ class FrenchScreen extends StatelessWidget {
         final isLoadingMore = frenchCubit.isLoadingMore;
         return SearchableListBuilder(
             dataModel: dataModelList,
+            searchData: frenchCubit.searchData,
             context: context,
             title: 'المطبخ الفرنسي',
             onPressed: () => frenchCubit.getData(),
-            isLoadingMore: isLoadingMore);
+            isLoadingMore: isLoadingMore,
+            clearData: () => frenchCubit.clearSearch(),
+            getData: (searchText) => frenchCubit.getDataSearch(searchText)
+        );
       },
     );
   }

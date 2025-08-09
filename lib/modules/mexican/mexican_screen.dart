@@ -18,10 +18,14 @@ class MexicanScreen extends StatelessWidget {
         final isLoadingMore = mexicanCubit.isLoadingMore;
         return SearchableListBuilder(
             dataModel: dataModelList,
+            searchData: mexicanCubit.searchData,
             context: context,
             title: 'المطبخ المكسيكي',
             onPressed: () => mexicanCubit.getData(),
-            isLoadingMore: isLoadingMore);
+            isLoadingMore: isLoadingMore,
+            clearData: () => mexicanCubit.clearSearch(),
+            getData: (searchText) => mexicanCubit.getDataSearch(searchText)
+        );
       },
     );
   }

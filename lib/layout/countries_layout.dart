@@ -359,18 +359,23 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
 
 class SearchableListBuilder extends StatefulWidget {
   final List<DataModel> dataModel;
+  final List<DataModel> searchData;
   final String title;
   final BuildContext context;
   final bool isLoadingMore;
   final VoidCallback onPressed;
+  final VoidCallback clearData;
+  final void Function(String) getData;
 
   const SearchableListBuilder({
     required this.dataModel,
+    required this.searchData,
     required this.title,
     required this.context,
     required this.onPressed,
     required this.isLoadingMore,
-
+    required this.getData,
+    required this.clearData,
     Key? key,
   }) : super(key: key);
 
@@ -408,10 +413,16 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
 
   void _performSearch() {
     final query = _searchController.text.toLowerCase();
+    if(query.isNotEmpty) {
+      widget.getData(query);
+    }
+    else{
+      widget.clearData();
+    }
     setState(() {
-      _filteredData = query.isEmpty
+      _filteredData = widget.searchData.isEmpty
           ? widget.dataModel
-          : widget.dataModel.where((item) =>
+          : widget.searchData.where((item) =>
           item.orderName!.toLowerCase().contains(query)).toList();
     });
   }

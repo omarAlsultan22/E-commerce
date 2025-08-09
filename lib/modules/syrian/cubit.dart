@@ -10,6 +10,7 @@ class SyrianCubit extends Cubit<CubitStates>{
   static SyrianCubit get(context) => BlocProvider.of(context);
 
   List<DataModel> dataModelList = [];
+  List<DataModel> searchData = [];
   DocumentSnapshot? lastDocument;
   bool isLoadingMore = true;
 
@@ -26,6 +27,15 @@ class SyrianCubit extends Cubit<CubitStates>{
     }).catchError((e) {
       emit(ErrorState(e.toString()));
     });
+  }
+
+  Future<void> getDataSearch(String searchText) async {
+    final _filteredData = await fetchPartialMatch(query: searchText, collectionId: 'syrian');
+    searchData = _filteredData;
+  }
+  void clearSearch() {
+    searchData.clear();
+    emit(InitialState());
   }
 
   Future<void> updateData({

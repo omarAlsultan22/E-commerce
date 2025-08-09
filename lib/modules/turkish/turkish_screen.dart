@@ -19,10 +19,14 @@ class TurkishScreen extends StatelessWidget {
         final isLoadingMore = turkishCubit.isLoadingMore;
         return SearchableListBuilder(
             dataModel: dataModelList,
+            searchData: turkishCubit.searchData,
             context: context,
             title: 'المطبخ التركي',
             onPressed: () => turkishCubit.getData(),
-            isLoadingMore: isLoadingMore);
+            isLoadingMore: isLoadingMore,
+            clearData: () => turkishCubit.clearSearch(),
+            getData: (searchText) => turkishCubit.getDataSearch(searchText)
+        );
       },
     );
   }

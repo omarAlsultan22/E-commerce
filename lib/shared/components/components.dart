@@ -31,6 +31,28 @@ Future<List<DataModel>> getCountriesData({
   return dataList.data;
 }
 
+Future<List<DataModel>> fetchPartialMatch({
+  required String query,
+  required String collectionId,
+}) async {
+  final firebase = FirebaseFirestore.instance;
+  query = query.toLowerCase();
+
+  final usersSnapshot = await firebase
+      .collection('countriesData').doc('L8nSAa05FTdy6I47cOaf').collection(collectionId)
+      .get();
+
+  final results = await Future.wait(usersSnapshot.docs.map((userDoc) async {
+    final dataModel = userDoc.data();
+    final fullName = dataModel['orderName']?.toString().toLowerCase() ?? '';
+    return fullName.contains(query)
+        ? DataModel.fromJson(dataModel)
+        : null;
+  }));
+  return results.whereType<DataModel>().toList();
+}
+
+
 Future<void> updateDataModel({
   required String collectionId,
   required String index,
