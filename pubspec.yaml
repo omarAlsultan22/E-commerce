@@ -58,6 +58,7 @@ dependencies:
   crypto: ^3.0.6
   url_launcher: ^6.3.1
   provider: ^6.1.4
+  font_awesome_flutter: ^10.9.1
   flutter_localizations:
     sdk: flutter
   #universal_io: ^2.2.2

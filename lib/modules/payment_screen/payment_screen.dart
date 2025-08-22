@@ -150,7 +150,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Future<void> _processPayment() async {
     if (!_formKey.currentState!.validate()) return;
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentInvoice()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentInvoice(title: 'تم الدفع بنجاح!',)));
     setState(() => _isLoading = true);
 
     try {
@@ -243,7 +243,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PaymentInvoice(),
+        builder: (context) => PaymentInvoice(title: 'تم الدفع بنجاح!',),
       ),
     );
   }

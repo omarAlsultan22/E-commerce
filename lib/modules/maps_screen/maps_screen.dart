@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:international_cuisine/modules/payment_screen/payment_screen.dart';
+import 'package:international_cuisine/layout/payment_ways.dart';
 import 'package:location/location.dart' as loc;
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -185,7 +185,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
         ),
       );
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => PaymentScreen()));
+          context, MaterialPageRoute(builder: (context) => PaymentWays()));
     } catch (e) {
       if (!mounted) return;
       _showError('فشل في حفظ العنوان');

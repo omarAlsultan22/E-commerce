@@ -10,8 +10,7 @@ class FrenchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FrenchCubit.get(context).getData();
-    return BlocConsumer<FrenchCubit, CubitStates>(
-      listener: (context, state) {},
+    return BlocBuilder<FrenchCubit, CubitStates>(
       builder: (context, state) {
         final frenchCubit = FrenchCubit.get(context);
         final dataModelList = frenchCubit.dataModelList;
@@ -21,10 +20,10 @@ class FrenchScreen extends StatelessWidget {
             searchData: frenchCubit.searchData,
             context: context,
             title: 'المطبخ الفرنسي',
-            onPressed: () => frenchCubit.getData(),
+            getData: () => frenchCubit.getData(),
             isLoadingMore: isLoadingMore,
             clearData: () => frenchCubit.clearSearch(),
-            getData: (searchText) => frenchCubit.getDataSearch(searchText)
+            dataSearch: (searchText) => frenchCubit.getDataSearch(searchText)
         );
       },
     );

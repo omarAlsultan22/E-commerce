@@ -34,8 +34,6 @@ class RegisterCubit extends Cubit<CubitStates> {
           phone: phone,
           uId: UserDetails.uId
       );
-    }).catchError((error) {
-      emit(ErrorState(error.toString()));
     });
   }
 
@@ -55,7 +53,7 @@ class RegisterCubit extends Cubit<CubitStates> {
       emit(SuccessState());
     })
         .catchError((error) {
-      emit(ErrorState(error.toString()));
+      emit(ErrorState(error: error.toString()));
     });
   }
 }

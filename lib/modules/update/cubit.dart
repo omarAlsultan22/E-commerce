@@ -20,13 +20,13 @@ class AppModelCubit extends Cubit<CubitStates> {
         Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
         UserModel userModel = UserModel.fromJson(data);
         print('Document data: $data');
-        emit(SuccessState<UserModel>(value: userModel));
+        emit(SuccessState<UserModel>(value: userModel, stateKey: StatesKeys.getInfo));
       } else {
         print('Document does not exist');
       }
     } catch (error) {
       print('Error fetching document: $error');
-      emit(ErrorState(error.toString()));
+      emit(ErrorState(error: error.toString()));
     }
   }
 
@@ -44,10 +44,10 @@ class AppModelCubit extends Cubit<CubitStates> {
       );
       await FirebaseFirestore.instance.collection('users').doc(UserDetails.uId).update(
           userModel.toMap());
-      emit(SuccessState());
+      emit(SuccessState(stateKey: StatesKeys.updateInfo));
     }
     catch (error) {
-      emit(ErrorState(error.toString()));
+      emit(ErrorState(error: error.toString(), stateKey: StatesKeys.updateInfo));
     }
   }
 
@@ -71,10 +71,10 @@ class AppModelCubit extends Cubit<CubitStates> {
           });
         });
       } on FirebaseAuthException catch (e) {
-        emit(ErrorState(e.toString()));
+        emit(ErrorState(error: e.toString()));
       }
     } else {
-      emit(ErrorState('No user is currently logged in'));
+      emit(ErrorState(error: 'No user is currently logged in'));
     }
   }
 }

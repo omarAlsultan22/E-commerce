@@ -6,28 +6,26 @@ import 'package:international_cuisine/shared/local/shared_preferences.dart';
 import '../../modules/home/home_screen.dart';
 
 Future<List<DataModel>> getCountriesData({
-  required List<DataModel> dataModelList,
   required DocumentSnapshot? lastDocument,
   required String collectionId,
-  required bool isLoadingMore,
+  required void Function(DocumentSnapshot) updateLastDoc
 }) async {
-  if (dataModelList.isEmpty) {
-    dataModelList.clear();
-  }
   final firebase = FirebaseFirestore.instance;
   Query query = firebase.collection('countriesData').doc(
       'L8nSAa05FTdy6I47cOaf')
       .collection(collectionId);
+
   if (lastDocument != null) {
     query = query.startAfterDocument(lastDocument);
   }
+
   final data = await query.limit(5).get();
-    if (data.docs.isEmpty) {
-      isLoadingMore = false;
-      return [];
-    }
-    lastDocument = data.docs.last;
-    DataList dataList = DataList.fromQuerySnapshot(data);
+
+  if (data.docs.isEmpty) {
+    return [];
+  }
+  updateLastDoc(data.docs.last);
+  DataList dataList = DataList.fromQuerySnapshot(data);
   return dataList.data;
 }
 
@@ -40,6 +38,8 @@ Future<List<DataModel>> fetchPartialMatch({
 
   final usersSnapshot = await firebase
       .collection('countriesData').doc('L8nSAa05FTdy6I47cOaf').collection(collectionId)
+      .where('orderName', isGreaterThanOrEqualTo: query)
+      .where('orderName', isLessThanOrEqualTo: '$query\uf8ff')
       .get();
 
   final results = await Future.wait(usersSnapshot.docs.map((userDoc) async {
@@ -104,6 +104,13 @@ void startTimer(BuildContext context) {
     }
   });
 }
+
+Future navigator({
+  required Widget link,
+  required BuildContext context,
+}) async =>
+  Navigator.push(context, MaterialPageRoute(builder: (context) => link));
+
 
 
 Widget sizedBox() =>

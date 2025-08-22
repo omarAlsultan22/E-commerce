@@ -10,8 +10,7 @@ class ItalianScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ItalianCubit.get(context).getData();
-    return BlocConsumer<ItalianCubit, CubitStates>(
-      listener: (context, state) {},
+    return BlocBuilder<ItalianCubit, CubitStates>(
       builder: (context, state) {
         final italianCubit = ItalianCubit.get(context);
         final dataModelList = italianCubit.dataModelList;
@@ -21,10 +20,10 @@ class ItalianScreen extends StatelessWidget {
             searchData: italianCubit.searchData,
             context: context,
             title: 'المطبخ الايطالي',
-            onPressed: () => italianCubit.getData(),
+            getData: () => italianCubit.getData(),
             isLoadingMore: isLoadingMore,
             clearData: () => italianCubit.clearSearch(),
-            getData: (searchText) => italianCubit.getDataSearch(searchText)
+            dataSearch: (searchText) => italianCubit.getDataSearch(searchText)
         );
       },
     );

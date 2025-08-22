@@ -10,21 +10,20 @@ class ChineseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ChineseCubit.get(context).getData();
-    return BlocConsumer<ChineseCubit, CubitStates>(
-      listener: (context, state) {},
+    return BlocBuilder<ChineseCubit, CubitStates>(
       builder: (context, state) {
         final chineseCubit = ChineseCubit.get(context);
         final dataModelList = chineseCubit.dataModelList;
         final isLoadingMore = chineseCubit.isLoadingMore;
         return SearchableListBuilder(
             dataModel: dataModelList,
-            searchData: [],
+            searchData: chineseCubit.searchData,
             context: context,
             title: 'المطبخ الصيني',
-            onPressed: () => chineseCubit.getData(),
+            getData: () => chineseCubit.getData(),
             isLoadingMore: isLoadingMore,
             clearData: () => chineseCubit.clearSearch(),
-            getData: (searchText) => chineseCubit.getDataSearch(searchText)
+            dataSearch: (searchText) => chineseCubit.getDataSearch(searchText)
         );
       },
     );

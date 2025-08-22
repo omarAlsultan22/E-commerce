@@ -10,8 +10,7 @@ class MexicanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MexicanCubit.get(context).getData();
-    return BlocConsumer<MexicanCubit, CubitStates>(
-      listener: (context, state) {},
+    return BlocBuilder<MexicanCubit, CubitStates>(
       builder: (context, state) {
         final mexicanCubit = MexicanCubit.get(context);
         final dataModelList = mexicanCubit.dataModelList;
@@ -21,10 +20,10 @@ class MexicanScreen extends StatelessWidget {
             searchData: mexicanCubit.searchData,
             context: context,
             title: 'المطبخ المكسيكي',
-            onPressed: () => mexicanCubit.getData(),
+            getData: () => mexicanCubit.getData(),
             isLoadingMore: isLoadingMore,
             clearData: () => mexicanCubit.clearSearch(),
-            getData: (searchText) => mexicanCubit.getDataSearch(searchText)
+            dataSearch: (searchText) => mexicanCubit.getDataSearch(searchText)
         );
       },
     );

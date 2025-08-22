@@ -10,8 +10,7 @@ class SyrianScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SyrianCubit.get(context).getData();
-    return BlocConsumer<SyrianCubit, CubitStates>(
-      listener: (context, state) {},
+    return BlocBuilder<SyrianCubit, CubitStates>(
       builder: (context, state) {
         final syrianCubit = SyrianCubit.get(context);
         final dataModelList = syrianCubit.dataModelList;
@@ -21,10 +20,10 @@ class SyrianScreen extends StatelessWidget {
             searchData: syrianCubit.searchData,
             context: context,
             title: 'المطبخ السوري',
-            onPressed: () => syrianCubit.getData(),
+            getData: () => syrianCubit.getData(),
             isLoadingMore: isLoadingMore,
             clearData: () => syrianCubit.clearSearch(),
-            getData: (searchText) => syrianCubit.getDataSearch(searchText)
+            dataSearch: (searchText) => syrianCubit.getDataSearch(searchText)
         );
       },
     );

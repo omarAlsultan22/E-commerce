@@ -5,10 +5,14 @@ import 'package:international_cuisine/modules/home/home_screen.dart';
 import 'package:international_cuisine/shared/components/constant.dart';
 import 'package:international_cuisine/shared/cubit/cubit.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../modles/order_model.dart';
 
 class PaymentInvoice extends StatefulWidget {
-  const PaymentInvoice({super.key});
+  final String title;
+
+  const PaymentInvoice({required this.title, super.key});
 
   @override
   State<PaymentInvoice> createState() => _PaymentInvoiceState();
@@ -20,7 +24,6 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
 
   @override
   Widget build(BuildContext context) {
-
     CartCubit.get(context).getUserInfo(uId: UserDetails.uId);
     CartCubit.get(context).sendOrdersToDatabase(uId: UserDetails.uId);
 
@@ -28,7 +31,18 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
         listener: (context, state) {
           if (state is ErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)));
+                SnackBar(content: Text(state.error!)));
+          }
+          if (state is SuccessState) {
+            QuickAlert.show(
+              context: context,
+              title: 'تم ارسال طلبك بنجاح!',
+              text: 'قم بأخذ لقطة شاشة للفتورة',
+              type: QuickAlertType.success,
+              showConfirmBtn: true,
+              confirmBtnText: 'حسنا',
+              autoCloseDuration: Duration(seconds: 3),
+            );
           }
         },
         builder: (context, state) {
@@ -36,17 +50,23 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
           final shoppingList = cubit.shoppingList;
           final userModel = cubit.userModel;
 
-          if(userModel == null) {
-            return const Center(child: CircularProgressIndicator(color: Colors.white,));
+          if (userModel == null) {
+            return const Center(
+                child: CircularProgressIndicator(color: Colors.white,));
           }
 
           return Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
-              appBar: _buildAppBar(context, state),
+              appBar: _buildAppBar(
+                  context: context,
+                  state: state,
+                  title: widget.title
+              ),
               backgroundColor: Colors.grey[100],
               body: state is SuccessState ?
-              _buildBody(shoppingList) : Center(child: Text('جاري إرسال طلبك...')),
+              _buildBody(shoppingList) : Center(
+                  child: Text('جاري إرسال طلبك...')),
               bottomNavigationBar: _buildBottomBar(
                   context: context,
                   shoppingList: shoppingList,
@@ -56,15 +76,19 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
         });
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context, CubitStates state) {
+  PreferredSizeWidget _buildAppBar({
+      required BuildContext context,
+      required CubitStates state,
+      required String title
+}) {
     return AppBar(
       elevation: 0,
       scrolledUnderElevation: 0,
       backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
       title: state is SuccessState ?
-      const Text(
-        "تمت الطلبية بنجاح!",
+      Text(
+        title,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 22,

@@ -65,7 +65,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
     _animationController.dispose();
     _sizeController.dispose();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      CartCubit.get(context).loadCartFromPrefs();
+      //CartCubit.get(context).loadCartFromPrefs();
     });
     super.dispose();
   }
@@ -363,18 +363,18 @@ class SearchableListBuilder extends StatefulWidget {
   final String title;
   final BuildContext context;
   final bool isLoadingMore;
-  final VoidCallback onPressed;
+  final VoidCallback getData;
   final VoidCallback clearData;
-  final void Function(String) getData;
+  final void Function(String) dataSearch;
 
-  const SearchableListBuilder({
+  SearchableListBuilder({
     required this.dataModel,
     required this.searchData,
     required this.title,
     required this.context,
-    required this.onPressed,
-    required this.isLoadingMore,
     required this.getData,
+    required this.isLoadingMore,
+    required this.dataSearch,
     required this.clearData,
     Key? key,
   }) : super(key: key);
@@ -398,33 +398,36 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
   void _onScrollData() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 50.0 &&
-        !widget.isLoadingMore) {
-      widget.onPressed();
+        widget.isLoadingMore && _searchController.text.isEmpty) {
+      widget.getData();
     }
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _searchController.removeListener(_performSearch);
     _scrollController.dispose();
     _scrollController.removeListener(_onScrollData);
     super.dispose();
   }
 
   void _performSearch() {
-    final query = _searchController.text.toLowerCase();
-    if(query.isNotEmpty) {
-      widget.getData(query);
+    final query = _searchController.text;
+    if (query.isNotEmpty) {
+      widget.dataSearch(query);
+      setState(() {
+        _filteredData = widget.searchData.isEmpty
+            ? widget.dataModel
+            : widget.searchData;
+      });
     }
-    else{
+    else {
       widget.clearData();
+      setState(() {
+        _filteredData = widget.dataModel;
+      });
     }
-    setState(() {
-      _filteredData = widget.searchData.isEmpty
-          ? widget.dataModel
-          : widget.searchData.where((item) =>
-          item.orderName!.toLowerCase().contains(query)).toList();
-    });
   }
 
   @override
@@ -464,7 +467,7 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                     ListView.builder(
                       controller: _scrollController,
                       padding: const EdgeInsets.all(10),
-                      itemCount: _filteredData.length + 1,
+                      itemCount: _filteredData.length + (widget.isLoadingMore ? 1 : 0),
                       itemBuilder: (context, index) {
                         if (index < _filteredData.length) {
                           return ItemBuilder(
@@ -472,8 +475,8 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                           );
                         } else {
                           return Center(
-                            child: ! widget.isLoadingMore
-                                ? const CircularProgressIndicator()
+                            child: widget.isLoadingMore
+                                ? const CircularProgressIndicator(color: Colors.white)
                                 : const SizedBox(),
                           );
                         }

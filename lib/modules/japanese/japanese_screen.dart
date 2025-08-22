@@ -10,8 +10,7 @@ class JapaneseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     JapaneseCubit.get(context).getData();
-    return BlocConsumer<JapaneseCubit, CubitStates>(
-      listener: (context, state) {},
+    return BlocBuilder<JapaneseCubit, CubitStates>(
       builder: (context, state) {
         final japaneseCubit = JapaneseCubit.get(context);
         final dataModelList = japaneseCubit.dataModelList;
@@ -21,10 +20,10 @@ class JapaneseScreen extends StatelessWidget {
             searchData: japaneseCubit.searchData,
             context: context,
             title: 'المطبخ الياباني',
-            onPressed: () => japaneseCubit.getData(),
+            getData: () => japaneseCubit.getData(),
             isLoadingMore: isLoadingMore,
             clearData: () => japaneseCubit.clearSearch(),
-            getData: (searchText) => japaneseCubit.getDataSearch(searchText)
+            dataSearch: (searchText) => japaneseCubit.getDataSearch(searchText)
         );
       },
     );

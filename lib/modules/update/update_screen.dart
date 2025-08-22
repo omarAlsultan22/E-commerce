@@ -35,7 +35,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
     AppModelCubit.get(context).getInfo(UserDetails.uId);
     return BlocConsumer<AppModelCubit, CubitStates>(
       listener: (context, state) {
-        if (state is SuccessState) {
+        if (state is SuccessState && state.stateKey == StatesKeys.updateInfo) {
           ScaffoldMessenger.of(context).showSnackBar(
             buildSnackBar('تم التحديث بنجاح', Colors.green[800]!),
           );
@@ -46,7 +46,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
             );
           });
         }
-        if (state is ErrorState) {
+        if (state is ErrorState && state.stateKey == StatesKeys.updateInfo) {
           ScaffoldMessenger.of(context).showSnackBar(
             buildSnackBar('فشل التحديث: ${state.error}', Colors.red[800]!),
           );
@@ -54,7 +54,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
       },
       builder: (context, state) {
         final cubit = AppModelCubit.get(context);
-        if (state is ErrorState) {
+        if (state is ErrorState && state.stateKey == StatesKeys.getInfo) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -73,7 +73,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
           );
         }
 
-        if (state is SuccessState) {
+        if (state is SuccessState && state.stateKey == StatesKeys.getInfo) {
           _firstNameController.text = state.value.firstName;
           _lastNameController.text = state.value.lastName;
           _phoneNumberController.text = state.value.phone;

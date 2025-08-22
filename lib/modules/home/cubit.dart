@@ -20,7 +20,7 @@ class HomeCubit extends Cubit<CubitStates> {
       dataModelList = dataList.data;
       emit((SuccessState()));
     }).catchError((error) {
-      emit(ErrorState(error));
+      emit(ErrorState(error: error));
     });
   }
 }

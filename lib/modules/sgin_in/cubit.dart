@@ -23,6 +23,7 @@ class LoginCubit extends Cubit<CubitStates> {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password).then((value) async {
+          emit(LoadingState());
       try {
         // Attempt to sign in with email and password
         UserCredential userCredential = await FirebaseAuth.instance
@@ -40,7 +41,7 @@ class LoginCubit extends Cubit<CubitStates> {
         emit(SuccessState<String>(value: userCredential.user!.uid));
         startTimer(context);
       } catch (error) {
-        emit(ErrorState(error.toString()));
+        emit(ErrorState(error: error.toString()));
         QuickAlert.show(
           context: context,
           text: 'فشل تسجيل الدخول: ${error.toString()}',

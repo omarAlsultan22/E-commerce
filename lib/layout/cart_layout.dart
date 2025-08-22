@@ -31,7 +31,6 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver{
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-
     super.dispose();
   }
 

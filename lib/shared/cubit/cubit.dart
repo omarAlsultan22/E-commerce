@@ -49,7 +49,7 @@ class CartCubit extends Cubit<CubitStates> {
       shoppingList.add(delv);
     }
 
-    emit(SuccessState());
+    emit(SuccessState(stateKey: StatesKeys.addItem));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('تمت الإضافة إلى السلة بنجاح'),
@@ -60,19 +60,19 @@ class CartCubit extends Cubit<CubitStates> {
 
   void removeItem(int index) {
     shoppingList.removeAt(index);
-    emit(SuccessState());
+    emit(SuccessState(stateKey: StatesKeys.removeItem));
   }
 
   void updateItemQuantity(int index, int newQuantity) {
     if (index >= 0 && index < shoppingList.length) {
       shoppingList[index].item = newQuantity;
-      emit(SuccessState());
+      emit(SuccessState(stateKey: StatesKeys.updateItem));
     }
   }
 
   void clearCart() {
     shoppingList.clear();
-    emit(SuccessState());
+    emit(SuccessState(stateKey: StatesKeys.clearCart));
   }
 
   int getTotalPrice() {
@@ -97,9 +97,9 @@ class CartCubit extends Cubit<CubitStates> {
       userModel = UserInfo
           .fromDocumentSnapshot(doc, location!)
           .userModel;
-      emit(SuccessState());
+      emit(SuccessState(stateKey: StatesKeys.userInfo));
     } catch (e) {
-      emit(ErrorState(e.toString()));
+      emit(ErrorState(error: e.toString(), stateKey: StatesKeys.userInfo));
     }
   }
 
@@ -115,7 +115,7 @@ class CartCubit extends Cubit<CubitStates> {
       });
 
       if (userModel == null) {
-        emit(ErrorState('User model is null'));
+        emit(ErrorState(error: 'User model is null', stateKey:  StatesKeys.sendOrder));
         return;
       }
 
@@ -128,9 +128,9 @@ class CartCubit extends Cubit<CubitStates> {
       );
 
       await firebase.collection('processingOrders').doc(uId).set(data.toMap());
-      emit(SuccessState());
+      emit(SuccessState(stateKey: StatesKeys.sendOrder));
     } catch (e) {
-      emit(ErrorState(e.toString()));
+      emit(ErrorState(error: e.toString(), stateKey: StatesKeys.sendOrder));
     }
   }
 

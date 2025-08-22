@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../layout/homeLayout.dart';
+import '../../layout/home_layout.dart';
 import '../../shared/cubit/state.dart';
 import 'cubit.dart';
 

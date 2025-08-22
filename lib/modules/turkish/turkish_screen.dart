@@ -11,8 +11,7 @@ class TurkishScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     EgyptianCubit.get(context).getData();
-    return BlocConsumer<TurkishCubit, CubitStates>(
-      listener: (context, state) {},
+    return BlocBuilder<TurkishCubit, CubitStates>(
       builder: (context, state) {
         final turkishCubit = TurkishCubit.get(context);
         final dataModelList = turkishCubit.dataModelList;
@@ -22,10 +21,10 @@ class TurkishScreen extends StatelessWidget {
             searchData: turkishCubit.searchData,
             context: context,
             title: 'المطبخ التركي',
-            onPressed: () => turkishCubit.getData(),
+            getData: () => turkishCubit.getData(),
             isLoadingMore: isLoadingMore,
             clearData: () => turkishCubit.clearSearch(),
-            getData: (searchText) => turkishCubit.getDataSearch(searchText)
+            dataSearch: (searchText) => turkishCubit.getDataSearch(searchText)
         );
       },
     );

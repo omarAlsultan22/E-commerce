@@ -13,26 +13,48 @@ class JapaneseCubit extends Cubit<CubitStates> {
   List<DataModel> searchData = [];
   DocumentSnapshot? lastDocument;
   bool isLoadingMore = true;
+  bool _isLoading = false;
 
   Future<void> getData() async {
+    if (_isLoading || isLoadingMore == false) return;
+    _isLoading = true;
     emit(LoadingState());
-    await getCountriesData(
-        dataModelList: dataModelList,
-        lastDocument: lastDocument,
-        collectionId: 'japanese',
-        isLoadingMore: isLoadingMore
-    ).then((dataList) {
-      dataModelList.addAll(dataList);
-      emit((SuccessState()));
-    }).catchError((e) {
-      emit(ErrorState(e.toString()));
-    });
+
+    try {
+      final dataList = await getCountriesData(
+          lastDocument: lastDocument,
+          collectionId: 'japanese',
+          updateLastDoc: (lastDoc) => lastDocument = lastDoc
+      );
+
+      if (dataList.isEmpty) {
+        isLoadingMore = false;
+      } else {
+        dataModelList.addAll(dataList);
+      }
+      emit(SuccessState());
+    } catch (e) {
+      isLoadingMore = false;
+      emit(ErrorState(error: e.toString()));
+    } finally {
+      _isLoading = false;
+    }
   }
 
   Future<void> getDataSearch(String searchText) async {
-    final _filteredData = await fetchPartialMatch(query: searchText, collectionId: 'japanese');
-    searchData = _filteredData;
+    emit(LoadingState());
+    try {
+      final _filteredData = await fetchPartialMatch(
+          query: searchText, collectionId: 'japanese');
+
+      searchData = _filteredData;
+      emit(SuccessState());
+    }
+    catch (e) {
+      emit(ErrorState(error: e.toString()));
+    }
   }
+
   void clearSearch() {
     searchData.clear();
     emit(InitialState());
@@ -51,7 +73,7 @@ class JapaneseCubit extends Cubit<CubitStates> {
     ).then((_) {
       emit(SuccessState());
     }).catchError((error) {
-      emit(ErrorState(error));
+      emit(ErrorState(error: error));
     });
   }
 }
