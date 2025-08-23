@@ -1,4 +1,13 @@
-enum StatesKeys{addItem, updateItem, removeItem, clearCart, userInfo, sendOrder, getInfo, updateInfo}
+enum StatesKeys{
+  addItem,
+  updateItem,
+  removeItem,
+  clearCart,
+  userInfo,
+  sendOrder,
+  getInfo,
+  updateInfo
+}
 
 abstract class CubitStates<T>{
   final T?  value;
@@ -7,14 +16,14 @@ abstract class CubitStates<T>{
   CubitStates({this.value, this.error, this.stateKey});
 }
 
-class InitialState extends CubitStates{}
-class LoadingState extends CubitStates{
+class InitialState<T> extends CubitStates<T>{}
+class LoadingState<T> extends CubitStates<T>{
   LoadingState({super.stateKey});
 }
 class SuccessState<T> extends CubitStates{
   SuccessState({super.value, super.stateKey});
 }
-class ErrorState extends CubitStates{
+class ErrorState<T> extends CubitStates<T>{
   ErrorState({super.error, super.stateKey});
 }
 
