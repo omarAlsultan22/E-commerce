@@ -16,7 +16,9 @@ abstract class CubitStates<T>{
   CubitStates({this.value, this.error, this.stateKey});
 }
 
-class InitialState<T> extends CubitStates<T>{}
+class InitialState<T> extends CubitStates<T>{
+  InitialState() : super();
+}
 class LoadingState<T> extends CubitStates<T>{
   LoadingState({super.stateKey});
 }
