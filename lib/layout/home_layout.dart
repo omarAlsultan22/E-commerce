@@ -161,7 +161,7 @@ class _HomeBuilderState extends State<HomeBuilder> with TickerProviderStateMixin
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const SignIn()),
+                  MaterialPageRoute(builder: (context) => const SignInScreen()),
                 );
               } catch (e) {
                 print('Error during sign-out: $e');

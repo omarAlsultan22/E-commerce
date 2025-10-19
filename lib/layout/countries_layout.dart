@@ -1,8 +1,8 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:flutter/material.dart';
-import 'package:international_cuisine/shared/cubit/cubit.dart';
-import '../modles/data_model.dart';
 import '../modules/update/update_screen.dart';
+import 'package:flutter/material.dart';
+import '../shared/cubit/cubit.dart';
+import '../modles/data_model.dart';
 import 'cart_layout.dart';
 
 
@@ -528,7 +528,7 @@ PreferredSizeWidget appBar({
           icon: const Icon(Icons.account_circle, size: 40, color: Colors.white),
           onPressed: () =>
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => UpdateAccount())),
+                  context, MaterialPageRoute(builder: (context) => UpdateAccountScreen())),
         ),
       ],
       title: Text(
