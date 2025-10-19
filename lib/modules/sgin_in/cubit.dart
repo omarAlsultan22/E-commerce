@@ -1,12 +1,13 @@
+import 'package:international_cuisine/shared/local/shared_preferences.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:quickalert/models/quickalert_type.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../shared/components/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:international_cuisine/shared/local/shared_preferences.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
-import '../../shared/components/components.dart';
 import '../../shared/cubit/state.dart';
+
 
 class LoginCubit extends Cubit<CubitStates> {
   LoginCubit() : super(InitialState());
