@@ -1,5 +1,6 @@
 import 'json_model.dart';
 
+
 class SendOrderModel implements JsonModel{
 
   final String userName;

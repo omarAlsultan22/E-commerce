@@ -1,12 +1,12 @@
-import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../shared/components/components.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:international_cuisine/modles/data_model.dart';
+import 'package:international_cuisine/shared/components/components.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
+import 'package:international_cuisine/modles/data_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../modles/units_processes_model.dart';
 
 
-class EgyptianCubit extends Cubit<CubitStates> {
+class EgyptianCubit extends Cubit<CubitStates> implements UnitsProcessesModel{
   EgyptianCubit() : super(InitialState());
 
   static EgyptianCubit get(context) => BlocProvider.of(context);
@@ -17,6 +17,8 @@ class EgyptianCubit extends Cubit<CubitStates> {
   bool isLoadingMore = true;
   bool _isLoading = false;
 
+
+  @override
   Future<void> getData() async {
     if (_isLoading || isLoadingMore == false) return;
     _isLoading = true;
@@ -43,6 +45,7 @@ class EgyptianCubit extends Cubit<CubitStates> {
     }
   }
 
+  @override
   Future<void> getDataSearch(String searchText) async {
     emit(LoadingState());
     try {
@@ -56,11 +59,14 @@ class EgyptianCubit extends Cubit<CubitStates> {
       emit(ErrorState(error: e.toString()));
     }
   }
+
+  @override
   void clearSearch() {
     searchData.clear();
     emit(InitialState());
   }
 
+  @override
   Future<void> updateData({
     required String collectionId,
     required String index,

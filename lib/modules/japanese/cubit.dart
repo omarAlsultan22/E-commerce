@@ -1,3 +1,4 @@
+import 'package:international_cuisine/modles/units_processes_model.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../shared/components/components.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../modles/data_model.dart';
 
 
-class JapaneseCubit extends Cubit<CubitStates> {
+class JapaneseCubit extends Cubit<CubitStates> implements UnitsProcessesModel{
   JapaneseCubit() : super(InitialState());
 
   static JapaneseCubit get(context) => BlocProvider.of(context);
@@ -16,6 +17,7 @@ class JapaneseCubit extends Cubit<CubitStates> {
   bool isLoadingMore = true;
   bool _isLoading = false;
 
+  @override
   Future<void> getData() async {
     if (_isLoading || isLoadingMore == false) return;
     _isLoading = true;
@@ -42,7 +44,7 @@ class JapaneseCubit extends Cubit<CubitStates> {
     }
   }
 
-
+  @override
   Future<void> getDataSearch(String searchText) async {
     emit(LoadingState());
     try {
@@ -57,13 +59,13 @@ class JapaneseCubit extends Cubit<CubitStates> {
     }
   }
 
-
+  @override
   void clearSearch() {
     searchData.clear();
     emit(InitialState());
   }
 
-
+  @override
   Future<void> updateData({
     required String collectionId,
     required String index,

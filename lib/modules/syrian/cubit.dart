@@ -1,11 +1,12 @@
 import 'package:international_cuisine/shared/cubit/state.dart';
+import 'package:international_cuisine/modles/units_processes_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../shared/components/components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../modles/data_model.dart';
 
 
-class SyrianCubit extends Cubit<CubitStates>{
+class SyrianCubit extends Cubit<CubitStates> implements UnitsProcessesModel{
   SyrianCubit() : super(InitialState());
 
   static SyrianCubit get(context) => BlocProvider.of(context);
@@ -16,6 +17,7 @@ class SyrianCubit extends Cubit<CubitStates>{
   bool isLoadingMore = true;
   bool _isLoading = false;
 
+  @override
   Future<void> getData() async {
     if (_isLoading || isLoadingMore == false) return;
     _isLoading = true;
@@ -42,6 +44,7 @@ class SyrianCubit extends Cubit<CubitStates>{
     }
   }
 
+  @override
   Future<void> getDataSearch(String searchText) async {
     emit(LoadingState());
     try {
@@ -56,11 +59,13 @@ class SyrianCubit extends Cubit<CubitStates>{
     }
   }
 
+  @override
   void clearSearch() {
     searchData.clear();
     emit(InitialState());
   }
 
+  @override
   Future<void> updateData({
     required String collectionId,
     required String index,
