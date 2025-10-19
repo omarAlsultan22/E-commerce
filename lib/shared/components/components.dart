@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../../modules/home/home_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:international_cuisine/modles/data_model.dart';
 import 'package:international_cuisine/shared/local/shared_preferences.dart';
-import '../../modules/home/home_screen.dart';
+
 
 Future<List<DataModel>> getCountriesData({
   required DocumentSnapshot? lastDocument,
@@ -29,6 +30,8 @@ Future<List<DataModel>> getCountriesData({
   return dataList.data;
 }
 
+
+
 Future<List<DataModel>> fetchPartialMatch({
   required String query,
   required String collectionId,
@@ -53,6 +56,7 @@ Future<List<DataModel>> fetchPartialMatch({
 }
 
 
+
 Future<void> updateDataModel({
   required String collectionId,
   required String index,
@@ -63,6 +67,7 @@ Future<void> updateDataModel({
   await firebase.collection('countriesData').doc('L8nSAa05FTdy6I47cOaf')
       .collection(collectionId).doc(index).update({'rating': rating});
 }
+
 
 
 SnackBar buildSnackBar(String message, Color backgroundColor) {
@@ -78,6 +83,7 @@ SnackBar buildSnackBar(String message, Color backgroundColor) {
 }
 
 
+
 Future isLoggedIn(BuildContext context) async {
   CacheHelper.getString(key: 'IsLoggedIn').then((value) {
     if (value != null) {
@@ -89,6 +95,7 @@ Future isLoggedIn(BuildContext context) async {
     }
   });
 }
+
 
 
 Timer? timer;
@@ -105,6 +112,8 @@ void startTimer(BuildContext context) {
   });
 }
 
+
+
 Future navigator({
   required Widget link,
   required BuildContext context,
@@ -118,6 +127,8 @@ Widget sizedBox() =>
       height: 30.0,
     );
 
+
+
 String? validator(String value, String fieldName, {String? newPassword}) {
   if (value.isEmpty) {
     return 'يرجي أدخال $fieldName';
@@ -130,6 +141,8 @@ String? validator(String value, String fieldName, {String? newPassword}) {
   }
   return null;
 }
+
+
 
 Widget buildInputField({
   required TextEditingController controller,

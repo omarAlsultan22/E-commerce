@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:international_cuisine/modules/sgin_in/sgin_in.dart';
+import 'package:international_cuisine/modules/sgin_in/sgin_in_screen.dart';
 import 'package:international_cuisine/modules/update/cubit.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
-import '../../shared/components/components.dart';
 import '../../shared/local/shared_preferences.dart';
+import '../../shared/components/components.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+
 
 class ChangeEmailAndPassword extends StatefulWidget {
   const ChangeEmailAndPassword({super.key});
@@ -32,13 +33,16 @@ class _ChangeEmailAndPasswordState extends State<ChangeEmailAndPassword> {
     super.dispose();
   }
 
-  IconButton _buildVisibilityToggle() => IconButton(
-    icon: Icon(
-      isObscure ? Icons.visibility_off : Icons.visibility,
-      color: Colors.amber[700],
-    ),
-    onPressed: () => setState(() => isObscure = !isObscure),
-  );
+
+  IconButton _buildVisibilityToggle() =>
+      IconButton(
+        icon: Icon(
+          isObscure ? Icons.visibility_off : Icons.visibility,
+          color: Colors.amber[700],
+        ),
+        onPressed: () => setState(() => isObscure = !isObscure),
+      );
+
 
   Future<void> _saveChanges({
     required BuildContext context,
@@ -65,7 +69,7 @@ class _ChangeEmailAndPasswordState extends State<ChangeEmailAndPassword> {
       }).whenComplete(() {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) =>  SignIn()),
+          MaterialPageRoute(builder: (context) => SignIn()),
         );
       });
     } catch (error) {
@@ -76,6 +80,7 @@ class _ChangeEmailAndPasswordState extends State<ChangeEmailAndPassword> {
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
 
   SnackBar _buildSnackBar(String message, Color backgroundColor) {
     return SnackBar(
@@ -89,44 +94,39 @@ class _ChangeEmailAndPasswordState extends State<ChangeEmailAndPassword> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<AppModelCubit, CubitStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          var cubit = AppModelCubit.get(context);
-          return Directionality(
-            textDirection: TextDirection.rtl,
-            child: Scaffold(
-              backgroundColor: Colors.grey[900],
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  color: Colors.white,
-                  onPressed: _isLoading ? null : () => Navigator.pop(context),
-                ),
-                title: const Text(
-                  'تغيير البريد وكلمة المرور',
-                  style: TextStyle(color: Colors.white),
-                ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: _buildSaveButton(cubit, state),
-                  ),
-                ],
-              ),
-              body: _buildFormContent(),
+
+  Widget _buildWidget(BuildContext cubitContext, CubitStates state) {
+    var cubit = AppModelCubit.get(cubitContext);
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: Colors.grey[900],
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            color: Colors.white,
+            onPressed: _isLoading ? null : () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'تغيير البريد وكلمة المرور',
+            style: TextStyle(color: Colors.white),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _buildSaveButton(cubit, state),
             ),
-          );
-        }
+          ],
+        ),
+        body: _buildFormContent(),
+      ),
     );
   }
 
 
-  Widget _buildSaveButton(AppModelCubit cubit ,CubitStates state) {
+  Widget _buildSaveButton(AppModelCubit cubit, CubitStates state) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.amber[700],
@@ -135,7 +135,8 @@ class _ChangeEmailAndPasswordState extends State<ChangeEmailAndPassword> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16),
       ),
-      onPressed: _isLoading ? null : () => _saveChanges(context: context, cubit: cubit),
+      onPressed: _isLoading ? null : () =>
+          _saveChanges(context: context, cubit: cubit),
       child: _isLoading
           ? const SizedBox(
         width: 20,
@@ -155,6 +156,7 @@ class _ChangeEmailAndPasswordState extends State<ChangeEmailAndPassword> {
       ),
     );
   }
+
 
   Widget _buildFormContent() {
     return IgnorePointer(
@@ -181,7 +183,8 @@ class _ChangeEmailAndPasswordState extends State<ChangeEmailAndPassword> {
                     controller: newEmailController,
                     hint: "البريد الإلكتروني الجديد",
                     icon: Icons.email,
-                    validator: (value) => validator(value!, 'البريد الإلكتروني'),
+                    validator: (value) =>
+                        validator(value!, 'البريد الإلكتروني'),
                   ),
                   sizedBox(),
                   buildInputField(
@@ -190,7 +193,8 @@ class _ChangeEmailAndPasswordState extends State<ChangeEmailAndPassword> {
                     icon: Icons.lock,
                     obscureText: isObscure,
                     suffixIcon: _buildVisibilityToggle(),
-                    validator: (value) => validator(value!, 'كلمة المرور الحالية'),
+                    validator: (value) =>
+                        validator(value!, 'كلمة المرور الحالية'),
                   ),
                   sizedBox(),
                   buildInputField(
@@ -199,7 +203,8 @@ class _ChangeEmailAndPasswordState extends State<ChangeEmailAndPassword> {
                     icon: Icons.lock,
                     obscureText: isObscure,
                     suffixIcon: _buildVisibilityToggle(),
-                    validator: (value) => validator(value!, 'كلمة المرور الجديدة'),
+                    validator: (value) =>
+                        validator(value!, 'كلمة المرور الجديدة'),
                   ),
                   sizedBox(),
                   buildInputField(
@@ -228,6 +233,14 @@ class _ChangeEmailAndPasswordState extends State<ChangeEmailAndPassword> {
           ),
         ),
       ),
+    );
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AppModelCubit, CubitStates>(
+        builder: (context, state) => _buildWidget(context, state)
     );
   }
 }

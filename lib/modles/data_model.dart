@@ -36,15 +36,6 @@ class DataModel {
         dislikeIcon: false
     );
   }
-
-  Map<String, dynamic> toMap(){
-    return {
-      'orderImage': orderImage,
-      'orderName': orderName,
-      'orderPrice': orderPrice,
-      'rating': rating
-    };
-  }
 }
 
 class DataList {

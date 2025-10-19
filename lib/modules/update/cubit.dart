@@ -1,9 +1,10 @@
+import 'package:international_cuisine/shared/cubit/state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:international_cuisine/shared/cubit/state.dart';
-import '../../modles/user_model.dart';
 import '../../shared/components/constant.dart';
+import '../../modles/user_model.dart';
+
 
 class AppModelCubit extends Cubit<CubitStates> {
   AppModelCubit() : super((InitialState()));
@@ -43,7 +44,7 @@ class AppModelCubit extends Cubit<CubitStates> {
         phone: phone,
       );
       await FirebaseFirestore.instance.collection('users').doc(UserDetails.uId).update(
-          userModel.toMap());
+          userModel.toJson());
       emit(SuccessState(stateKey: StatesKeys.updateInfo));
     }
     catch (error) {

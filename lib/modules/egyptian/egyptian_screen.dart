@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:international_cuisine/modules/egyptian/cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../layout/countries_layout.dart';
+import 'package:flutter/cupertino.dart';
 import '../../shared/cubit/state.dart';
+
 
 class EgyptianScreen extends StatelessWidget {
   EgyptianScreen({super.key});

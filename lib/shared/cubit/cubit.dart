@@ -1,13 +1,14 @@
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../modles/user_model.dart';
+import '../../modles/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:international_cuisine/modles/data_model.dart';
-import 'package:international_cuisine/modles/processingModel.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
+import 'package:international_cuisine/modles/send_order_model.dart';
 import 'package:international_cuisine/shared/local/shared_preferences.dart';
-import '../../modles/order_model.dart';
-import '../../modles/user_model.dart';
+
 
 class CartCubit extends Cubit<CubitStates> {
   CartCubit() : super(InitialState());
@@ -58,10 +59,12 @@ class CartCubit extends Cubit<CubitStates> {
     );
   }
 
+
   void removeItem(int index) {
     shoppingList.removeAt(index);
     emit(SuccessState(stateKey: StatesKeys.removeItem));
   }
+
 
   void updateItemQuantity(int index, int newQuantity) {
     if (index >= 0 && index < shoppingList.length) {
@@ -70,10 +73,12 @@ class CartCubit extends Cubit<CubitStates> {
     }
   }
 
+
   void clearCart() {
     shoppingList.clear();
     emit(SuccessState(stateKey: StatesKeys.clearCart));
   }
+
 
   int getTotalPrice() {
     int totalPrice = 0;
@@ -103,6 +108,7 @@ class CartCubit extends Cubit<CubitStates> {
     }
   }
 
+
   Future<void> sendOrdersToDatabase({
     required String uId
   }) async {
@@ -115,24 +121,26 @@ class CartCubit extends Cubit<CubitStates> {
       });
 
       if (userModel == null) {
-        emit(ErrorState(error: 'User model is null', stateKey:  StatesKeys.sendOrder));
+        emit(ErrorState(
+            error: 'User model is null', stateKey: StatesKeys.sendOrder));
         return;
       }
 
 
-      ProcessingModel data = ProcessingModel(
+      SendOrderModel data = SendOrderModel(
           userName: ('${userModel!.firstName} ${userModel!.lastName}'),
           userPhone: userModel!.phone,
           userLocation: userModel!.location!,
           userOrder: order
       );
 
-      await firebase.collection('processingOrders').doc(uId).set(data.toMap());
+      await firebase.collection('processingOrders').doc(uId).set(data.toJson());
       emit(SuccessState(stateKey: StatesKeys.sendOrder));
     } catch (e) {
       emit(ErrorState(error: e.toString(), stateKey: StatesKeys.sendOrder));
     }
   }
+
 
   Future<void> saveCartToPrefs() async {
     try {
@@ -146,7 +154,9 @@ class CartCubit extends Cubit<CubitStates> {
 
       await CacheHelper.setInt(
           key: 'cart_saved_time',
-          value: DateTime.now().millisecondsSinceEpoch
+          value: DateTime
+              .now()
+              .millisecondsSinceEpoch
       );
     } catch (e) {
       print('Error saving cart to prefs: $e');
@@ -154,10 +164,13 @@ class CartCubit extends Cubit<CubitStates> {
     }
   }
 
+
   Future<void> loadCartFromPrefs() async {
     try {
       final savedTime = await CacheHelper.getInt(key: 'cart_saved_time') ?? 0;
-      final currentTime = DateTime.now().millisecondsSinceEpoch;
+      final currentTime = DateTime
+          .now()
+          .millisecondsSinceEpoch;
       const expiryHours = 1;
       const expiryMilliseconds = expiryHours * 60 * 60 * 1000;
 
@@ -169,7 +182,9 @@ class CartCubit extends Cubit<CubitStates> {
       } else {
         final cartJson = await CacheHelper.getString(key: 'cartData');
         shoppingList = cartJson != null
-            ? (jsonDecode(cartJson) as List).map((e) => OrderModel.fromJson(e)).toList()
+            ? (jsonDecode(cartJson) as List)
+            .map((e) => OrderModel.fromJson(e))
+            .toList()
             : [];
       }
     } catch (e) {

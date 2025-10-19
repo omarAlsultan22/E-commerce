@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:international_cuisine/layout/delivery_layout.dart';
-import 'package:international_cuisine/modules/payment_screen/payment_screen.dart';
 import 'package:international_cuisine/shared/components/components.dart';
+import 'package:international_cuisine/modules/payment_screen/payment_screen.dart';
+
 
 class PaymentWays extends StatelessWidget {
   const PaymentWays({super.key});
@@ -29,21 +30,35 @@ class PaymentWays extends StatelessWidget {
     );
   }
 
+
   Widget container({
     required String iconName,
     required IconData iconType,
     required VoidCallback onTap,
   }) =>
       Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Container(
           height: 200.0,
           width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
           child: GestureDetector(
             onTap: onTap,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(iconType),
+                Icon(iconType, size: 50.0),
                 Text(iconName)
               ],
             ),

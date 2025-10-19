@@ -1,6 +1,8 @@
+import 'json_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserModel {
+
+class UserModel implements JsonModel{
   final String firstName;
   final String lastName;
   final String phone;
@@ -22,7 +24,8 @@ class UserModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  @override
+  Map<String, dynamic> toJson() {
     return {
       'firstName': firstName,
       'lastName': lastName,

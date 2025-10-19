@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../shared/components/components.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:international_cuisine/modles/data_model.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 
-import '../../shared/components/components.dart';
 
 class EgyptianCubit extends Cubit<CubitStates> {
   EgyptianCubit() : super(InitialState());

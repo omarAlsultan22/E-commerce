@@ -1,4 +1,6 @@
-class OrderModel {
+import 'package:international_cuisine/modles/json_model.dart';
+
+class OrderModel implements JsonModel{
   final String order;
   final String image;
   final int price;
@@ -20,6 +22,7 @@ class OrderModel {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'order': order,

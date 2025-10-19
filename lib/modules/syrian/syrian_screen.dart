@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../layout/countries_layout.dart';
+import 'package:flutter/cupertino.dart';
 import '../../shared/cubit/state.dart';
 import 'cubit.dart';
+
 
 class SyrianScreen extends StatelessWidget {
   SyrianScreen({super.key});

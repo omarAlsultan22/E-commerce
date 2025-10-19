@@ -1,8 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:international_cuisine/modles/data_model.dart';
-import 'package:international_cuisine/shared/components/components.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
+import 'package:international_cuisine/shared/components/components.dart';
+
 
 class ChineseCubit extends Cubit<CubitStates> {
   ChineseCubit() : super(InitialState());
@@ -14,6 +15,7 @@ class ChineseCubit extends Cubit<CubitStates> {
   DocumentSnapshot? lastDocument;
   bool isLoadingMore = true;
   bool _isLoading = false;
+
 
   Future<void> getData() async {
     if (_isLoading || isLoadingMore == false) return;
@@ -40,6 +42,7 @@ class ChineseCubit extends Cubit<CubitStates> {
       _isLoading = false;
     }
   }
+
 
   Future<void> getDataSearch(String searchText) async {
     emit(LoadingState());

@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:international_cuisine/modules/sgin_in/sgin_in.dart';
 import 'package:international_cuisine/shared/components/constant.dart';
+import 'package:international_cuisine/modules/sgin_in/sgin_in_screen.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
-import 'change_email_&_password.dart';
 import '../../shared/components/components.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+import 'change_email_&_password.dart';
 import 'cubit.dart';
+
 
 class UpdateAccount extends StatefulWidget {
   const UpdateAccount({super.key});
@@ -29,28 +30,31 @@ class _UpdateAccountState extends State<UpdateAccount> {
     super.dispose();
   }
 
-  @override
+  void _statesListener(CubitStates  state){
+    if (state is SuccessState && state.stateKey == StatesKeys.updateInfo) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        buildSnackBar('تم التحديث بنجاح', Colors.green[800]!),
+      );
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const SignIn()),
+        );
+      });
+    }
+    if (state is ErrorState && state.stateKey == StatesKeys.updateInfo) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        buildSnackBar('فشل التحديث: ${state.error}', Colors.red[800]!),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     AppModelCubit.get(context).getInfo(UserDetails.uId);
     return BlocConsumer<AppModelCubit, CubitStates>(
       listener: (context, state) {
-        if (state is SuccessState && state.stateKey == StatesKeys.updateInfo) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            buildSnackBar('تم التحديث بنجاح', Colors.green[800]!),
-          );
-          Future.delayed(const Duration(seconds: 1), () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const SignIn()),
-            );
-          });
-        }
-        if (state is ErrorState && state.stateKey == StatesKeys.updateInfo) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            buildSnackBar('فشل التحديث: ${state.error}', Colors.red[800]!),
-          );
-        }
+        _statesListener(state);
       },
       builder: (context, state) {
         final cubit = AppModelCubit.get(context);

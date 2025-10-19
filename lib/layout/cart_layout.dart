@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:international_cuisine/modules/maps_screen/maps_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 import '../modles/order_model.dart';
 import '../shared/cubit/cubit.dart';
 import '../shared/cubit/state.dart';
+
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -36,55 +37,59 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver{
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CartCubit, CubitStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        final cartCubit = CartCubit.get(context);
-        final isEmpty = cartCubit.shoppingList.isEmpty;
+    return BlocBuilder<CartCubit, CubitStates>(
+      builder: (context, state) => _buildWidget(context)
+    );
+  }
 
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: Scaffold(
-            appBar: AppBar(
-              elevation: 0,
-              backgroundColor: Colors.white,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-                onPressed: () => Navigator.pop(context),
-              ),
-              title: const Text(
-                'عربة التسوق',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Colors.black,
-                ),
-              ),
-              centerTitle: true,
+  Widget _buildWidget(BuildContext context) {
+    final cartCubit = CartCubit.get(context);
+    final isEmpty = cartCubit.shoppingList.isEmpty;
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'عربة التسوق',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
+              color: Colors.black,
             ),
-            backgroundColor: Colors.grey[100],
-            body: isEmpty
-                ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.shopping_cart_outlined, size: 60, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'عربة التسوق فارغة',
-                    style: TextStyle(fontSize: 20, color: Colors.grey),
-                  ),
-                ],
+          ),
+          centerTitle: true,
+        ),
+        backgroundColor: Colors.grey[100],
+        body: isEmpty
+            ? const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.shopping_cart_outlined, size: 60, color: Colors.grey),
+              SizedBox(height: 16),
+              Text(
+                'عربة التسوق فارغة',
+                style: TextStyle(fontSize: 20, color: Colors.grey),
               ),
-            )
-                : Column(
-              children: [
-                Expanded(
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: cartCubit.shoppingList.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) => CartItemCard(
+            ],
+          ),
+        )
+            : Column(
+          children: [
+            Expanded(
+              child: ListView.separated(
+                padding: const EdgeInsets.all(16),
+                itemCount: cartCubit.shoppingList.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                itemBuilder: (context, index) =>
+                    CartItemCard(
                       item: cartCubit.shoppingList[index],
                       onRemove: () => cartCubit.removeItem(index),
                       onQuantityChanged: (newQuantity) {
@@ -95,15 +100,13 @@ class _CartScreenState extends State<CartScreen> with WidgetsBindingObserver{
                         }
                       },
                     ),
-                  ),
-                ),
-                _buildOrderSummary(cartCubit),
-                _buildCheckoutButton(),
-              ],
+              ),
             ),
-          ),
-        );
-      },
+            _buildOrderSummary(cartCubit),
+            _buildCheckoutButton(),
+          ],
+        ),
+      ),
     );
   }
 

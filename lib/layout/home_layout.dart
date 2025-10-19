@@ -1,18 +1,19 @@
-import 'dart:async';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../modules/sgin_in/sgin_in.dart';
-import '../modles/home_model.dart';
-import '../modules/chinese/chinese_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../modules/egyptian/egyptian_screen.dart';
-import '../modules/french/french_screen.dart';
-import '../modules/italian/italian_screen.dart';
 import '../modules/japanese/japanese_screen.dart';
+import '../modules/sgin_in/sgin_in_screen.dart';
+import '../modules/chinese/chinese_screen.dart';
+import '../modules/italian/italian_screen.dart';
 import '../modules/mexican/mexican_screen.dart';
-import '../modules/syrian/syrian_screen.dart';
 import '../modules/turkish/turkish_screen.dart';
+import '../modules/french/french_screen.dart';
+import '../modules/syrian/syrian_screen.dart';
+import 'package:flutter/material.dart';
+import '../modles/home_model.dart';
+import 'dart:async';
+
 
 class HomeBuilder extends StatefulWidget {
   final List<HomeModel> homeModel;

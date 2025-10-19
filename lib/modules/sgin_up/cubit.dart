@@ -1,8 +1,8 @@
+import 'package:international_cuisine/shared/components/constant.dart';
+import 'package:international_cuisine/shared/cubit/state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:international_cuisine/shared/components/constant.dart';
-import 'package:international_cuisine/shared/cubit/state.dart';
 import '../../modles/user_model.dart';
 
 
@@ -49,7 +49,7 @@ class RegisterCubit extends Cubit<CubitStates> {
       phone: phone,
     );
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await db.collection("user").doc(uId).collection('userModel').doc(uId).set(userModel.toMap()).then((value) {
+    await db.collection("user").doc(uId).collection('userModel').doc(uId).set(userModel.toJson()).then((value) {
       emit(SuccessState());
     })
         .catchError((error) {

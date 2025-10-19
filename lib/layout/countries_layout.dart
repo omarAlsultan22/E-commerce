@@ -5,9 +5,9 @@ import '../modles/data_model.dart';
 import '../modules/update/update_screen.dart';
 import 'cart_layout.dart';
 
-final List<String> items = List.generate(10, (index) => (index + 1).toString());
 
 final List<String> mealSizes = ['صغير', 'وسط', 'كبير'];
+final List<String> items = List.generate(10, (index) => (index + 1).toString());
 final List<Color> mealColors = [Colors.amber, Colors.orange, Colors.red];
 
 class ItemBuilder extends StatefulWidget {
@@ -83,6 +83,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
     }
   }
 
+
   num _getSizePrice() {
     switch (_currentSizeIndex) {
       case 0:
@@ -95,6 +96,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
         return widget.dataModel.orderPrice!;
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -356,6 +358,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
     );
   }
 }
+
 
 class SearchableListBuilder extends StatefulWidget {
   final List<DataModel> dataModel;

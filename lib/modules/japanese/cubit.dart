@@ -1,8 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
-import '../../modles/data_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../shared/components/components.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../modles/data_model.dart';
+
 
 class JapaneseCubit extends Cubit<CubitStates> {
   JapaneseCubit() : super(InitialState());
@@ -41,6 +42,7 @@ class JapaneseCubit extends Cubit<CubitStates> {
     }
   }
 
+
   Future<void> getDataSearch(String searchText) async {
     emit(LoadingState());
     try {
@@ -55,10 +57,12 @@ class JapaneseCubit extends Cubit<CubitStates> {
     }
   }
 
+
   void clearSearch() {
     searchData.clear();
     emit(InitialState());
   }
+
 
   Future<void> updateData({
     required String collectionId,

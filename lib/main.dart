@@ -1,21 +1,20 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:international_cuisine/modules/chinese/cubit.dart';
-import 'package:international_cuisine/modules/egyptian/cubit.dart';
-import 'package:international_cuisine/modules/french/cubit.dart';
-import 'package:international_cuisine/modules/home/cubit.dart';
-import 'package:international_cuisine/modules/home/home_screen.dart';
-import 'package:international_cuisine/modules/italian/cubit.dart';
-import 'package:international_cuisine/modules/japanese/cubit.dart';
-import 'package:international_cuisine/modules/mexican/cubit.dart';
-import 'package:international_cuisine/modules/sgin_in/sgin_in.dart';
-import 'package:international_cuisine/modules/syrian/cubit.dart';
-import 'package:international_cuisine/modules/turkish/cubit.dart';
-import 'package:international_cuisine/modules/update/cubit.dart';
-import 'package:international_cuisine/shared/cubit/cubit.dart';
-import 'package:international_cuisine/shared/local/shared_preferences.dart';
 import 'shared/remot/firebase_options.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:international_cuisine/modules/home/cubit.dart';
+import 'package:international_cuisine/shared/cubit/cubit.dart';
+import 'package:international_cuisine/modules/syrian/cubit.dart';
+import 'package:international_cuisine/modules/update/cubit.dart';
+import 'package:international_cuisine/modules/french/cubit.dart';
+import 'package:international_cuisine/modules/chinese/cubit.dart';
+import 'package:international_cuisine/modules/italian/cubit.dart';
+import 'package:international_cuisine/modules/mexican/cubit.dart';
+import 'package:international_cuisine/modules/turkish/cubit.dart';
+import 'package:international_cuisine/modules/japanese/cubit.dart';
+import 'package:international_cuisine/modules/egyptian/cubit.dart';
+import 'package:international_cuisine/modules/home/home_screen.dart';
+import 'package:international_cuisine/shared/local/shared_preferences.dart';
 
 
 void main() async {
@@ -44,6 +43,7 @@ void main() async {
       )
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

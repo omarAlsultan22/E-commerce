@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:international_cuisine/modles/user_model.dart';
-import 'package:international_cuisine/modules/home/home_screen.dart';
 import 'package:international_cuisine/shared/components/constant.dart';
+import 'package:international_cuisine/modules/home/home_screen.dart';
 import 'package:international_cuisine/shared/cubit/cubit.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
-import 'package:quickalert/models/quickalert_type.dart';
+import 'package:international_cuisine/modles/user_model.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 import '../modles/order_model.dart';
+
 
 class PaymentInvoice extends StatefulWidget {
   final String title;
@@ -20,67 +21,63 @@ class PaymentInvoice extends StatefulWidget {
 
 class _PaymentInvoiceState extends State<PaymentInvoice> {
 
+  bool lock = false;
 
-
-  @override
-  Widget build(BuildContext context) {
-    CartCubit.get(context).getUserInfo(uId: UserDetails.uId);
-    CartCubit.get(context).sendOrdersToDatabase(uId: UserDetails.uId);
-
-    return BlocConsumer<CartCubit, CubitStates>(
-        listener: (context, state) {
-          if (state is ErrorState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error!)));
-          }
-          if (state is SuccessState) {
-            QuickAlert.show(
-              context: context,
-              title: 'تم ارسال طلبك بنجاح!',
-              text: 'قم بأخذ لقطة شاشة للفتورة',
-              type: QuickAlertType.success,
-              showConfirmBtn: true,
-              confirmBtnText: 'حسنا',
-              autoCloseDuration: Duration(seconds: 3),
-            );
-          }
-        },
-        builder: (context, state) {
-          final cubit = CartCubit.get(context);
-          final shoppingList = cubit.shoppingList;
-          final userModel = cubit.userModel;
-
-          if (userModel == null) {
-            return const Center(
-                child: CircularProgressIndicator(color: Colors.white,));
-          }
-
-          return Directionality(
-            textDirection: TextDirection.rtl,
-            child: Scaffold(
-              appBar: _buildAppBar(
-                  context: context,
-                  state: state,
-                  title: widget.title
-              ),
-              backgroundColor: Colors.grey[100],
-              body: state is SuccessState ?
-              _buildBody(shoppingList) : Center(
-                  child: Text('جاري إرسال طلبك...')),
-              bottomNavigationBar: _buildBottomBar(
-                  context: context,
-                  shoppingList: shoppingList,
-                  userModel: userModel),
-            ),
-          );
-        });
+  void _buildListener(CubitStates state) {
+    if (state is ErrorState) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(state.error!)));
+    }
+    if (state is SuccessState && !lock) {
+      QuickAlert.show(
+        context: context,
+        title: 'تم ارسال طلبك بنجاح!',
+        text: 'قم بأخذ لقطة شاشة للفتورة',
+        type: QuickAlertType.success,
+        showConfirmBtn: true,
+        confirmBtnText: 'حسنا',
+      );
+      lock = true;
+    }
   }
 
+
+  Widget _buildWidget(BuildContext context, CubitStates state) {
+    final cubit = CartCubit.get(context);
+    final shoppingList = cubit.shoppingList;
+    final userModel = cubit.userModel;
+
+    if (userModel == null) {
+      return const Center(
+          child: CircularProgressIndicator(color: Colors.white,));
+    }
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: _buildAppBar(
+            context: context,
+            state: state,
+            title: widget.title
+        ),
+        backgroundColor: Colors.grey[100],
+        body: state is SuccessState ?
+        _buildBody(shoppingList) : Center(
+            child: Text('جاري إرسال طلبك...')),
+        bottomNavigationBar: _buildBottomBar(
+            context: context,
+            shoppingList: shoppingList,
+            userModel: userModel),
+      ),
+    );
+  }
+
+
   PreferredSizeWidget _buildAppBar({
-      required BuildContext context,
-      required CubitStates state,
-      required String title
-}) {
+    required BuildContext context,
+    required CubitStates state,
+    required String title
+  }) {
     return AppBar(
       elevation: 0,
       scrolledUnderElevation: 0,
@@ -94,15 +91,18 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
           fontSize: 22,
           color: Colors.black,
         ),
-      ): SizedBox(),
+      ) : SizedBox(),
       centerTitle: true,
       leading:
       IconButton(
-        icon: const Icon(Icons.home_filled, color: Colors.black),
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()))
+          icon: const Icon(Icons.home_filled, color: Colors.black),
+          onPressed: () =>
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()))
       ),
     );
   }
+
 
   Widget _buildBody(List<OrderModel> shoppingList) {
     return Column(
@@ -114,6 +114,7 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
       ],
     );
   }
+
 
   Widget _buildEmptyState() {
     return Center(
@@ -136,6 +137,7 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
     );
   }
 
+
   Widget _buildOrderList(List<OrderModel> shoppingList) {
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
@@ -144,6 +146,7 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
       itemBuilder: (context, index) => _buildDeliveryItem(shoppingList[index]),
     );
   }
+
 
   Widget _buildDeliveryItem(OrderModel orderModel) {
     final totalPrice = orderModel.price * orderModel.item;
@@ -213,6 +216,7 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
     );
   }
 
+
   Widget _buildBottomBar({
     required BuildContext context,
     required List<OrderModel> shoppingList,
@@ -246,6 +250,7 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
     );
   }
 
+
   Widget _buildDeliveryInfo(UserModel userModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,16 +263,15 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
           ),
         ),
         const SizedBox(height: 8),
-        _buildInfoRow('الاسم: ', userModel.firstName + userModel.lastName),
-        _buildInfoRow(' العنوان: ', userModel.location!),
-        _buildInfoRow('الهاتف: ', userModel.phone),
-        const SizedBox(height: 8),
-        _buildInfoRow('وقت التوصيل المتوقع: ', '45-30 دقيقة'),
+        _buildInfoRow('الاسم: ${userModel.firstName + userModel.lastName}'),
+        _buildInfoRow(' العنوان: ${userModel.location!}'),
+        _buildInfoRow('الهاتف: ${userModel.phone}'),
+        _buildInfoRow('وقت التوصيل المتوقع: 45-30 دقيقة'),
       ],
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -275,23 +279,17 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
         children: [
           SizedBox(
             child: Text(
-              label,
+              value,
               style: const TextStyle(
                 fontSize: 14,
-                fontWeight: FontWeight.w500,
               ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontSize: 14),
             ),
           ),
         ],
       ),
     );
   }
+
 
   Widget _buildTotalPrice(List<OrderModel> shoppingList) {
     final totalAmount = shoppingList.fold(
@@ -335,6 +333,18 @@ class _PaymentInvoiceState extends State<PaymentInvoice> {
           ),
         ],
       ),
+    );
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    CartCubit.get(context).getUserInfo(uId: UserDetails.uId);
+    CartCubit.get(context).sendOrdersToDatabase(uId: UserDetails.uId);
+
+    return BlocConsumer<CartCubit, CubitStates>(
+        listener: (context, state) => _buildListener(state),
+        builder: (context, state) => _buildWidget(context, state)
     );
   }
 }

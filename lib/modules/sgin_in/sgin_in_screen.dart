@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:international_cuisine/modules/sgin_up/sgin_up.dart';
+import 'package:international_cuisine/modules/sgin_up/sgin_up_screen.dart';
 import 'package:international_cuisine/shared/components/constant.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 import 'package:international_cuisine/shared/local/shared_preferences.dart';
 import '../../shared/components/components.dart';
 import '../home/home_screen.dart';
 import 'cubit.dart';
+
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
