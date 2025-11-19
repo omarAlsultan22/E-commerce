@@ -1,6 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-
 class DataModel {
   final String? orderImage;
   final String? orderName;
@@ -38,18 +35,3 @@ class DataModel {
   }
 }
 
-class DataList {
-  List<DataModel> data;
-
-  DataList({required this.data});
-
-  factory DataList.fromQuerySnapshot(QuerySnapshot snapshot){
-    List<DataModel> data = [];
-    for (var doc in snapshot.docs) {
-      Map<String, dynamic> map = doc.data() as Map<String, dynamic>;
-      DataModel dataModel = DataModel.fromJson(map);
-      data.add(dataModel);
-    }
-    return DataList(data: data);
-  }
-}

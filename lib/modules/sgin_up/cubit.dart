@@ -1,4 +1,4 @@
-import 'package:international_cuisine/shared/components/constant.dart';
+import 'package:international_cuisine/shared/constants/user_details.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

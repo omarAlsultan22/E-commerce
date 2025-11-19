@@ -1,5 +1,4 @@
 import 'json_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class UserModel implements JsonModel{
@@ -34,23 +33,3 @@ class UserModel implements JsonModel{
   }
 }
 
-class UserInfo {
-  final UserModel userModel;
-
-  UserInfo({required this.userModel});
-
-  factory UserInfo.fromDocumentSnapshot(DocumentSnapshot snapshot, String location) {
-    if (!snapshot.exists || snapshot.data() == null) {
-      throw Exception('User document does not exist or is empty');
-    }
-    if(location.isEmpty) {
-      throw Exception('User location is empty');
-    }
-
-    final modelMap = snapshot.data()! as Map<String, dynamic>;
-    modelMap['location'] = location;
-    return UserInfo(
-      userModel: UserModel.fromJson(modelMap),
-    );
-  }
-}

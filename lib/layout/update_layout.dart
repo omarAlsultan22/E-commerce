@@ -1,9 +1,10 @@
 import 'package:international_cuisine/modules/sgin_in/sgin_in_screen.dart';
-import 'package:international_cuisine/shared/components/constant.dart';
+import 'package:international_cuisine/shared/constants/user_details.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 import '../modules/update/change_email_&_password_screen.dart';
 import '../../shared/components/components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../shared/constants/state_keys.dart';
 import 'package:flutter/material.dart';
 import '../modules/update/cubit.dart';
 

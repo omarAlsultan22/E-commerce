@@ -1,7 +1,9 @@
+import 'package:international_cuisine/helpers/home_converter.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../modles/home_model.dart';
+
 
 class HomeCubit extends Cubit<CubitStates> {
   HomeCubit() : super(InitialState());
@@ -16,7 +18,7 @@ class HomeCubit extends Cubit<CubitStates> {
     final firebase = FirebaseFirestore.instance;
     await firebase.collection('homeData').get()
         .then((value) {
-      HomeList dataList = HomeList.fromQuerySnapshot(value);
+      HomeModelConverter dataList = HomeModelConverter.fromQuerySnapshot(value);
       dataModelList = dataList.data;
       emit((SuccessState()));
     }).catchError((error) {

@@ -1,13 +1,4 @@
-enum StatesKeys{
-  addItem,
-  updateItem,
-  removeItem,
-  clearCart,
-  userInfo,
-  sendOrder,
-  getInfo,
-  updateInfo
-}
+import '../constants/state_keys.dart';
 
 abstract class CubitStates<T>{
   final T?  value;

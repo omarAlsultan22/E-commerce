@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../shared/components/constant.dart';
+import '../../shared/constants/user_details.dart';
 import '../../layout/update_layout.dart';
 import 'package:flutter/material.dart';
 import 'cubit.dart';

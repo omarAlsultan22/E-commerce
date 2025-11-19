@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import '../../shared/cubit/state.dart';
 import 'cubit.dart';
 
+
 class FrenchScreen extends StatelessWidget {
   FrenchScreen({super.key});
 

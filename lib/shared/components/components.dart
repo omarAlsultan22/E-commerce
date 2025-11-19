@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../modules/home/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:international_cuisine/modles/data_model.dart';
+import 'package:international_cuisine/helpers/data_converter.dart';
 import 'package:international_cuisine/shared/local/shared_preferences.dart';
 
 
@@ -26,8 +27,8 @@ Future<List<DataModel>> getCountriesData({
     return [];
   }
   updateLastDoc(data.docs.last);
-  DataList dataList = DataList.fromQuerySnapshot(data);
-  return dataList.data;
+  DataModelConverter dataModelConverter = DataModelConverter.fromQuerySnapshot(data);
+  return dataModelConverter.data;
 }
 
 

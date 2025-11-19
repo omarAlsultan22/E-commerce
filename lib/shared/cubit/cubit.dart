@@ -1,4 +1,6 @@
 import 'dart:convert';
+import '../constants/state_keys.dart';
+import '../../helpers/user_info.dart';
 import '../../modles/user_model.dart';
 import '../../modles/order_model.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +101,7 @@ class CartCubit extends Cubit<CubitStates> {
         throw Exception('User document does not exist');
       }
 
-      userModel = UserInfo
+      userModel = UserInfoConverter
           .fromDocumentSnapshot(doc, location!)
           .userModel;
       emit(SuccessState(stateKey: StatesKeys.userInfo));

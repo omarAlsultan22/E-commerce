@@ -2,8 +2,8 @@ import 'package:international_cuisine/shared/components/components.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 import 'package:international_cuisine/modles/data_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../modles/units_processes_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class EgyptianCubit extends Cubit<CubitStates> implements UnitsProcessesModel{

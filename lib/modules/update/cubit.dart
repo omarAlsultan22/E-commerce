@@ -1,8 +1,9 @@
 import 'package:international_cuisine/shared/cubit/state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../shared/constants/user_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../shared/components/constant.dart';
+import '../../shared/constants/state_keys.dart';
 import '../../modles/user_model.dart';
 
 

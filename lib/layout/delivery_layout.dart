@@ -1,4 +1,4 @@
-import 'package:international_cuisine/shared/components/constant.dart';
+import 'package:international_cuisine/shared/constants/user_details.dart';
 import 'package:international_cuisine/modules/home/home_screen.dart';
 import 'package:international_cuisine/shared/cubit/cubit.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';

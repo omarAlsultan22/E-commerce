@@ -1,5 +1,5 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../shared/components/components.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../shared/cubit/state.dart';
 import '../modules/sgin_up/cubit.dart';

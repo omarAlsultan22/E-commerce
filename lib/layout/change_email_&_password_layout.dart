@@ -2,10 +2,9 @@ import 'package:international_cuisine/modules/sgin_in/sgin_in_screen.dart';
 import 'package:international_cuisine/modules/update/cubit.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 import '../../shared/local/shared_preferences.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../shared/components/components.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-
 
 
 class ChangeEmailAndPasswordLayout extends StatefulWidget {
