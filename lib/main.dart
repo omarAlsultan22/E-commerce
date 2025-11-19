@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'shared/remot/firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:international_cuisine/modules/home/cubit.dart';
@@ -14,7 +13,8 @@ import 'package:international_cuisine/modules/turkish/cubit.dart';
 import 'package:international_cuisine/modules/japanese/cubit.dart';
 import 'package:international_cuisine/modules/egyptian/cubit.dart';
 import 'package:international_cuisine/modules/home/home_screen.dart';
-import 'package:international_cuisine/shared/local/shared_preferences.dart';
+import 'package:international_cuisine/shared/networks/remote/firebase_options.dart';
+import 'package:international_cuisine/shared/networks/local/shared_preferences.dart';
 
 
 void main() async {

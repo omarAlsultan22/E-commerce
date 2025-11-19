@@ -5,11 +5,11 @@ import '../../modles/user_model.dart';
 import '../../modles/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../networks/local/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:international_cuisine/modles/data_model.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
 import 'package:international_cuisine/modles/send_order_model.dart';
-import 'package:international_cuisine/shared/local/shared_preferences.dart';
 
 
 class CartCubit extends Cubit<CubitStates> {

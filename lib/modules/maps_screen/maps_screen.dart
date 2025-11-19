@@ -1,8 +1,8 @@
 import 'package:international_cuisine/layout/payment_ways_layout.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../shared/networks/local/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../shared/local/shared_preferences.dart';
 import 'package:location/location.dart' as loc;
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';

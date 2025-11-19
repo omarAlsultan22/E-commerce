@@ -1,4 +1,4 @@
-import 'package:international_cuisine/shared/local/shared_preferences.dart';
+import '../../shared/networks/local/shared_preferences.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:firebase_auth/firebase_auth.dart';

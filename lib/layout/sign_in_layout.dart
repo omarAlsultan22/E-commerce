@@ -1,6 +1,6 @@
-import 'package:international_cuisine/shared/local/shared_preferences.dart';
 import 'package:international_cuisine/shared/constants/user_details.dart';
 import 'package:international_cuisine/shared/cubit/state.dart';
+import '../shared/networks/local/shared_preferences.dart';
 import '../../shared/components/components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../modules/sgin_up/sgin_up_screen.dart';
