@@ -1,62 +1,32 @@
+import 'app/my_app.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'core/config/firebase_options.dart';
+import 'core/data/data_sources/local/hive.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:international_cuisine/modules/home/cubit.dart';
-import 'package:international_cuisine/shared/cubit/cubit.dart';
-import 'package:international_cuisine/modules/syrian/cubit.dart';
-import 'package:international_cuisine/modules/update/cubit.dart';
-import 'package:international_cuisine/modules/french/cubit.dart';
-import 'package:international_cuisine/modules/chinese/cubit.dart';
-import 'package:international_cuisine/modules/italian/cubit.dart';
-import 'package:international_cuisine/modules/mexican/cubit.dart';
-import 'package:international_cuisine/modules/turkish/cubit.dart';
-import 'package:international_cuisine/modules/japanese/cubit.dart';
-import 'package:international_cuisine/modules/egyptian/cubit.dart';
-import 'package:international_cuisine/modules/home/home_screen.dart';
-import 'package:international_cuisine/shared/networks/remote/firebase_options.dart';
-import 'package:international_cuisine/shared/networks/local/shared_preferences.dart';
+import 'core/data/data_sources/local/shared_preferences.dart';
+import 'core/domain/services/connectivity_service/connectivity_service.dart';
+import 'core/presentation/screens/internet_unavailability_screen.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await CacheHelper.init();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(
-      MultiBlocProvider(
-          providers: [
-            BlocProvider<HomeCubit>(create: (context) =>
-            HomeCubit()
-              ..getData()),
-            BlocProvider<CartCubit>(create: (context) => CartCubit()),
-            BlocProvider<AppModelCubit>(create: (context) => AppModelCubit()),
-            BlocProvider<EgyptianCubit>(create: (context) => EgyptianCubit()),
-            BlocProvider<SyrianCubit>(create: (context) => SyrianCubit()),
-            BlocProvider<TurkishCubit>(create: (context) => TurkishCubit()),
-            BlocProvider<MexicanCubit>(create: (context) => MexicanCubit()),
-            BlocProvider<ChineseCubit>(create: (context) => ChineseCubit()),
-            BlocProvider<JapaneseCubit>(create: (context) => JapaneseCubit()),
-            BlocProvider<ItalianCubit>(create: (context) => ItalianCubit()),
-            BlocProvider<FrenchCubit>(create: (context) => FrenchCubit()),
-          ],
-          child: const MyApp(
-          )
-      )
-  );
-}
 
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: HomeScreen()
+  try {
+    await CacheHelper.init();
+    await HiveStore.init();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
     );
+
+    final _hasInternet = await ConnectivityService.checkInternetConnection();
+    if (!_hasInternet) {
+      throw Exception();
+    }
+
+    runApp(MyApp());
+  } catch (e) {
+    runApp(InternetUnavailabilityScreen(onRetry: () => MyApp()));
   }
 }
-
-
 
 
