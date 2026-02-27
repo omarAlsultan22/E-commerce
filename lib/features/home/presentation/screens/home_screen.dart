@@ -1,7 +1,7 @@
-import '../../../../core/presentation/screens/internet_unavailability_screen.dart';
 import 'package:international_cuisine/features/home/presentation/states/home_data_state.dart';
-import '../../../../core/presentation/widgets/states/error_state_widget.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
+import '../../../../core/presentation/screens/internet_unavailability_screen.dart';
+import '../../../../core/presentation/widgets/states/error_state_widget.dart';
 import '../widgets/lists/list_home_builder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubits/home_data_cubit.dart';
