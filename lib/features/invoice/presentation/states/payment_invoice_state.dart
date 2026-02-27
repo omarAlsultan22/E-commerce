@@ -20,6 +20,8 @@ class PaymentInvoiceState {
 
   AppException? get failure => appState!.failure!;
 
+  bool get listIsNotEmpty => shoppingList!.isNotEmpty;
+
 
   PaymentInvoiceState copyWith({
     AppState? appState,

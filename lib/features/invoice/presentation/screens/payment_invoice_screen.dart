@@ -32,7 +32,7 @@ class PaymentInvoiceScreen extends StatelessWidget {
       ..displayInvoice(),
         child: BlocConsumer<PaymentInvoiceCubit, PaymentInvoiceState>(
             listener: (context, state){
-              if (!state.isLoading && state.shoppingList!.isNotEmpty) {
+              if (!state.isLoading && state.listIsNotEmpty) {
                 QuickAlert.show(
                   context: context,
                   title: 'تم ارسال طلبك بنجاح!',
