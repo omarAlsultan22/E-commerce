@@ -56,6 +56,9 @@ class _EvaluationLayoutState extends State<EvaluationLayout> {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                 ),
                 maxLines: null,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
+                style: TextStyle(backgroundColor: Colors.grey.shade700),
               ),
             ),
             IconButton(onPressed: () {}, icon: isLoading ? const Padding(
