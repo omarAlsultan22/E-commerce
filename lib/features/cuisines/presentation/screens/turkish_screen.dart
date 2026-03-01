@@ -27,6 +27,7 @@ class _TurkishScreenState extends State<TurkishScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const turkishCuisine = 'المطبخ التركي';
     return ConnectivityAwareService(
         child: BlocBuilder<TurkishDataCubit, CategoriesState>(
           builder: (context, state) {
@@ -41,7 +42,7 @@ class _TurkishScreenState extends State<TurkishScreen> {
                       isLocked: false,
                       dataList: categoryData!,
                       searchData: searchData!,
-                      title: 'المطبخ التركي',
+                      title: turkishCuisine,
                       getMoreData: () => _cubit.getData(),
                       hasMore: state.hasMore!,
                       clearData: () => _cubit.clearDataSearch(),

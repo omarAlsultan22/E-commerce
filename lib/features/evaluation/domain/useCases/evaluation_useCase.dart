@@ -13,7 +13,7 @@ class EvaluationUseCase {
     required String evaluationText
   }) async {
     try {
-      await _repository.sendEvaluation(evaluationText: evaluationText);
+      await _repository.sendEvaluation(evaluationValue: evaluationText);
     }
     catch (e) {
       rethrow;

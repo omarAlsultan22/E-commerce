@@ -8,11 +8,14 @@ class FirebaseEvaluationRepository implements EvaluationRepository {
   FirebaseEvaluationRepository({required FirebaseFirestore firestore})
       : _firestore = firestore;
 
+  static const String evaluationId = 'evaluation';
+  static const String evaluationKey = 'evaluationText';
+
   @override
-  Future<void> sendEvaluation({required String evaluationText}) async {
+  Future<void> sendEvaluation({required String evaluationValue}) async {
     try {
-      await _firestore.collection('evaluation').doc().set({
-        'evaluationText': evaluationText
+      await _firestore.collection(evaluationId).doc().set({
+        evaluationKey: evaluationValue
       });
     }
     catch (e) {

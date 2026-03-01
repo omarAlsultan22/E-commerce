@@ -19,6 +19,21 @@ class PaymentInvoiceScreen extends StatelessWidget {
 
   const PaymentInvoiceScreen({required this.isPaid, super.key});
 
+  //texts
+  static const title = 'تم ارسال طلبك بنجاح!';
+  static const text = 'قم بأخذ لقطة شاشة للفتورة';
+  static const confirmBtnText = 'حسنا';
+
+  static const noOrders = 'لا توجد طلبات للتوصيل';
+  static const checkCuisines = 'يمكنك تصفح المطاعم وإضافة طلبات جديدة';
+
+  //numbers
+  static const eight = 8.0;
+  static const fourteen = 14.0;
+  static const sixteen = 16.0;
+  static const eighteen = 18.0;
+  static const eighty = 80.0;
+
   @override
   Widget build(BuildContext context) {
     final _cartCubit = context.read<CartDataCubit>();
@@ -36,11 +51,11 @@ class PaymentInvoiceScreen extends StatelessWidget {
                   if (!state.isLoading && state.listIsNotEmpty) {
                     QuickAlert.show(
                       context: context,
-                      title: 'تم ارسال طلبك بنجاح!',
-                      text: 'قم بأخذ لقطة شاشة للفتورة',
+                      title: title,
+                      text: text,
                       type: QuickAlertType.success,
                       showConfirmBtn: true,
-                      confirmBtnText: 'حسنا',
+                      confirmBtnText: confirmBtnText,
                     );
                   }
                 },
@@ -52,19 +67,20 @@ class PaymentInvoiceScreen extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.shopping_bag_outlined, size: 80,
+                                Icon(Icons.shopping_bag_outlined, size: eighty,
                                     color: Colors.grey[400]),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: sixteen),
                                 const Text(
-                                  'لا توجد طلبات للتوصيل',
+                                  noOrders,
                                   style: TextStyle(
-                                      fontSize: 18, color: Colors.grey),
+                                      fontSize: eighteen, color: Colors.grey),
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: eight),
                                 Text(
-                                  'يمكنك تصفح المطاعم وإضافة طلبات جديدة',
+                                  checkCuisines,
                                   style: TextStyle(
-                                      fontSize: 14, color: Colors.grey[600]),
+                                      fontSize: fourteen, color: Colors
+                                      .grey[600]),
                                 ),
                               ],
                             ),

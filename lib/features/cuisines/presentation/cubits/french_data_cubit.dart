@@ -1,6 +1,5 @@
 import 'package:international_cuisine/features/cuisines/domain/useCases/cuisine_data_useCase.dart';
 import 'package:international_cuisine/core/errors/exceptions/app_exception.dart';
-import 'package:international_cuisine/core/constants/cuisines_names.dart';
 import 'package:international_cuisine/core/errors/error_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,13 +18,15 @@ class FrenchDataCubit extends BaseCountriesCubit {
   static FrenchDataCubit get(BuildContext context) =>
       BlocProvider.of<FrenchDataCubit>(context);
 
+  static const String french = 'french';
+
   Future<void> getData() async {
     if (!state.hasMore!) return;
 
     final appState = state.appState!;
     try {
       final newState = await _dataUseCases.getDataExecute(
-          CountriesNames.french,
+          french,
           state.lastDocument
       );
       emit(state.copyWith(
@@ -50,7 +51,7 @@ class FrenchDataCubit extends BaseCountriesCubit {
 
     try {
       _dataUseCases.updateRatingExecute(
-          collectionId: CountriesNames.french,
+          collectionId: french,
           index: index.toString(),
           rating: rating
       );
@@ -70,7 +71,7 @@ class FrenchDataCubit extends BaseCountriesCubit {
 
     try {
       final _searchData = await _dataUseCases.getDataSearchExecute(
-          query: searchText, collectionPath: CountriesNames.french);
+          query: searchText, collectionPath: french);
 
       emit(state.copyWith(searchData: _searchData));
 

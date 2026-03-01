@@ -27,6 +27,7 @@ class _SyrianScreenState extends State<SyrianScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const syrianCuisine = 'المطبخ السوري';
     return ConnectivityAwareService(
         child: BlocBuilder<SyrianDataCubit, CategoriesState>(
             builder: (context, state) {
@@ -41,7 +42,7 @@ class _SyrianScreenState extends State<SyrianScreen> {
                         isLocked: false,
                         dataList: categoryData!,
                         searchData: searchData!,
-                        title: 'المطبخ السوري',
+                        title: syrianCuisine,
                         getMoreData: () => _cubit.getData(),
                         hasMore: state.hasMore!,
                         clearData: () => _cubit.clearDataSearch(),

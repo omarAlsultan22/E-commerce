@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class IntroScreen extends StatelessWidget {
   const IntroScreen({Key? key}) : super(key: key);
 
+  static const imageUrl = 'assets/images/secondary_logo.png';
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -12,7 +14,7 @@ class IntroScreen extends StatelessWidget {
         Image.asset(
           fit: BoxFit.fill,
           height: double.infinity,
-          'assets/images/secondary_logo.png',
+          imageUrl,
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 50.0),

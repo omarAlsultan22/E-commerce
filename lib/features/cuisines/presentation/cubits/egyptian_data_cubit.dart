@@ -1,6 +1,5 @@
 import 'package:international_cuisine/features/cuisines/domain/useCases/cuisine_data_useCase.dart';
 import 'package:international_cuisine/core/errors/exceptions/app_exception.dart';
-import 'package:international_cuisine/core/constants/cuisines_names.dart';
 import 'package:international_cuisine/core/errors/error_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,14 +19,15 @@ class EgyptianDataCubit extends BaseCountriesCubit {
   static EgyptianDataCubit get(BuildContext context) =>
       BlocProvider.of<EgyptianDataCubit>(context);
 
+  static const String egyptian = 'egyptian';
+
   Future<void> getData() async {
     if (!state.hasMore!) return;
 
-    print('fuck you..................');
     final appState = state.appState!;
     try {
       final newState = await _dataUseCases.getDataExecute(
-          CountriesNames.egyptian,
+          egyptian,
           state.lastDocument
       );
       emit(state.copyWith(
@@ -52,7 +52,7 @@ class EgyptianDataCubit extends BaseCountriesCubit {
 
     try {
       _dataUseCases.updateRatingExecute(
-          collectionId: CountriesNames.egyptian,
+          collectionId: egyptian,
           index: index.toString(),
           rating: rating
       );
@@ -72,7 +72,7 @@ class EgyptianDataCubit extends BaseCountriesCubit {
 
     try {
       final _searchData = await _dataUseCases.getDataSearchExecute(
-          query: searchText, collectionPath: CountriesNames.egyptian);
+          query: searchText, collectionPath: egyptian);
 
       emit(state.copyWith(searchData: _searchData));
     } on AppException catch (e) {

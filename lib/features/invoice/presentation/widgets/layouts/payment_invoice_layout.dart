@@ -22,12 +22,24 @@ class PaymentInvoiceLayout extends StatefulWidget {
 
 class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
 
+  //texts
+  static const quantity = 'الكمية';
+  static const  userName = 'الاسم:';
+  static const userAddress = 'العنوان:';
+  static const phoneNumber = 'الهاتف:';
+  static const deliveryTime = 'وقت التوصيل المتوقع: 45-30 دقيقة';
+  static const paid = 'تم الدفع بنجاح!';
+  static const notPaid = 'لم يتم الدفع!';
+
+  //numbers
+  static const eighty = 80.0;
+
   Widget _buildWidget() {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: _buildAppBar(
-            title: widget.isPaid ? 'تم الدفع بنجاح!' : 'لم يتم الدفع!'
+            title: widget.isPaid ?  paid : notPaid
         ),
         backgroundColor: Colors.grey[100],
         body: _buildBody(widget.shoppingList),
@@ -49,7 +61,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
       automaticallyImplyLeading: false,
       title: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 22,
           color: Colors.black,
@@ -103,8 +115,8 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 orderModel.image,
-                width: 80,
-                height: 80,
+                width: eighty,
+                height: eighty,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) =>
                     Container(
@@ -132,7 +144,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'الكمية: ${orderModel.item}',
+                        ' $quantity${orderModel.item}',
                         style: const TextStyle(fontSize: 14),
                       ),
                       Text(
@@ -201,10 +213,10 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
           ),
         ),
         const SizedBox(height: 8),
-        _buildInfoRow('الاسم: ${userModel.firstName + userModel.lastName}'),
-        _buildInfoRow(' العنوان: ${userModel.userLocation!}'),
-        _buildInfoRow('الهاتف: ${userModel.userPhone}'),
-        _buildInfoRow('وقت التوصيل المتوقع: 45-30 دقيقة'),
+        _buildInfoRow(' $userName${userModel.firstName + userModel.lastName}'),
+        _buildInfoRow(' $userAddress${userModel.userLocation!}'),
+        _buildInfoRow(' $phoneNumber${userModel.userPhone}'),
+        _buildInfoRow(deliveryTime),
       ],
     );
   }

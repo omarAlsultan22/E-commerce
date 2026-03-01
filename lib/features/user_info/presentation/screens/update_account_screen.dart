@@ -15,6 +15,9 @@ import 'package:flutter/material.dart';
 class UpdateAccountScreen extends StatelessWidget {
   const UpdateAccountScreen({super.key});
 
+  static const String userInfo = 'userInfo';
+  static const IconData infoIcon = Icons.info;
+
   @override
   Widget build(BuildContext context) {
     final repository = FirebaseFirestore.instance;
@@ -30,7 +33,8 @@ class UpdateAccountScreen extends StatelessWidget {
                   final cubit = UpdateUserInfoCubit.get(context);
                   return state.when(
                     onInitial: () =>
-                    const InitialStateWidget('userInfo', Icons.info),
+                    const InitialStateWidget(
+                        userInfo, infoIcon),
                     onLoading: () =>
                     const LoadingStateWidget(),
                     onLoaded: () =>

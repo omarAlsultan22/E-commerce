@@ -17,6 +17,7 @@ class CartDataLayout extends StatefulWidget {
 class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObserver{
   late CartDataCubit _cubit;
 
+
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if(state == AppLifecycleState.paused){
@@ -134,11 +135,14 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
   }
 
   Widget _buildCheckoutButton() {
+
+    const fifty = 50.0;
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SizedBox(
         width: double.infinity,
-        height: 50,
+        height: fifty,
         child: ElevatedButton(
           onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FixedLocationPicker())),
           style: ElevatedButton.styleFrom(
@@ -174,6 +178,11 @@ class CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //numbers constants
+    const tow = 2.0;
+    const five = 5.0;
+    const oneHundredTwenty = 120.0;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -181,8 +190,8 @@ class CartItemCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 5,
+            spreadRadius: tow,
+            blurRadius: five,
             offset: const Offset(0, 2),
           ),
         ],
@@ -194,8 +203,8 @@ class CartItemCard extends StatelessWidget {
                 right: Radius.circular(12)),
             child: CachedNetworkImage(
               imageUrl: item.image,
-              width: 120,
-              height: 120,
+              width: oneHundredTwenty,
+              height: oneHundredTwenty,
               fit: BoxFit.cover,
             ),
           ),

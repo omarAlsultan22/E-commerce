@@ -27,6 +27,7 @@ class _MexicanScreenState extends State<MexicanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const mexicanCuisine = 'المطبخ المكسيكي';
     return ConnectivityAwareService(
         child: BlocBuilder<MexicanDataCubit, CategoriesState>(
           builder: (context, state) {
@@ -41,7 +42,7 @@ class _MexicanScreenState extends State<MexicanScreen> {
                       isLocked: false,
                       dataList: categoryData!,
                       searchData: searchData!,
-                      title: 'المطبخ المكسيكي',
+                      title: mexicanCuisine,
                       getMoreData: () => _cubit.getData(),
                       hasMore: state.hasMore!,
                       clearData: () => _cubit.clearDataSearch(),

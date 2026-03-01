@@ -22,6 +22,8 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
   GoogleMapController? _mapController;
   final loc.Location _locationService = loc.Location();
 
+  static const String location = 'location';
+
   Set<Marker> _markers = {};
   LatLng? _initialPosition;
 
@@ -39,7 +41,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
   Future<void> _loadSavedLocation() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      final savedAddress = prefs.getString('location');
+      final savedAddress = prefs.getString(location);
 
       if (savedAddress != null && savedAddress.isNotEmpty) {
         setState(() {
@@ -146,7 +148,8 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
       parts.add(place.locality!);
     }
 
-    if (place.administrativeArea != null && place.administrativeArea!.isNotEmpty) {
+    if (place.administrativeArea != null &&
+        place.administrativeArea!.isNotEmpty) {
       parts.add(place.administrativeArea!);
     }
 
@@ -160,9 +163,9 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
       _initialPosition = position;
       _markers = {
         Marker(
-          markerId: MarkerId('current'),
+          markerId: const MarkerId('current'),
           position: position,
-          infoWindow: InfoWindow(title: 'موقعك الحالي'),
+          infoWindow: const InfoWindow(title: 'موقعك الحالي'),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
         ),
       };
@@ -177,7 +180,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
     if (_currentLocation == null || _currentAddress.isEmpty) return;
 
     try {
-      await CacheHelper.setStringValue(key: 'location', value: _currentAddress);
+      await CacheHelper.setStringValue(key: location, value: _currentAddress);
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -196,16 +199,17 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
   void _showError(String message) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text("خطأ"),
-        content: Text(message),
-        actions: [
-          TextButton(
-            child: Text("حسناً"),
-            onPressed: () => Navigator.pop(ctx),
+      builder: (ctx) =>
+          AlertDialog(
+            title: const Text("خطأ"),
+            content: Text(message),
+            actions: [
+              TextButton(
+                child: const Text("حسناً"),
+                onPressed: () => Navigator.pop(ctx),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -217,7 +221,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
             title: Text("حدد موقع التوصيل"),
             actions: [
               IconButton(
-                icon: Icon(Icons.my_location),
+                icon: const Icon(Icons.my_location),
                 onPressed: _getCurrentLocation,
                 tooltip: 'الموقع الحالي',
               ),
@@ -262,7 +266,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
         children: [
           CircularProgressIndicator(),
           SizedBox(height: 16),
-          Text("جاري تحميل الخريطة..."),
+          const Text("جاري تحميل الخريطة..."),
         ],
       ),
     );
@@ -274,10 +278,10 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-        BoxShadow(
-        color: Colors.black12,
-        blurRadius: 10,
-        offset: Offset(0, -5))
+          BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, -5))
         ],
       ),
       child: Column(

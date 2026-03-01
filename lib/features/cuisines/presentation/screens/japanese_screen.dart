@@ -27,6 +27,7 @@ class _JapaneseScreenState extends State<JapaneseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const japaneseCuisine = 'المطبخ الياباني';
     return ConnectivityAwareService(
         child: BlocBuilder<JapaneseDataCubit, CategoriesState>(
           builder: (context, state) {
@@ -41,7 +42,7 @@ class _JapaneseScreenState extends State<JapaneseScreen> {
                       isLocked: false,
                       dataList: categoryData!,
                       searchData: searchData!,
-                      title: 'المطبخ الياباني',
+                      title: japaneseCuisine,
                       getMoreData: () => _cubit.getData(),
                       hasMore: state.hasMore!,
                       clearData: () => _cubit.clearDataSearch(),

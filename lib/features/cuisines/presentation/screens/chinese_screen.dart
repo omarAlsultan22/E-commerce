@@ -27,6 +27,7 @@ class _ChineseScreenState extends State<ChineseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const chineseCuisine = 'المطبخ الصيني';
     return ConnectivityAwareService(
         child: BlocBuilder<ChineseDataCubit, CategoriesState>(
           builder: (context, state) {
@@ -41,7 +42,7 @@ class _ChineseScreenState extends State<ChineseScreen> {
                       isLocked: false,
                       dataList: categoryData!,
                       searchData: searchData!,
-                      title: 'المطبخ الصيني',
+                      title: chineseCuisine,
                       getMoreData: () => _cubit.getData(),
                       hasMore: state.hasMore!,
                       clearData: () => _cubit.clearDataSearch(),

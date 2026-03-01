@@ -27,6 +27,7 @@ class _EgyptianScreenState extends State<EgyptianScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const egyptianCuisine = 'المطبخ المصري';
     return ConnectivityAwareService(
         child: BlocBuilder<EgyptianDataCubit, CategoriesState>(
           builder: (context, state) {
@@ -41,7 +42,7 @@ class _EgyptianScreenState extends State<EgyptianScreen> {
                       isLocked: false,
                       dataList: categoryData!,
                       searchData: searchData!,
-                      title: 'المطبخ المصري',
+                      title: egyptianCuisine,
                       getMoreData: () => _cubit.getData(),
                       hasMore: state.hasMore!,
                       clearData: () => _cubit.clearDataSearch(),

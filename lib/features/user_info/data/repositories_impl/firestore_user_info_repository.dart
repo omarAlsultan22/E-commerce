@@ -5,12 +5,14 @@ import '../../domain/repositories/user_info_repository.dart';
 import '../../../../core/data/data_sources/local/shared_preferences.dart';
 
 
-class FirestoreInfoRepository implements UserInfoRepository{
+class FirestoreInfoRepository implements UserInfoRepository {
   final FirebaseFirestore _repository;
 
   FirestoreInfoRepository({required FirebaseFirestore repository})
       : _repository = repository;
 
+  static const String key = 'uId';
+  static const String userInfo = 'userInfo';
 
   @override
   Future<void> setInfo({
@@ -19,10 +21,7 @@ class FirestoreInfoRepository implements UserInfoRepository{
   }) async {
     try {
       final uId = userCredential.user!.uid;
-      await _repository.collection('user').doc(uId)
-          .collection('userModel')
-          .doc(uId)
-          .set(
+      await _repository.collection(userInfo).doc(uId).set(
           userModel.toJson());
     } catch (e) {
       rethrow;
@@ -32,10 +31,9 @@ class FirestoreInfoRepository implements UserInfoRepository{
   @override
   Future<UserInfoModel> getInfo() async {
     try {
-      final uId = await CacheHelper.getStringValue(key: 'uId');
-      final jsonData = await _repository.collection('user')
-          .doc(uId).collection('userModel').doc(uId)
-          .get();
+      final uId = await CacheHelper.getStringValue(key: key);
+      final jsonData = await _repository.collection(userInfo)
+          .doc(uId).get();
       return UserInfoModel.fromDocumentSnapshot(jsonData);
     }
     catch (e) {
@@ -51,7 +49,7 @@ class FirestoreInfoRepository implements UserInfoRepository{
     required String userLocation
   }) async {
     try {
-      final uId = await CacheHelper.getStringValue(key: 'uId');
+      final uId = await CacheHelper.getStringValue(key: key);
 
       final userModel = UserInfoModel(
         firstName: firstName,
@@ -59,9 +57,7 @@ class FirestoreInfoRepository implements UserInfoRepository{
         userPhone: userPhone,
         userLocation: userLocation,
       );
-      await _repository.collection('user').doc(uId)
-          .collection('userModel')
-          .doc(uId)
+      await _repository.collection(userInfo).doc(uId)
           .update(userModel.toJson());
     }
     catch (e) {

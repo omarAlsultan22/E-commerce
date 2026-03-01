@@ -7,6 +7,8 @@ class InternetUnavailability extends StatelessWidget {
 
   const InternetUnavailability({super.key, required this.onRetry});
 
+  static const imageUrl = 'assets/images/original_logo.png';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +22,7 @@ class InternetUnavailability extends StatelessWidget {
           Opacity(
             opacity: 0.3,
             child: Image.asset(
-              'assets/images/original_logo.png',
+              imageUrl,
               fit: BoxFit.contain,
             ),
           ),
@@ -93,7 +95,7 @@ class InternetUnavailability extends StatelessWidget {
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
-        color: color ?? Colors.grey[800],
+        color: Colors.grey[800],
       ),
     );
   }

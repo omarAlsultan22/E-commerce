@@ -1,5 +1,5 @@
 abstract class EvaluationRepository {
   Future<void> sendEvaluation({
-    required String evaluationText
+    required String evaluationValue
   });
 }
