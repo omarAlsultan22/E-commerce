@@ -20,12 +20,20 @@ class FrenchDataCubit extends BaseCountriesCubit {
       BlocProvider.of<FrenchDataCubit>(context);
 
   Future<void> getData() async {
-    final appState = state.appState!;
+    if (!state.hasMore!) return;
 
+    final appState = state.appState!;
     try {
       final newState = await _dataUseCases.getDataExecute(
-          state, CountriesNames.french);
-      emit(newState);
+          CountriesNames.french,
+          state.lastDocument
+      );
+      emit(state.copyWith(
+          appState: appState.copyWith(isLoading: false),
+          categoryData: [...state.categoryData!, ...newState.dataList],
+          lastDocument: newState.lastDocument,
+          hasMore: newState.hasMoreData)
+      );
     } on AppException catch (e) {
       final failure = ErrorHandler.handleException(e);
       emit(state.copyWith(

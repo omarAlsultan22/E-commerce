@@ -9,24 +9,26 @@ import '../layouts/item_builder.dart';
 
 
 class SearchableListBuilder extends StatefulWidget {
-  final List<DataModel> dataModel;
-  final List<DataModel> searchData;
+  bool isLocked;
   final String title;
   final bool hasMore;
-  final VoidCallback getData;
+  final List<DataModel> dataList;
+  final List<DataModel> searchData;
+  final VoidCallback getMoreData;
   final VoidCallback clearData;
-  final void Function(String) dataSearch;
+  final void Function(String) getSearchData;
   final void Function(int, int) updateRate;
 
   SearchableListBuilder({
-    required this.dataModel,
-    required this.searchData,
+    this.isLocked = false,
     required this.title,
-    required this.getData,
+    required this.getMoreData,
     required this.hasMore,
-    required this.dataSearch,
     required this.clearData,
     required this.updateRate,
+    required this.dataList,
+    required this.searchData,
+    required this.getSearchData,
     Key? key,
   }) : super(key: key);
 
@@ -49,8 +51,9 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
   void _onScrollData() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 50.0 &&
-        widget.hasMore && _searchController.text.isEmpty) {
-      widget.getData();
+        widget.hasMore && !widget.isLocked && _searchController.text.isEmpty) {
+      widget.isLocked = true;
+      widget.getMoreData();
     }
   }
 
@@ -66,25 +69,25 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
   void _performSearch() {
     final query = _searchController.text;
     if (query.isNotEmpty) {
-      widget.dataSearch(query);
+      widget.getSearchData(query);
       setState(() {
         _filteredData = widget.searchData.isEmpty
-            ? widget.dataModel
+            ? widget.dataList
             : widget.searchData;
       });
     }
     else {
       widget.clearData();
       setState(() {
-        _filteredData = widget.dataModel;
+        _filteredData = widget.dataList;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.dataModel.isNotEmpty && _searchController.text.isEmpty) {
-      _filteredData = widget.dataModel;
+    if (widget.dataList.isNotEmpty && _searchController.text.isEmpty) {
+      _filteredData = widget.dataList;
     }
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -130,7 +133,8 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                             );
                           } else {
                             return Center(
-                              child: widget.hasMore
+                              child: widget.hasMore && _searchController.text
+                                  .isEmpty
                                   ? const CircularProgressIndicator(
                                   color: Colors.white)
                                   : const SizedBox(),
@@ -141,7 +145,7 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                 fallback: (context) =>
                     Center(
                       child: _searchController.text.isEmpty ?
-                      CircularProgressIndicator(color: Colors.white,) :
+                      CircularProgressIndicator(color: Colors.white) :
                       Text('لا توجد نتائج متاحة',
                           style: TextStyle(color: Colors.white, fontSize: 18)),
                     ),

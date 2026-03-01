@@ -1,5 +1,6 @@
 import 'package:international_cuisine/features/payment/presentation/screens/payment_way_selection_screen.dart';
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator.dart';
+import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import '../../../../core/data/data_sources/local/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -210,45 +211,47 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("حدد موقع التوصيل"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.my_location),
-            onPressed: _getCurrentLocation,
-            tooltip: 'الموقع الحالي',
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _initialPosition == null
-                ? _buildLoadingView()
-                : GoogleMap(
-              onMapCreated: (ctrl) => _mapController = ctrl,
-              initialCameraPosition: CameraPosition(
-                target: _initialPosition!,
-                zoom: 16,
+    return ConnectivityAwareService(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("حدد موقع التوصيل"),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.my_location),
+                onPressed: _getCurrentLocation,
+                tooltip: 'الموقع الحالي',
               ),
-              markers: _markers,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              onTap: (pos) {
-                _updateMapPosition(pos);
-                _getAddressFromCoordinates(
-                  loc.LocationData.fromMap({
-                    'latitude': pos.latitude,
-                    'longitude': pos.longitude,
-                  }),
-                );
-              },
-            ),
+            ],
           ),
-          _buildAddressPanel(),
-        ],
-      ),
+          body: Column(
+            children: [
+              Expanded(
+                child: _initialPosition == null
+                    ? _buildLoadingView()
+                    : GoogleMap(
+                  onMapCreated: (ctrl) => _mapController = ctrl,
+                  initialCameraPosition: CameraPosition(
+                    target: _initialPosition!,
+                    zoom: 16,
+                  ),
+                  markers: _markers,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                  onTap: (pos) {
+                    _updateMapPosition(pos);
+                    _getAddressFromCoordinates(
+                      loc.LocationData.fromMap({
+                        'latitude': pos.latitude,
+                        'longitude': pos.longitude,
+                      }),
+                    );
+                  },
+                ),
+              ),
+              _buildAddressPanel(),
+            ],
+          ),
+        )
     );
   }
 

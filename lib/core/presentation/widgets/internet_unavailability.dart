@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../domain/services/connectivity_service/connectivity_service.dart';
 
 
-class InternetUnavailabilityScreen extends StatelessWidget {
+class InternetUnavailability extends StatelessWidget {
   final VoidCallback onRetry;
 
-  const InternetUnavailabilityScreen({super.key, required this.onRetry});
+  const InternetUnavailability({super.key, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

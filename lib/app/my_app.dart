@@ -7,9 +7,9 @@ import '../core/domain/services/connectivity_service/connectivity_provider.dart'
 import 'package:international_cuisine/features/home/presentation/screens/home_screen.dart';
 
 //cubits
-import '../features/cuisines/domain/useCases/cuisine_data_useCase.dart';
 import '../features/home/presentation/cubits/home_data_cubit.dart';
 import '../features/cart/presentation/cubits/cart_data_cubit.dart';
+import '../features/cuisines/domain/useCases/cuisine_data_useCase.dart';
 import '../features/cuisines/presentation/cubits/french_data_cubit.dart';
 import '../features/cuisines/presentation/cubits/syrian_data_cubit.dart';
 import '../features/cuisines/presentation/cubits/italian_data_cubit.dart';
@@ -23,10 +23,10 @@ import '../features/cuisines/presentation/cubits/egyptian_data_cubit.dart';
 import 'package:international_cuisine/features/home/domain/useCases/home_data_useCase.dart';
 import 'package:international_cuisine/features/cart/domain/useCases/cart_data_useCase.dart';
 
-//repository
-import '../features/cuisines/data/repositories_impl/firebase_cuisine_data_repository.dart';
+//repositories
 import 'package:international_cuisine/features/cart/data/repositories_impl/hive_shopping_List_repository.dart';
 import 'package:international_cuisine/features/home/data/repositories_impl/firestore_home_data_repository.dart';
+import 'package:international_cuisine/features/cuisines/data/repositories_impl/firestore_cuisine_data_repository.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
 
     //cuisine useCase
     final _firestore = FirebaseFirestore.instance;
-    final _repository = FirebaseCuisineDataRepository(firestore: _firestore);
+    final _repository = FirestoreCuisineDataRepository(firestore: _firestore);
     final _dataUseCases = CuisineDataUseCase(repository: _repository);
 
     //cart useCase
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: HomeScreen())
+            home: const HomeScreen())
     );
   }
 }

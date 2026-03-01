@@ -6,25 +6,23 @@ import '../../data/models/data_model.dart';
 
 class CategoriesState {
   final bool? hasMore;
-  final bool? isConnection;
   final AppState? appState;
-  final List<DataModel>? categoryData;
+  List<DataModel>? categoryData;
   final List<DataModel>? searchData;
   final DocumentSnapshot? lastDocument;
 
-  const CategoriesState({
+   CategoriesState({
     this.appState,
-    this.hasMore = true,
-    this.isConnection,
-    this.categoryData = const [],
-    this.searchData = const [],
+    this.hasMore,
+    this.categoryData,
+    this.searchData,
     this.lastDocument
   });
 
 
   bool get isLoading => appState!.isLoading;
 
-  AppException? get failure => appState!.failure!;
+  AppException? get failure => appState!.failure;
 
 
   DataModel currentDataModel(int index) => categoryData![index];
@@ -43,13 +41,13 @@ class CategoriesState {
 
   CategoriesState copyWith({
     bool? hasMore,
-    bool? isConnection,
     AppState? appState,
     List<DataModel>? categoryData,
     List<DataModel>? searchData,
     DocumentSnapshot? lastDocument
   }) {
     return CategoriesState(
+        hasMore: hasMore ?? this.hasMore,
         appState: appState ?? this.appState,
         categoryData: categoryData ?? this.categoryData,
         searchData: searchData ?? this.searchData,

@@ -5,6 +5,7 @@ import '../../domain/useCases/cart_data_useCase.dart';
 import '../../../cuisines/data/models/data_model.dart';
 import 'package:international_cuisine/core/errors/error_handler.dart';
 import '../../../../core/data/data_sources/local/shared_preferences.dart';
+import 'package:international_cuisine/core/presentation/states/app_state.dart';
 import 'package:international_cuisine/core/errors/exceptions/app_exception.dart';
 
 
@@ -16,10 +17,11 @@ class CartDataCubit extends Cubit<CartDataState> {
   })
       :
         _useCase = useCase,
-        super(CartDataState());
+        super(CartDataState(
+          appState: AppState(),
+          shoppingList: const []));
 
   static CartDataCubit get(context) => BlocProvider.of(context);
-
 
   Future<void> addOrder({
     required String orderSize,

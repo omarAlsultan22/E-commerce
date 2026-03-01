@@ -35,7 +35,6 @@ class _HomeLayoutState extends State<HomeLayout>
   late Animation<double> _leftColumnAnimation;
   late Animation<double> _rightColumnAnimation;
 
-  bool _isInitializing = true;
   bool _showSlideAnimation = false;
 
   @override
@@ -48,7 +47,6 @@ class _HomeLayoutState extends State<HomeLayout>
     await _preloadImages();
     if (mounted) {
       setState(() {
-        _isInitializing = false;
         _showSlideAnimation = true;
       });
       _startRotationAnimation();

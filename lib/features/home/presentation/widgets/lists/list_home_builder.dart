@@ -1,5 +1,6 @@
+import 'package:flutter/material.dart';
+
 import '../layouts/home_layout.dart';
-import 'package:flutter/cupertino.dart';
 import '../../../data/models/home_model.dart';
 
 
@@ -13,8 +14,10 @@ class ListHomeBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) => HomeLayout(homeData: homeData),
+    return Scaffold(
+      body: ListView.builder(
+        itemBuilder: (context, index) => HomeLayout(homeData: homeData),
+      ),
     );
   }
 }

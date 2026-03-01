@@ -47,7 +47,7 @@ dependencies:
   http: ^1.6.0
   image_picker: ^1.2.1
   firebase_storage: ^13.0.6
-  mailer: ^6.6.0
+  mailer: ^7.1.0
   path: ^1.9.1
   location: ^8.0.1
   geocoding: ^4.0.0
@@ -66,8 +66,8 @@ dependencies:
 
 
 dev_dependencies:
-  flutter_native_splash: ^2.4.0
-  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.7
+  flutter_launcher_icons: ^0.14.4
   hive_generator: ^2.0.1
   analyzer: ^6.4.1
   build_runner: ^2.4.13

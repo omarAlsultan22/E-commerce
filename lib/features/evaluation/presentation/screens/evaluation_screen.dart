@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import 'package:international_cuisine/features/evaluation/domain/useCases/evaluation_useCase.dart';
 import 'package:international_cuisine/features/evaluation/presentation/operations/evaluation_operations.dart';
 import 'package:international_cuisine/features/evaluation/presentation/widgets/layouts/evaluation_layout.dart';
@@ -15,6 +16,7 @@ class EvaluationScreen extends StatelessWidget {
     final _repository = FirebaseEvaluationRepository(firestore: _firestore);
     final _useCase = EvaluationUseCase(repository: _repository);
     final _operations = EvaluationOperations(useCase: _useCase);
-    return EvaluationLayout(_operations);
+    return ConnectivityAwareService(
+        child: EvaluationLayout(_operations));
   }
 }

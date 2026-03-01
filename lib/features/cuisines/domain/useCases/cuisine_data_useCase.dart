@@ -1,4 +1,5 @@
-import '../../presentation/states/categories_states.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:international_cuisine/core/data/models/paginated_result.dart';
 import 'package:international_cuisine/features/cuisines/data/models/data_model.dart';
 import 'package:international_cuisine/features/cuisines/domain/repositories/cuisine_data_repository.dart';
 
@@ -11,28 +12,18 @@ class CuisineDataUseCase {
   })
       : _repository = repository;
 
-  Future<CategoriesState> getDataExecute(CategoriesState state,
-      String collectionPath) async {
-    final data = state.categoryData!;
-    if (state.hasMore!) return state;
-
+  Future<PaginatedResult> getDataExecute(
+      String collectionPath,
+      DocumentSnapshot? lastDocument
+      ) async {
     try {
       final result = await _repository.getPaginatedData(
           collectionPath: collectionPath,
-          lastDocument: state.lastDocument
+          lastDocument: lastDocument
       );
-
-      if (result.data.isEmpty) {
-        return state;
-      }
-
-      return state.copyWith(
-          lastDocument: result.lastDocument,
-          hasMore: result.hasMoreData,
-          categoryData: [...data, ...result.data]
-      );
+      return result;
     }
-    catch(e){
+    catch (e) {
       rethrow;
     }
   }

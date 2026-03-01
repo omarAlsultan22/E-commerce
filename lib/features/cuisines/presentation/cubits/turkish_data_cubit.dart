@@ -20,12 +20,20 @@ class TurkishDataCubit extends BaseCountriesCubit {
       BlocProvider.of<TurkishDataCubit>(context);
 
   Future<void> getData() async {
-    final appState = state.appState!;
+    if (!state.hasMore!) return;
 
+    final appState = state.appState!;
     try {
       final newState = await _dataUseCases.getDataExecute(
-          state, CountriesNames.turkish);
-      emit(newState);
+          CountriesNames.turkish,
+          state.lastDocument
+      );
+      emit(state.copyWith(
+          appState: appState.copyWith(isLoading: false),
+          categoryData: [...state.categoryData!, ...newState.dataList],
+          lastDocument: newState.lastDocument,
+          hasMore: newState.hasMoreData)
+      );
     }
     on AppException catch (e) {
       final failure = ErrorHandler.handleException(e);

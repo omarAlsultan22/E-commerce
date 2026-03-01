@@ -9,24 +9,26 @@ class InitialStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            _iconData,
-            size: 100.0,
-            color: Colors.grey[300],
-          ),
-          Text(
-            'There is no any $_textType',
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              _iconData,
+              size: 100.0,
+              color: Colors.grey[300],
             ),
-          ),
-        ],
+            Text(
+              'There is no any $_textType',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

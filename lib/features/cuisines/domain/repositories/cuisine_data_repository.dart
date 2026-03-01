@@ -5,7 +5,7 @@ import '../../../../core/data/models/paginated_result.dart';
 
 abstract class CuisineDataRepository {
 
-  Future<PaginatedResult<DataModel>> getPaginatedData({
+  Future<PaginatedResult> getPaginatedData({
     required String collectionPath,
     required DocumentSnapshot? lastDocument,
     int pageSize = 5,

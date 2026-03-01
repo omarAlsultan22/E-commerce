@@ -11,12 +11,12 @@ class CartDataState{
 
   const CartDataState({
     this.appState,
-    this.shoppingList = const [],
+    this.shoppingList,
   });
 
   bool get isLoading => appState!.isLoading;
 
-  AppException? get failure => appState!.failure!;
+  AppException? get failure => appState!.failure;
 
   List<OrderModel> get getShoppingList => shoppingList ?? [];
 

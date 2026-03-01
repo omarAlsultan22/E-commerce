@@ -1,6 +1,6 @@
 import 'package:international_cuisine/features/invoice/presentation/screens/payment_invoice_screen.dart';
-import 'package:international_cuisine/features/invoice/presentation/widgets/layouts/payment_invoice_layout.dart';
 import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
+import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -108,7 +108,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   String _formatExpiryDate(String expiry) {
     if (expiry.length >= 2) {
-      return '${expiry.substring(0, 2)}/${expiry.length > 2 ? expiry.substring(2) : ''}';
+      return '${expiry.substring(0, 2)}/${expiry.length > 2 ? expiry.substring(
+          2) : ''}';
     }
     return expiry;
   }
@@ -150,7 +151,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Future<void> _processPayment() async {
     if (!_formKey.currentState!.validate()) return;
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentInvoiceScreen(isPaid: true)));
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context) => PaymentInvoiceScreen(isPaid: true)));
     setState(() => _isLoading = true);
 
     try {
@@ -177,7 +179,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       body: json.encode({'api_key': _paymobApiKey}),
     );
 
-    if (authResponse.statusCode != 201) throw Exception('فشل في الحصول على رمز الدفع');
+    if (authResponse.statusCode != 201) throw Exception(
+        'فشل في الحصول على رمز الدفع');
     final authToken = json.decode(authResponse.body)['token'];
     print(authToken);
 
@@ -194,7 +197,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           'name': 'International Cuisine Order',
           'amount_cents': (totalAmount * 100).round().toString(),
           'quantity': '1'
-        }],
+        }
+        ],
       }),
     );
 
@@ -210,15 +214,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'auth_token': authToken,
-        'amount_cents': (double.parse(_amountController.text) * 100).round().toString(),
+        'amount_cents': (double.parse(_amountController.text) * 100)
+            .round()
+            .toString(),
         'expiration': 3600,
         'order_id': orderId,
         'billing_data': {
-          'first_name': _cardHolderController.text.split(' ').isNotEmpty
-              ? _cardHolderController.text.split(' ').first
+          'first_name': _cardHolderController.text
+              .split(' ')
+              .isNotEmpty
+              ? _cardHolderController.text
+              .split(' ')
+              .first
               : 'User',
-          'last_name': _cardHolderController.text.split(' ').length > 1
-              ? _cardHolderController.text.split(' ').last
+          'last_name': _cardHolderController.text
+              .split(' ')
+              .length > 1
+              ? _cardHolderController.text
+              .split(' ')
+              .last
               : 'Customer',
           'email': _emailController.text,
           'phone_number': _phoneController.text,
@@ -250,24 +264,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Future<void> _payWithFawry() async {
     final response = await http.post(
-      Uri.parse('https://atfawry.fawrystaging.com/ECommerceWeb/Fawry/payments/charge'),
+      Uri.parse(
+          'https://atfawry.fawrystaging.com/ECommerceWeb/Fawry/payments/charge'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'merchantCode': 'YOUR_FAWRY_MERCHANT_CODE',
-        'merchantRefNum': 'REF-${DateTime.now().millisecondsSinceEpoch}',
+        'merchantRefNum': 'REF-${DateTime
+            .now()
+            .millisecondsSinceEpoch}',
         'customerMobile': _phoneController.text,
         'customerEmail': _emailController.text,
         'paymentMethod': 'PayAtFawry',
         'amount': _amountController.text,
         'description': 'Payment for Order',
-        'paymentExpiry': DateTime.now().add(const Duration(days: 3)).millisecondsSinceEpoch,
+        'paymentExpiry': DateTime
+            .now()
+            .add(const Duration(days: 3))
+            .millisecondsSinceEpoch,
       }),
     );
 
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
       _fawryRefNumber = result['referenceNumber'];
-      _showPaymentResult(true, 'رقم المرجع الفوري: $_fawryRefNumber\nيمكنك الدفع في أي فرع فوري');
+      _showPaymentResult(true,
+          'رقم المرجع الفوري: $_fawryRefNumber\nيمكنك الدفع في أي فرع فوري');
     } else {
       throw Exception('فشل في إنشاء فاتورة فوري');
     }
@@ -338,28 +359,32 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void _showPaymentResult(bool success, [String? message]) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(success ? 'تمت العملية بنجاح' : 'فشلت العملية'),
-        content: Text(message ?? (success ? 'تمت عملية الدفع بنجاح' : 'حدث خطأ أثناء عملية الدفع')),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              if (success) {
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('موافق'),
+      builder: (context) =>
+          AlertDialog(
+            title: Text(success ? 'تمت العملية بنجاح' : 'فشلت العملية'),
+            content: Text(message ?? (success
+                ? 'تمت عملية الدفع بنجاح'
+                : 'حدث خطأ أثناء عملية الدفع')),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  if (success) {
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('موافق'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
   Widget _buildPaymentMethodSelector() {
     return Column(
       children: [
-        const Text('طريقة الدفع', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text('طريقة الدفع',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -367,7 +392,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: ChoiceChip(
                 label: const Text('بطاقة ائتمانية'),
                 selected: _selectedPaymentMethod == 0,
-                onSelected: (selected) => setState(() => _selectedPaymentMethod = 0),
+                onSelected: (selected) =>
+                    setState(() => _selectedPaymentMethod = 0),
               ),
             ),
             const SizedBox(width: 8),
@@ -375,7 +401,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: ChoiceChip(
                 label: const Text('فوري'),
                 selected: _selectedPaymentMethod == 1,
-                onSelected: (selected) => setState(() => _selectedPaymentMethod = 1),
+                onSelected: (selected) =>
+                    setState(() => _selectedPaymentMethod = 1),
               ),
             ),
             const SizedBox(width: 8),
@@ -383,7 +410,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: ChoiceChip(
                 label: const Text('فودافون كاش'),
                 selected: _selectedPaymentMethod == 2,
-                onSelected: (selected) => setState(() => _selectedPaymentMethod = 2),
+                onSelected: (selected) =>
+                    setState(() => _selectedPaymentMethod = 2),
               ),
             ),
           ],
@@ -413,7 +441,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) return 'يرجى إدخال رقم البطاقة';
-            if (value.replaceAll(' ', '').length != 16) return 'رقم البطاقة يجب أن يكون 16 رقم';
+            if (value
+                .replaceAll(' ', '')
+                .length != 16) return 'رقم البطاقة يجب أن يكون 16 رقم';
             return null;
           },
         ),
@@ -437,8 +467,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   prefixIcon: Icon(Icons.calendar_today),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'يرجى إدخال تاريخ الانتهاء';
-                  if (!RegExp(r'^\d{2}/\d{2}$').hasMatch(value)) return 'الصيغة MM/YY';
+                  if (value == null || value.isEmpty)
+                    return 'يرجى إدخال تاريخ الانتهاء';
+                  if (!RegExp(r'^\d{2}/\d{2}$').hasMatch(value))
+                    return 'الصيغة MM/YY';
                   return null;
                 },
               ),
@@ -476,7 +508,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
             prefixIcon: Icon(Icons.person),
           ),
           validator: (value) {
-            if (value == null || value.isEmpty) return 'يرجى إدخال اسم حامل البطاقة';
+            if (value == null || value.isEmpty)
+              return 'يرجى إدخال اسم حامل البطاقة';
             return null;
           },
         ),
@@ -524,7 +557,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
             prefixIcon: Icon(Icons.email),
           ),
           validator: (value) {
-            if (value == null || value.isEmpty) return 'يرجى إدخال البريد الإلكتروني';
+            if (value == null || value.isEmpty)
+              return 'يرجى إدخال البريد الإلكتروني';
             if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
               return 'بريد إلكتروني غير صحيح';
             }
@@ -537,61 +571,67 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('إتمام الدفع'),
-        centerTitle: true,
-      ),
-      body: Directionality(
-        textDirection: TextDirection.rtl,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 20),
-                const Text(
-                  'المبلغ الإجمالي',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+    return ConnectivityAwareService(
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('إتمام الدفع'),
+            centerTitle: true,
+          ),
+          body: Directionality(
+            textDirection: TextDirection.rtl,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 20),
+                    const Text(
+                      'المبلغ الإجمالي',
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      '${totalAmount.toStringAsFixed(2)} جنيهاً',
+                      style: const TextStyle(fontSize: 24, color: Colors.amber),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 30),
+                    _buildPaymentMethodSelector(),
+                    _buildCardForm(),
+                    _buildMobileForm(),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: _isLoading ? null : _processPayment,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: Colors.blue,
+                      ),
+                      child: _isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                        _selectedPaymentMethod == 1
+                            ? 'إنشاء فاتورة فوري'
+                            : 'إتمام الدفع',
+                        style: const TextStyle(
+                            fontSize: 18, color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'بياناتك محمية ولا يتم تخزين معلومات البطاقة على خوادمنا',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  '${totalAmount.toStringAsFixed(2)} جنيهاً',
-                  style: const TextStyle(fontSize: 24, color: Colors.amber),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 30),
-                _buildPaymentMethodSelector(),
-                _buildCardForm(),
-                _buildMobileForm(),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _processPayment,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.blue,
-                  ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                    _selectedPaymentMethod == 1 ? 'إنشاء فاتورة فوري' : 'إتمام الدفع',
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'بياناتك محمية ولا يتم تخزين معلومات البطاقة على خوادمنا',
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        )
     );
   }
 }

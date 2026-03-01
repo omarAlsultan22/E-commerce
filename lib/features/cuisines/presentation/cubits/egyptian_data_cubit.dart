@@ -4,6 +4,7 @@ import 'package:international_cuisine/core/constants/cuisines_names.dart';
 import 'package:international_cuisine/core/errors/error_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'base/base_data_cubit.dart';
 
 
@@ -20,12 +21,21 @@ class EgyptianDataCubit extends BaseCountriesCubit {
       BlocProvider.of<EgyptianDataCubit>(context);
 
   Future<void> getData() async {
-    final appState = state.appState!;
+    if (!state.hasMore!) return;
 
+    print('fuck you..................');
+    final appState = state.appState!;
     try {
       final newState = await _dataUseCases.getDataExecute(
-          state, CountriesNames.egyptian);
-      emit(newState.copyWith(appState: appState.copyWith(isLoading: false)));
+          CountriesNames.egyptian,
+          state.lastDocument
+      );
+      emit(state.copyWith(
+          appState: appState.copyWith(isLoading: false),
+          categoryData: [...state.categoryData!, ...newState.dataList],
+          lastDocument: newState.lastDocument!,
+          hasMore: newState.hasMoreData)
+      );
     } on AppException catch (e) {
       final failure = ErrorHandler.handleException(e);
       emit(state.copyWith(

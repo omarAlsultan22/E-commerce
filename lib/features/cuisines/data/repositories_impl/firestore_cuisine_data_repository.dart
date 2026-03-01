@@ -5,31 +5,37 @@ import '../../presentation/utils/helpers/cuisine_data_converter.dart';
 import 'package:international_cuisine/features/cuisines/domain/repositories/cuisine_data_repository.dart';
 
 
-class FirebaseCuisineDataRepository implements CuisineDataRepository {
+class FirestoreCuisineDataRepository implements CuisineDataRepository {
   final FirebaseFirestore _firestore;
 
-  FirebaseCuisineDataRepository({
+  FirestoreCuisineDataRepository({
     required FirebaseFirestore firestore
   }) : _firestore = firestore;
 
+  static const orderName = 'countriesData';
+  static const collectionId = 'countriesData';
+  static const docId = 'L8nSAa05FTdy6I47cOaf';
+
   @override
-  Future<PaginatedResult<DataModel>> getPaginatedData({
+  Future<PaginatedResult> getPaginatedData({
     required String collectionPath,
     required DocumentSnapshot? lastDocument,
     int pageSize = 5,
   }) async {
-    Query query = _firestore.collection(collectionPath);
+    Query query = _firestore.collection(collectionId)
+        .doc(docId)
+        .collection(collectionPath);
 
     if (lastDocument != null) {
       query = query.startAfterDocument(lastDocument);
     }
-
     try {
       final querySnapshot = await query.limit(pageSize).get();
 
+
       if (querySnapshot.docs.isEmpty) {
         return PaginatedResult(
-          data: [],
+          dataList: [],
           lastDocument: null,
           hasMoreData: false,
         );
@@ -40,7 +46,7 @@ class FirebaseCuisineDataRepository implements CuisineDataRepository {
           .data;
 
       return PaginatedResult(
-        data: data,
+        dataList: data,
         lastDocument: querySnapshot.docs.last,
         hasMoreData: data.length == pageSize,
       );
@@ -63,11 +69,11 @@ class FirebaseCuisineDataRepository implements CuisineDataRepository {
     }
 
     var firestoreQuery = _firestore
-        .collection('countriesData')
-        .doc('L8nSAa05FTdy6I47cOaf')
+        .collection(collectionId)
+        .doc(docId)
         .collection(collectionPath)
-        .where('orderName', isGreaterThanOrEqualTo: normalizedQuery)
-        .where('orderName', isLessThanOrEqualTo: '$normalizedQuery\uf8ff');
+        .where(orderName, isGreaterThanOrEqualTo: normalizedQuery)
+        .where(orderName, isLessThanOrEqualTo: '$normalizedQuery\uf8ff');
 
     try {
       final snapshot = await firestoreQuery.get();
@@ -75,7 +81,7 @@ class FirebaseCuisineDataRepository implements CuisineDataRepository {
       return snapshot.docs
           .where((doc) {
         final data = doc.data();
-        final fullName = data['orderName']?.toString().toLowerCase() ?? '';
+        final fullName = data[orderName]?.toString().toLowerCase() ?? '';
         return fullName.contains(normalizedQuery);
       }).map((doc) {
         final data = doc.data();

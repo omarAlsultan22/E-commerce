@@ -1,5 +1,6 @@
 import 'package:international_cuisine/features/auth/presentation/operations/auth_operations.dart';
 import '../../../user_info/data/repositories_impl/firestore_user_info_repository.dart';
+import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import '../../data/repositories_impl/firebase_auth_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,6 +21,8 @@ class SignUpScreen extends StatelessWidget {
     final authUseCase = AuthUseCase(
         authRepository: authRepository, userInfoRepository: userInfoRepository);
     final authOperations = AuthOperations(authUseCase: authUseCase);
-    return SignUpLayout(authOperations);
+    return ConnectivityAwareService(
+        child: SignUpLayout(authOperations)
+    );
   }
 }

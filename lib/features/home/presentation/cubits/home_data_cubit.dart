@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:international_cuisine/core/presentation/states/app_state.dart';
 import '../../../../core/errors/error_handler.dart';
 import 'package:international_cuisine/core/errors/exceptions/app_exception.dart';
 import 'package:international_cuisine/features/home/domain/useCases/home_data_useCase.dart';
@@ -12,13 +13,13 @@ class HomeDataCubit extends Cubit<HomeDataState> {
     required HomeDataUseCase homeDataUseCase
   })
       : _homeDataUseCase = homeDataUseCase,
-        super(HomeDataState());
+        super(HomeDataState(appState: AppState(), homeDataList: []));
 
-  static HomeDataCubit get(context) => BlocProvider.of(context);
+  static HomeDataCubit get(context) => BlocProvider.of<HomeDataCubit>(context);
 
   Future<void> getData() async {
 
-    final appState = state.appState!;
+    final appState = state.appState;
     emit(state.copyWith(
         appState: appState.copyWith(isLoading: true, failure: null))
     );
