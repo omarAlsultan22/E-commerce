@@ -41,10 +41,12 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   bool _isObscure = true;
   bool _isLoading = false;
 
-  //sizes
+  //numbers
+  static const _zero = AppNumbers.zero;
+
+  //spaces
   static const _height16 = AppSpacing.height_16;
   static const _height24 = AppSpacing.height24;
-  static const _zero = AppNumbers.zero;
 
   //labels
   static const _firstName = AppLabelTexts.firstName;

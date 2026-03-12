@@ -12,7 +12,7 @@ import 'package:international_cuisine/features/cart/presentation/screens/cart_da
 
 final List<String> _mealSizes = ['صغير', 'وسط', 'كبير'];
 final List<String> _items = List.generate(10, (index) => (index + 1).toString());
-final List<Color> _mealColors = [CuisinesConstants.amber, Colors.orange, Colors.red];
+final List<Color> _mealColors = [AppColors.primaryAmber, Colors.orange, Colors.red];
 
 
 class ItemBuilder extends StatefulWidget {
@@ -123,7 +123,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
     const _ten = 10.0;
     const _towHundred = 200.0;
 
-    //spacing
+    //spaces
     const _sizedBox = SizedBox(width: 8.0);
 
     //borders
@@ -132,7 +132,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
 
     //colors
     const _grey300 = AppColors.lightGrey300;
-    const _amber = CuisinesConstants.amber;
+    const _amber = AppColors.primaryAmber;
     const _white = AppColors.white;
     const _black = AppColors.black;
 

@@ -164,7 +164,7 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: CuisinesConstants.amber,
+          backgroundColor: AppColors.primaryAmber,
           onPressed: () =>
               Navigator.push(
                 context,

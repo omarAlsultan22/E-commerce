@@ -23,6 +23,7 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
   late CartDataCubit _cubit;
 
   static const _paddingAll = EdgeInsets.all(16);
+  static const _amber =  AppColors.primaryAmber;
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -132,7 +133,7 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.amber,
+              color: _amber,
             ),
           ),
         ],
@@ -150,7 +151,7 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
         child: ElevatedButton(
           onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FixedLocationPicker())),
           style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.amber,
+              backgroundColor: _amber,
               shape: RoundedRectangleBorder(
                 borderRadius: AppBorders.borderRadius_8,
               )),
@@ -236,10 +237,9 @@ class CartItemCard extends StatelessWidget {
                     '${item.price} ج',
                     style: const TextStyle(
                       fontSize: 16,
-                      color: Colors.amber,
+                      color: AppColors.primaryAmber,
                     ),
                   ),
-                  AppSpacing.height_12,
                   Row(
                     children: [
                       IconButton(

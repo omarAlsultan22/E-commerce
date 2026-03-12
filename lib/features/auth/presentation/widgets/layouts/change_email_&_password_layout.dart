@@ -35,7 +35,7 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   bool _isObscureNew = false;
   bool _isObscureConfirm = false;
 
-  //sizes
+  //spaces
   static const _height_16 = AppSpacing.height_16;
 
   //colors

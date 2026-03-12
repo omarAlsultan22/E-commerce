@@ -36,7 +36,7 @@ class _SignInLayoutState extends State<SignInLayout> {
   bool _isObscure = true;
   bool _isLoading = false;
 
-  //sizes
+  //spaces
   static const _height16 = AppSpacing.height_16;
 
   //colors
