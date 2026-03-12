@@ -10,12 +10,10 @@ class FirestoreHomeDataRepository implements HomeDataRepository {
   FirestoreHomeDataRepository({required FirebaseFirestore repository})
       : _repository = repository;
 
-  static const homeData = 'homeData';
-
   @override
   Future<List<HomeDataModel>> getData() async {
     try {
-      final jsonData = await _repository.collection(homeData).get();
+      final jsonData = await _repository.collection('homeData').get();
       return HomeModelConverter
           .fromQuerySnapshot(jsonData)
           .data;

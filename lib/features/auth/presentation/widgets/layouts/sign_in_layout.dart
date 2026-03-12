@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import '../../screens/sgin_up_screen.dart';
 import '../../operations/auth_operations.dart';
+import '../../utils/validate/validate_email.dart';
+import '../../utils/validate/validate_password.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import '../../../constants/auth_label_texts_constants.dart';
 import '../../../../home/presentation/screens/home_screen.dart';
 import '../../../../../core/data/models/message_result_model.dart';
+import 'package:international_cuisine/core/constants/app_keys.dart';
+import 'package:international_cuisine/core/constants/app_states.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
 import '../../../../../core/presentation/widgets/navigation/navigator.dart';
 import '../../../../../core/data/data_sources/local/shared_preferences.dart';
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
+import 'package:international_cuisine/features/auth/constants/auth_numbers_constants.dart';
+import 'package:international_cuisine/features/auth/presentation/widgets/auth_spacing.dart';
+import 'package:international_cuisine/features/auth/constants/auth_hint_texts_constants.dart';
 
 
 class SignInLayout extends StatefulWidget {
@@ -22,8 +32,16 @@ class _SignInLayoutState extends State<SignInLayout> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
   bool _isObscure = true;
   bool _isLoading = false;
+
+  //sizes
+  static const _height16 = AppSpacing.height_16;
+
+  //colors
+  static const _black = AppColors.black;
+  static const _primaryAmber = AppColors.primaryAmber;
 
   @override
   void initState() {
@@ -45,7 +63,7 @@ class _SignInLayoutState extends State<SignInLayout> {
 
   Widget _buildScaffold(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: AppColors.darkGrey,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -57,13 +75,13 @@ class _SignInLayoutState extends State<SignInLayout> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildHeader(context),
-                  const SizedBox(height: 32),
+                  AppSpacing.height_32,
                   _buildEmailField(),
-                  const SizedBox(height: 16),
+                  _height16,
                   _buildPasswordField(),
-                  const SizedBox(height: 24),
+                  AppSpacing.height24,
                   _buildLoginButton(context),
-                  const SizedBox(height: 16),
+                  _height16,
                   _buildSignUpButton(),
                 ],
               ),
@@ -80,16 +98,24 @@ class _SignInLayoutState extends State<SignInLayout> {
       children: [
         Text(
           'تسجيل دخول',
-          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-            color: Colors.amber,
+          style: Theme
+              .of(context)
+              .textTheme
+              .headlineLarge
+              ?.copyWith(
+            color: _primaryAmber,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        AppSpacing.height_8,
         Text(
           'سجل الان كي تستمتع بأفضل العروض المتاحة',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Colors.grey[400],
+          style: Theme
+              .of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(
+            color: AppColors.lightGrey400,
           ),
         ),
       ],
@@ -99,21 +125,21 @@ class _SignInLayoutState extends State<SignInLayout> {
   Widget _buildEmailField() {
     return BuildInputField(
       controller: _emailController,
-      labelText: "البريد الإلكتروني",
-      hintText: "أدخل بريدك الإلكتروني",
+      labelText: AuthLabelTextsConstants.email,
+      hintText: AuthHintTextsConstants.email,
       prefixIcon: Icons.email,
-      validator: (value) => _validateEmail(value),
+      validator: (value) => ValidateEmail.validator(value),
     );
   }
 
   Widget _buildPasswordField() {
     return BuildInputField(
       controller: _passwordController,
-      labelText: "كلمة المرور",
-      hintText: "أدخل كلمة المرور",
+      labelText: AuthLabelTextsConstants.password,
+      hintText: AuthHintTextsConstants.password,
       prefixIcon: Icons.lock,
       obscureText: _isObscure,
-      validator: (value) => _validatePassword(value),
+      validator: (value) => ValidatePassword.validator(value),
       suffixIcon: _buildVisibilityToggle(),
     );
   }
@@ -122,7 +148,7 @@ class _SignInLayoutState extends State<SignInLayout> {
     return IconButton(
       icon: Icon(
         _isObscure ? Icons.visibility_off : Icons.visibility,
-        color: Colors.amber,
+        color: _primaryAmber,
       ),
       onPressed: () => setState(() => _isObscure = !_isObscure),
     );
@@ -138,14 +164,7 @@ class _SignInLayoutState extends State<SignInLayout> {
 
   Widget _buildLoginButtonContent() {
     return _isLoading
-        ? const SizedBox(
-      height: 24,
-      width: 24,
-      child: CircularProgressIndicator(
-        color: Colors.black,
-        strokeWidth: 2,
-      ),
-    )
+        ? AuthSpacing.sizedBox
         : const Text(
       "دخول",
       style: TextStyle(
@@ -170,8 +189,8 @@ class _SignInLayoutState extends State<SignInLayout> {
   }
 
   Future<void> _checkExistingUser() async {
-    final value = await CacheHelper.getStringValue(key: 'uId');
-    if (value != null && mounted) {
+    final userId = await CacheHelper.getStringValue(key: AppKeys.uId);
+    if (userId != null && mounted) {
       navigator(link: const HomeScreen(), context: context);
     }
   }
@@ -204,10 +223,10 @@ class _SignInLayoutState extends State<SignInLayout> {
     if (message.isSuccess) {
       QuickAlert.show(
         context: context,
-        text: 'تم التسجيل بنجاح',
+        text: AppStates.success,
         type: QuickAlertType.success,
         showConfirmBtn: false,
-        autoCloseDuration: Duration(seconds: 3),
+        autoCloseDuration: const Duration(seconds: 3),
       ).whenComplete(() =>
           navigator(context: context, link: const HomeScreen())
       );
@@ -222,34 +241,13 @@ class _SignInLayoutState extends State<SignInLayout> {
     }
   }
 
-
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'يرجى إدخال البريد الإلكتروني';
-    }
-    if (!value.contains('@')) {
-      return 'يرجى إدخال بريد إلكتروني صحيح';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'يرجى إدخال كلمة المرور';
-    }
-    if (value.length < 6) {
-      return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
-    }
-    return null;
-  }
-
   ButtonStyle _loginButtonStyle() {
     return ElevatedButton.styleFrom(
-      backgroundColor: Colors.amber,
-      foregroundColor: Colors.black,
+      backgroundColor: _primaryAmber,
+      foregroundColor: _black,
       padding: const EdgeInsets.symmetric(vertical: 16),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(AuthNumbersConstants.fifty),
       ),
       minimumSize: const Size(double.infinity, 50),
     );
@@ -257,7 +255,7 @@ class _SignInLayoutState extends State<SignInLayout> {
 
   ButtonStyle _signUpButtonStyle() {
     return TextButton.styleFrom(
-      foregroundColor: Colors.amber,
+      foregroundColor: _primaryAmber,
       padding: const EdgeInsets.symmetric(vertical: 12),
     );
   }

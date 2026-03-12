@@ -4,11 +4,11 @@ import '../../../../../core/errors/exceptions/app_exception.dart';
 import '../../../../../core/presentation/states/base/when_states.dart';
 
 
-class UpdateUserInfoState implements WhenStates {
+class UserInfoState implements WhenStates {
   final UserInfoModel? userModel;
   final AppState? appState;
 
-  UpdateUserInfoState({this.userModel, this.appState});
+  UserInfoState({this.userModel, this.appState});
 
   String get firstName => userModel!.firstName;
 
@@ -20,13 +20,13 @@ class UpdateUserInfoState implements WhenStates {
 
   bool get isLoading => appState!.isLoading;
 
-  AppException? get failure => appState!.failure;
+  AppException? get _failure => appState!.failure;
 
-  UpdateUserInfoState updateState({
+  UserInfoState updateState({
     UserInfoModel? userModel,
     AppState? appState
   }) {
-    return UpdateUserInfoState(
+    return UserInfoState(
         userModel: userModel ?? this.userModel,
         appState: appState ?? this.appState
     );
@@ -39,8 +39,8 @@ class UpdateUserInfoState implements WhenStates {
     required R Function() onLoading,
     required R Function() onLoaded,
     required R Function(AppException error) onError}) {
-    if (failure != null) {
-      return onError(failure!);
+    if (_failure != null) {
+      return onError(_failure!);
     }
 
     if (isLoading) {

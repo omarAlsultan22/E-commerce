@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
 
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({Key? key}) : super(key: key);
-
-  static const imageUrl = 'assets/images/secondary_logo.png';
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +13,7 @@ class IntroScreen extends StatelessWidget {
         Image.asset(
           fit: BoxFit.fill,
           height: double.infinity,
-          imageUrl,
+          'assets/images/secondary_logo.png',
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 50.0),
@@ -22,7 +21,7 @@ class IntroScreen extends StatelessWidget {
             width: 25.0,
             height: 25.0,
             child: CircularProgressIndicator(
-              color: Colors.white,
+              color: AppColors.white,
               strokeWidth: 2.0,
             ),
           ),

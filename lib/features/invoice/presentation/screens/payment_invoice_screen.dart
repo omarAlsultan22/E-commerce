@@ -1,10 +1,12 @@
-import 'package:international_cuisine/features/invoice/data/repositories_impl/firestore_user_info_repository.dart';
+import 'package:international_cuisine/features/invoice/data/repositories_impl/firestore_payment_invoice_repository.dart';
 import 'package:international_cuisine/features/invoice/presentation/widgets/layouts/payment_invoice_layout.dart';
 import 'package:international_cuisine/features/invoice/domain/useCases/payment_Invoice_useCase.dart';
 import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
 import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import '../../../../core/presentation/widgets/states/error_state_widget.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,45 +21,35 @@ class PaymentInvoiceScreen extends StatelessWidget {
 
   const PaymentInvoiceScreen({required this.isPaid, super.key});
 
-  //texts
-  static const title = 'تم ارسال طلبك بنجاح!';
-  static const text = 'قم بأخذ لقطة شاشة للفتورة';
-  static const confirmBtnText = 'حسنا';
-
-  static const noOrders = 'لا توجد طلبات للتوصيل';
-  static const checkCuisines = 'يمكنك تصفح المطاعم وإضافة طلبات جديدة';
-
-  //numbers
-  static const eight = 8.0;
-  static const fourteen = 14.0;
-  static const sixteen = 16.0;
-  static const eighteen = 18.0;
-  static const eighty = 80.0;
-
   @override
   Widget build(BuildContext context) {
     final _cartCubit = context.read<CartDataCubit>();
     final _repository = FirebaseFirestore.instance;
-    final _userInfoRepository = FirestoreInfoRepository(
+    final _userInfoRepository = FirestorePaymentInvoiceRepository(
         repository: _repository);
     final _useCase = PaymentInvoiceUseCase(
         userInfoRepository: _userInfoRepository);
+
+    void _stateListener(PaymentInvoiceState state) {
+      if (!state.isLoading && state.listIsNotEmpty) {
+        QuickAlert.show(
+          context: context,
+          title: 'تم ارسال طلبك بنجاح!',
+          text: 'قم بأخذ لقطة شاشة للفتورة',
+          type: QuickAlertType.success,
+          showConfirmBtn: true,
+          confirmBtnText: 'حسنا',
+        );
+      }
+    }
+
     return ConnectivityAwareService(
         child: BlocProvider(create: (context) =>
         PaymentInvoiceCubit(cubit: _cartCubit, useCase: _useCase)
           ..displayInvoice(),
             child: BlocConsumer<PaymentInvoiceCubit, PaymentInvoiceState>(
                 listener: (context, state) {
-                  if (!state.isLoading && state.listIsNotEmpty) {
-                    QuickAlert.show(
-                      context: context,
-                      title: title,
-                      text: text,
-                      type: QuickAlertType.success,
-                      showConfirmBtn: true,
-                      confirmBtnText: confirmBtnText,
-                    );
-                  }
+                  _stateListener(state);
                 },
                 builder: (context, state) {
                   final _cubit = context.read<PaymentInvoiceCubit>();
@@ -67,20 +59,20 @@ class PaymentInvoiceScreen extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.shopping_bag_outlined, size: eighty,
-                                    color: Colors.grey[400]),
-                                const SizedBox(height: sixteen),
+                                const Icon(
+                                    Icons.shopping_bag_outlined, size: 80.0,
+                                    color: const Color(0xFFBDBDBD)),
+                                AppSpacing.height_16,
                                 const Text(
-                                  noOrders,
+                                  'لا توجد طلبات للتوصيل',
                                   style: TextStyle(
-                                      fontSize: eighteen, color: Colors.grey),
+                                      fontSize: 18.0, color: AppColors.grey),
                                 ),
-                                const SizedBox(height: eight),
-                                Text(
-                                  checkCuisines,
+                                AppSpacing.height_8,
+                                const Text(
+                                  'يمكنك تصفح المطاعم وإضافة طلبات جديدة',
                                   style: TextStyle(
-                                      fontSize: fourteen, color: Colors
-                                      .grey[600]),
+                                      fontSize: 14.0, color: Color(0xFF757575)),
                                 ),
                               ],
                             ),

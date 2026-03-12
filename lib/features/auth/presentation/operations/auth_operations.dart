@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../../core/errors/error_handler.dart';
 import '../../../../core/data/models/message_result_model.dart';
 import '../../../../../core/errors/exceptions/app_exception.dart';
-import 'package:international_cuisine/core/errors/auth_error_handler.dart';
+import 'package:international_cuisine/features/auth/errors/auth_error_handler.dart';
 
 
 class AuthOperations {

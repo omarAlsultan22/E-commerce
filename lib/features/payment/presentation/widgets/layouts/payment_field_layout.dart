@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/core/constants/app_borders.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_paddings.dart';
 
 
 class PaymentFieldLayout extends StatelessWidget {
@@ -16,16 +19,16 @@ class PaymentFieldLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: AppPaddings.paddingAll_12,
       child: Container(
         height: 200.0,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          color: AppColors.white,
+          borderRadius: AppBorders.borderRadius_12,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: AppColors.grey.withOpacity(0.1),
               spreadRadius: 2,
               blurRadius: 5,
               offset: const Offset(0, 2),

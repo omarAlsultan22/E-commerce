@@ -13,7 +13,7 @@ class PaymentWaySelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('اختر طريق الدفع'),
+        title: const Text('اختر طريق الدفع'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

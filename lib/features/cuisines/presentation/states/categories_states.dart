@@ -20,9 +20,9 @@ class CategoriesState {
   });
 
 
-  bool get isLoading => appState!.isLoading;
+  bool get _isLoading => appState!.isLoading;
 
-  AppException? get failure => appState!.failure;
+  AppException? get _failure => appState!.failure;
 
 
   DataModel currentDataModel(int index) => categoryData![index];
@@ -62,10 +62,10 @@ class CategoriesState {
         DataModel>? searchData) onLoaded,
     required R Function(AppException error) onError,
   }) {
-    if (failure != null) {
-      return onError(failure!);
+    if (_failure != null) {
+      return onError(_failure!);
     }
-    if (isLoading) {
+    if (_isLoading) {
       return onLoading();
     }
     if (categoryData!.isNotEmpty) {

@@ -2,17 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/data/models/user_info_model.dart';
 import '../../domain/repositories/user_info_repository.dart';
+import 'package:international_cuisine/core/constants/app_keys.dart';
 import '../../../../core/data/data_sources/local/shared_preferences.dart';
 
 
-class FirestoreInfoRepository implements UserInfoRepository {
+class FirestoreUserInfoRepository implements UserInfoRepository {
   final FirebaseFirestore _repository;
 
-  FirestoreInfoRepository({required FirebaseFirestore repository})
+  FirestoreUserInfoRepository({required FirebaseFirestore repository})
       : _repository = repository;
 
-  static const String key = 'uId';
-  static const String userInfo = 'userInfo';
+  static const  _uId = AppKeys.uId;
+  static const _userInfo = AppKeys.userInfo;
 
   @override
   Future<void> setInfo({
@@ -21,7 +22,7 @@ class FirestoreInfoRepository implements UserInfoRepository {
   }) async {
     try {
       final uId = userCredential.user!.uid;
-      await _repository.collection(userInfo).doc(uId).set(
+      await _repository.collection(_userInfo).doc(uId).set(
           userModel.toJson());
     } catch (e) {
       rethrow;
@@ -31,9 +32,9 @@ class FirestoreInfoRepository implements UserInfoRepository {
   @override
   Future<UserInfoModel> getInfo() async {
     try {
-      final uId = await CacheHelper.getStringValue(key: key);
-      final jsonData = await _repository.collection(userInfo)
-          .doc(uId).get();
+      final userId = await CacheHelper.getStringValue(key: _uId);
+      final jsonData = await _repository.collection(_userInfo)
+          .doc(userId).get();
       return UserInfoModel.fromDocumentSnapshot(jsonData);
     }
     catch (e) {
@@ -49,7 +50,7 @@ class FirestoreInfoRepository implements UserInfoRepository {
     required String userLocation
   }) async {
     try {
-      final uId = await CacheHelper.getStringValue(key: key);
+      final userId = await CacheHelper.getStringValue(key: _uId);
 
       final userModel = UserInfoModel(
         firstName: firstName,
@@ -57,7 +58,7 @@ class FirestoreInfoRepository implements UserInfoRepository {
         userPhone: userPhone,
         userLocation: userLocation,
       );
-      await _repository.collection(userInfo).doc(uId)
+      await _repository.collection(_userInfo).doc(userId)
           .update(userModel.toJson());
     }
     catch (e) {

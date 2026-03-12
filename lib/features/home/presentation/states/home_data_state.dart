@@ -2,6 +2,7 @@ import 'package:international_cuisine/features/home/data/models/home_model.dart'
 import '../../../../core/errors/exceptions/app_exception.dart';
 import '../../../../core/presentation/states/app_state.dart';
 
+
 class HomeDataState {
   final AppState appState;
   final List<HomeDataModel> homeDataList;
@@ -11,9 +12,9 @@ class HomeDataState {
     required this.homeDataList,
   });
 
-  bool get isLoading => appState.isLoading;
+  bool get _isLoading => appState.isLoading;
 
-  AppException? get failure => appState.failure;
+  AppException? get _failure => appState.failure;
 
   HomeDataState copyWith({
     final AppState? appState,
@@ -30,11 +31,11 @@ class HomeDataState {
     required R Function(List<HomeDataModel> data) onLoaded,
     required R Function(AppException error) onError,
   }) {
-    if (failure != null) {
-      return onError(failure!);
+    if (_failure != null) {
+      return onError(_failure!);
     }
 
-    if (isLoading) {
+    if (_isLoading) {
       return onLoading();
     }
 

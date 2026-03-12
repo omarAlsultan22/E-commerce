@@ -1,11 +1,17 @@
 import 'package:international_cuisine/features/auth/presentation/operations/auth_operations.dart';
 import 'package:international_cuisine/features/auth/presentation/screens/sgin_in_screen.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import '../../../../../core/data/data_sources/local/shared_preferences.dart';
 import '../../../../../core/presentation/widgets/navigation/navigator.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
+import 'package:international_cuisine/core/constants/app_numbers.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_states.dart';
+import 'package:international_cuisine/core/constants/app_keys.dart';
 import '../../../../../core/data/models/message_result_model.dart';
-import '../../../../../core/presentation/widgets/sized_box.dart';
+import '../../utils/validate/validate_password.dart';
+import '../../utils/validate/validate_email.dart';
 import 'package:flutter/material.dart';
 
 
@@ -18,21 +24,31 @@ class ChangeEmailAndPasswordLayout extends StatefulWidget {
 }
 
 class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLayout> {
-  final formKey = GlobalKey<FormState>();
-  final newEmailController = TextEditingController();
-  final currentPasswordController = TextEditingController();
-  final newPasswordController = TextEditingController();
-  final repeatNewPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _newEmailController = TextEditingController();
+  final _currentPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+  final _repeatNewPasswordController = TextEditingController();
 
-  bool isObscure = true;
   bool _isLoading = false;
+  bool _isObscureCurrent = false;
+  bool _isObscureNew = false;
+  bool _isObscureConfirm = false;
+
+  //sizes
+  static const _height_16 = AppSpacing.height_16;
+
+  //colors
+  static const _white = AppColors.white;
+  static const _errorRed = AppColors.errorRed;
+  static const _primaryAmber = AppColors.primaryAmber;
 
   @override
   void dispose() {
-    newEmailController.dispose();
-    currentPasswordController.dispose();
-    newPasswordController.dispose();
-    repeatNewPasswordController.dispose();
+    _newEmailController.dispose();
+    _currentPasswordController.dispose();
+    _newPasswordController.dispose();
+    _repeatNewPasswordController.dispose();
     super.dispose();
   }
 
@@ -45,7 +61,7 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: const Color(0xFF212121),
         appBar: _buildAppBar(),
         body: _buildBody(),
       ),
@@ -54,12 +70,12 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
 
   AppBar _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
+      backgroundColor: AppColors.transparent,
+      elevation: AppNumbers.zero,
       leading: _buildBackButton(),
       title: const Text(
         'تغيير البريد وكلمة المرور',
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: _white),
       ),
       actions: [_buildSaveButton()],
     );
@@ -68,7 +84,7 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   Widget _buildBackButton() {
     return IconButton(
       icon: const Icon(Icons.arrow_back),
-      color: Colors.white,
+      color: _white,
       onPressed: _isLoading ? null : () => Navigator.pop(context),
     );
   }
@@ -78,7 +94,7 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.amber[700],
+          backgroundColor: _primaryAmber,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -97,7 +113,7 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
       height: 20,
       child: CircularProgressIndicator(
         strokeWidth: 2,
-        color: Colors.white,
+        color: _white,
       ),
     )
         : const Text(
@@ -105,7 +121,7 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
       style: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
-        color: Colors.white,
+        color: _white,
       ),
     );
   }
@@ -119,15 +135,15 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Form(
-              key: formKey,
+              key: _formKey,
               child: Column(
                 children: [
                   _buildEmailField(),
-                  sizedBox(),
+                  _height_16,
                   _buildCurrentPasswordField(),
-                  sizedBox(),
+                  _height_16,
                   _buildNewPasswordField(),
-                  sizedBox(),
+                  _height_16,
                   _buildConfirmPasswordField(),
                   if (_isLoading) _buildLoadingIndicator(),
                 ],
@@ -140,13 +156,13 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   }
 
   BoxDecoration _buildBackgroundDecoration() {
-    return BoxDecoration(
+    return const BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          Colors.grey[900]!,
-          Colors.grey[800]!,
+          AppColors.darkGrey,
+          AppColors.lightGrey400,
         ],
       ),
     );
@@ -154,42 +170,53 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
 
   Widget _buildEmailField() {
     return BuildInputField(
-      controller: newEmailController,
-      hintText: "البريد الإلكتروني الجديد",
+      controller: _newEmailController,
+      hintText: 'يمكنك اضافة بريد إلكتروني الجديد',
       prefixIcon: Icons.email,
-      validator: (value) => _validateInput(value!, 'البريد الإلكتروني'),
+      validator: (value) => ValidateEmail.validator(value),
     );
   }
 
   Widget _buildCurrentPasswordField() {
+    const currentPassword = 'كلمة المرور الحالية';
     return BuildInputField(
-      controller: currentPasswordController,
-      hintText: "كلمة المرور الحالية",
+      controller: _currentPasswordController,
+      hintText: currentPassword,
       prefixIcon: Icons.lock,
-      obscureText: isObscure,
-      suffixIcon: _buildVisibilityToggle(),
-      validator: (value) => _validateInput(value!, 'كلمة المرور الحالية'),
+      obscureText: _isObscureCurrent,
+      suffixIcon: _buildVisibilityToggle(
+          isObscure: _isObscureCurrent,
+          onToggle: (value) =>
+              setState(() => _isObscureCurrent = value)),
+      validator: (value) => ValidatePassword.validator(value!),
     );
   }
 
   Widget _buildNewPasswordField() {
+    const newPassword = 'كلمة المرور الجديدة';
     return BuildInputField(
-      controller: newPasswordController,
-      hintText: "كلمة المرور الجديدة",
+      controller: _newPasswordController,
+      hintText: newPassword,
       prefixIcon: Icons.lock,
-      obscureText: isObscure,
-      suffixIcon: _buildVisibilityToggle(),
-      validator: (value) => _validateInput(value!, 'كلمة المرور الجديدة'),
+      obscureText: _isObscureNew,
+      suffixIcon: _buildVisibilityToggle(
+          isObscure: _isObscureNew,
+          onToggle: (value) =>
+              setState(() => _isObscureNew = value)),
+      validator: (value) => ValidatePassword.validator(value!),
     );
   }
 
   Widget _buildConfirmPasswordField() {
     return BuildInputField(
-      controller: repeatNewPasswordController,
+      controller: _repeatNewPasswordController,
       hintText: "تأكيد كلمة المرور الجديدة",
       prefixIcon: Icons.lock_reset,
-      obscureText: isObscure,
-      suffixIcon: _buildVisibilityToggle(),
+      obscureText: _isObscureConfirm,
+      suffixIcon: _buildVisibilityToggle(
+          isObscure: _isObscureConfirm,
+          onToggle: (value) =>
+              setState(() => _isObscureConfirm = value)),
       validator: _validatePasswordConfirmation,
     );
   }
@@ -197,21 +224,24 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   Widget _buildLoadingIndicator() {
     return const Column(
       children: [
-        SizedBox(height: 24),
+        AppSpacing.height24,
         CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+          valueColor: AlwaysStoppedAnimation<Color>(_primaryAmber),
         ),
       ],
     );
   }
 
-  IconButton _buildVisibilityToggle() {
+  IconButton _buildVisibilityToggle({
+    required bool isObscure,
+    required void Function(bool) onToggle
+  }) {
     return IconButton(
       icon: Icon(
         isObscure ? Icons.visibility_off : Icons.visibility,
-        color: Colors.amber[700],
+        color: _primaryAmber,
       ),
-      onPressed: () => setState(() => isObscure = !isObscure),
+      onPressed: () => onToggle(!isObscure),
     );
   }
 
@@ -222,9 +252,9 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   }
 
   bool _validateForm() {
-    if (!formKey.currentState!.validate()) return false;
+    if (!_formKey.currentState!.validate()) return false;
 
-    if (newPasswordController.text != repeatNewPasswordController.text) {
+    if (_newPasswordController.text != _repeatNewPasswordController.text) {
       _showPasswordMismatchError();
       return false;
     }
@@ -236,9 +266,9 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
     setState(() => _isLoading = true);
 
     final message = await widget._authOperations.changeEmailAndPassword(
-        newEmail: newEmailController.text,
-        currentPassword: currentPasswordController.text,
-        newPassword: newPasswordController.text
+        newEmail: _newEmailController.text,
+        currentPassword: _currentPasswordController.text,
+        newPassword: _newPasswordController.text
     );
 
     _clearUserData();
@@ -247,21 +277,14 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   }
 
   void _clearUserData() {
-    CacheHelper.removeValue(key: 'uId');
-  }
-
-  String? _validateInput(String? value, String fieldName) {
-    if (value == null || value.isEmpty) {
-      return 'يرجى إدخال $fieldName';
-    }
-    return null;
+    CacheHelper.removeValue(key: AppKeys.uId);
   }
 
   String? _validatePasswordConfirmation(dynamic value) {
     if (value == null || value.isEmpty) {
       return 'يرجى تأكيد كلمة المرور';
     }
-    if (value != newPasswordController.text) {
+    if (value != _newPasswordController.text) {
       return 'كلمات المرور غير متطابقة';
     }
     return null;
@@ -270,20 +293,21 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   void _showMessageResult(MessageResultModel message) {
     if (message.isSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
-          buildSnackBar('تم التحديث بنجاح', Colors.green[800]!)
+          buildSnackBar(AppStates.success, AppColors.successGreen)
       );
       navigator(context: context, link: const SignInScreen());
     }
     else {
       ScaffoldMessenger.of(context).showSnackBar(
-        buildSnackBar('فشل التحديث: ${message.error}', Colors.red[800]!),
+        buildSnackBar(' ${AppStates.failed}${message.error}',
+            _errorRed),
       );
     }
   }
 
   void _showPasswordMismatchError() {
     ScaffoldMessenger.of(context).showSnackBar(
-      buildSnackBar('كلمة المرور الجديدة غير متطابقة', Colors.red[800]!),
+      buildSnackBar('كلمة المرور الجديدة غير متطابقة', _errorRed),
     );
   }
 }

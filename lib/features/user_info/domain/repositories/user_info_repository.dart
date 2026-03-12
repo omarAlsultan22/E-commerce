@@ -3,7 +3,7 @@ import '../../../../core/data/models/user_info_model.dart';
 import 'package:international_cuisine/core/data/repositories_impl/base_user_repository.dart';
 
 
-abstract class UserInfoRepository implements BaseUserRepository{
+abstract class UserInfoRepository implements BaseUserInfoRepository{
   Future<void> setInfo({
     required UserInfoModel userModel,
     required UserCredential userCredential

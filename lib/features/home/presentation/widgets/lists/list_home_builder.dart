@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import '../layouts/home_layout.dart';
+import 'package:flutter/material.dart';
 import '../../../data/models/home_model.dart';
 
 

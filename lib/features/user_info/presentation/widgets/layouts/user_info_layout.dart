@@ -1,21 +1,27 @@
+import 'package:international_cuisine/core/presentation/utils/validate/validator_input.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import '../../../../auth/presentation/screens/change_email_&_password_screen.dart';
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import '../../../../../core/presentation/widgets/navigation/navigator.dart';
+import 'package:international_cuisine/core/constants/app_label_texts.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
+import 'package:international_cuisine/core/constants/app_borders.dart';
+import 'package:international_cuisine/core/constants/app_numbers.dart';
+import 'package:international_cuisine/core/constants/app_states.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
 import '../../../../../core/data/models/message_result_model.dart';
-import '../../../../../core/presentation/widgets/sized_box.dart';
-import '../../cubits/update_user_Info_cubit.dart';
+import '../../cubits/user_info_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
 
-class UpdateAccountLayout extends StatefulWidget {
+class UserInfoLayout extends StatefulWidget {
   final String firstName;
   final String lastName;
   final String userPhone;
   final String userLocation;
 
-  const UpdateAccountLayout({
+  const UserInfoLayout({
     required this.firstName,
     required this.lastName,
     required this.userPhone,
@@ -23,10 +29,10 @@ class UpdateAccountLayout extends StatefulWidget {
     Key? key}) : super(key: key);
 
   @override
-  State<UpdateAccountLayout> createState() => _UpdateAccountLayoutState();
+  State<UserInfoLayout> createState() => _UserInfoLayoutState();
 }
 
-class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
+class _UserInfoLayoutState extends State<UserInfoLayout> {
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
@@ -34,12 +40,33 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
   final _locationController = TextEditingController();
 
   bool _isLoading = false;
-  late UpdateUserInfoCubit cubit;
+  late UserInfoCubit _cubit;
+
+  //sizes
+  static const _verticalSpacing8 = AppSpacing.height_8;
+  static const _verticalSpacing16 = AppSpacing.height_16;
+  static const _verticalSpacing24 = AppSpacing.height24;
+
+  //labels
+  static const _firstName = AppLabelTexts.firstName;
+  static const _lastName = AppLabelTexts.lastName;
+  static const _phoneNumber = AppLabelTexts.phoneNumber;
+  static const _location = AppLabelTexts.location;
+
+  //colors
+  static const _white = AppColors.white;
+  static const _primaryAmber = AppColors.primaryAmber;
+
+  //paddings
+  static const _paddingSymmetric = EdgeInsets.symmetric(vertical: 16);
+
+  //borders
+  static final _borderRadius = AppBorders.borderRadius_12;
 
   @override
   void initState() {
     super.initState();
-    cubit = context.read<UpdateUserInfoCubit>();
+    _cubit = context.read<UserInfoCubit>();
     _initializeControllers(
         firstName: widget.firstName,
         lastName: widget.lastName,
@@ -73,9 +100,9 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: Colors.brown[900],
+        backgroundColor: AppColors.primaryBrown,
         appBar: _buildAppBar(),
-        body: _buildBody(context, cubit),
+        body: _buildBody(context, _cubit),
       ),
     );
   }
@@ -84,27 +111,27 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
   AppBar _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.transparent,
-      elevation: 0,
+      elevation: AppNumbers.zero,
       title: const Text(
         'الإعدادات',
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: _white),
       ),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
-        color: Colors.white,
+        color: _white,
         onPressed: _isLoading ? null : () => Navigator.pop(context),
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, UpdateUserInfoCubit cubit) {
+  Widget _buildBody(BuildContext context, UserInfoCubit cubit) {
     return Container(
       decoration: _buildBackgroundDecoration(),
       child: _buildFormContent(context, cubit),
     );
   }
 
-  Widget _buildFormContent(BuildContext context, UpdateUserInfoCubit cubit) {
+  Widget _buildFormContent(BuildContext context, UserInfoCubit cubit) {
     return IgnorePointer(
       ignoring: _isLoading,
       child: SingleChildScrollView(
@@ -115,15 +142,17 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeaderSection(),
-              const SizedBox(height: 32),
-              _buildNameField(),
-              sizedBox(),
+              AppSpacing.height_32,
+              _buildFirstNameField(),
+              _verticalSpacing16,
+              _buildSecondNameField(),
+              _verticalSpacing16,
               _buildPhoneField(),
-              sizedBox(),
+              _verticalSpacing16,
               _buildLocationField(),
-              const SizedBox(height: 24),
+              AppSpacing.height24,
               _buildChangePasswordButton(),
-              const SizedBox(height: 16),
+              _verticalSpacing16,
               _buildUpdateButton(cubit),
               if (_isLoading) _buildLoadingIndicator(),
             ],
@@ -137,54 +166,64 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'تحديث الملف الشخصي',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Colors.amber[400],
+            color: AppColors.lightAmber,
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
+        _verticalSpacing8,
+        const Text(
           'قم بتحديث معلوماتك الشخصية',
           style: TextStyle(
             fontSize: 16,
-            color: Colors.grey[400],
+            color: AppColors.lightGrey400,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildNameField() {
+  Widget _buildFirstNameField() {
+    return _buildCustomInputField(
+      controller: _firstNameController,
+      label: _firstName,
+      hint: AppLabelTexts.firstName,
+      icon: Icons.person,
+      validator: (value) => ValidateInput.validator(value, _firstName),
+    );
+  }
+
+  Widget _buildSecondNameField() {
     return _buildCustomInputField(
       controller: _lastNameController,
-      label: "الاسم",
-      hint: "أدخل اسمك",
+      label: _lastName,
+      hint: AppLabelTexts.lastName,
       icon: Icons.person,
-      validator: (value) => _validateInput(value, 'الاسم'),
+      validator: (value) => ValidateInput.validator(value, _lastName),
     );
   }
 
   Widget _buildPhoneField() {
     return _buildCustomInputField(
       controller: _phoneController,
-      label: "الهاتف",
-      hint: "أدخل رقم هاتفك",
+      label: _phoneNumber,
+      hint: AppLabelTexts.phoneNumber,
       icon: Icons.phone,
       keyboardType: TextInputType.phone,
-      validator: (value) => _validateInput(value, 'الهاتف'),
+      validator: (value) => ValidateInput.validator(value, _phoneNumber),
     );
   }
 
   Widget _buildLocationField() {
     return _buildCustomInputField(
       controller: _locationController,
-      label: "العنوان",
-      hint: "أدخل عنوانك",
+      label: _location,
+      hint: AppLabelTexts.location,
       icon: Icons.location_on,
-      validator: (value) => _validateInput(value, 'العنوان'),
+      validator: (value) => ValidateInput.validator(value, _location),
     );
   }
 
@@ -201,12 +240,12 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
       children: [
         Text(
           label,
-          style: TextStyle(
-            color: Colors.grey[300],
+          style: const TextStyle(
+            color: AppColors.lightGrey300,
             fontSize: 16,
           ),
         ),
-        const SizedBox(height: 8),
+        _verticalSpacing8,
         BuildInputField(
           controller: controller,
           hintText: hint,
@@ -223,11 +262,11 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
       child: OutlinedButton(
         style: _changePasswordButtonStyle(),
         onPressed: _navigateToChangePassword,
-        child: Text(
+        child: const Text(
           'تغيير البريد وكلمة المرور',
           style: TextStyle(
             fontSize: 18,
-            color: Colors.amber[700],
+            color: _primaryAmber,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -235,7 +274,7 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
     );
   }
 
-  Widget _buildUpdateButton(UpdateUserInfoCubit cubit) {
+  Widget _buildUpdateButton(UserInfoCubit cubit) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -246,7 +285,7 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: _white,
           ),
         ),
       ),
@@ -256,21 +295,21 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
   Widget _buildLoadingIndicator() {
     return const Column(
       children: [
-        SizedBox(height: 24),
+        _verticalSpacing24,
         Center(
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+            valueColor: AlwaysStoppedAnimation<Color>(_primaryAmber),
           ),
         ),
       ],
     );
   }
 
-  Future<void> _onUpdatePressed(UpdateUserInfoCubit cubit) async {
+  Future<void> _onUpdatePressed(UserInfoCubit cubit) async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       final message = await cubit.updateInfo(
-        firstName: _lastNameController.text.trim(),
+        firstName: _firstNameController.text.trim(),
         lastName: _lastNameController.text.trim(),
         userPhone: _phoneController.text.trim(),
         userLocation: _locationController.text.trim(),
@@ -283,13 +322,14 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
   void _showMessageResult(MessageResultModel message) {
     if (message.isSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
-          buildSnackBar('تم التحديث بنجاح', Colors.green[800]!)
+          buildSnackBar(AppStates.success, AppColors.successGreen)
       );
       navigator(context: context);
     }
     else {
       ScaffoldMessenger.of(context).showSnackBar(
-          buildSnackBar('فشل التحديث: ${message.error}', Colors.red[800]!)
+          buildSnackBar(' ${AppStates.failed} ${message.error}',
+              AppColors.errorRed)
       );
     }
   }
@@ -303,21 +343,15 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
     );
   }
 
-  String? _validateInput(String? value, String fieldName) {
-    if (value == null || value.isEmpty) {
-      return 'يرجى إدخال $fieldName';
-    }
-    return null;
-  }
 
   BoxDecoration _buildBackgroundDecoration() {
     return BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [
-          Colors.grey[900]!,
-          Colors.grey[800]!,
+        colors: const[
+          AppColors.darkGrey,
+          AppColors.mediumGrey,
         ],
       ),
     );
@@ -325,20 +359,20 @@ class _UpdateAccountLayoutState extends State<UpdateAccountLayout> {
 
   ButtonStyle _changePasswordButtonStyle() {
     return OutlinedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      side: BorderSide(color: Colors.amber[700]!),
+      padding: _paddingSymmetric,
+      side: BorderSide(color: _primaryAmber),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: _borderRadius,
       ),
     );
   }
 
   ButtonStyle _updateButtonStyle() {
     return ElevatedButton.styleFrom(
-      backgroundColor: Colors.amber[700],
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      backgroundColor: _primaryAmber,
+      padding: _paddingSymmetric,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: _borderRadius,
       ),
       elevation: 4,
     );

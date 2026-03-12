@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/useCases/cart_data_useCase.dart';
 import '../../../cuisines/data/models/data_model.dart';
 import 'package:international_cuisine/core/errors/error_handler.dart';
-import '../../../../core/data/data_sources/local/shared_preferences.dart';
 import 'package:international_cuisine/core/presentation/states/app_state.dart';
 import 'package:international_cuisine/core/errors/exceptions/app_exception.dart';
 
@@ -81,9 +80,6 @@ class CartDataCubit extends Cubit<CartDataState> {
     final appState = state.appState!;
     try {
       await _useCase.saveCartDataExecute(shoppingList: state.getShoppingList);
-      await CacheHelper.setIntValue(key: 'cart_saved_time', value: DateTime
-          .now()
-          .millisecondsSinceEpoch);
     }
     on AppException catch (e) {
       final exception = ErrorHandler.handleException(e);

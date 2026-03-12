@@ -1,3 +1,8 @@
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
+import 'package:international_cuisine/core/constants/app_paddings.dart';
+import 'package:international_cuisine/core/constants/app_borders.dart';
+import 'package:international_cuisine/core/constants/app_numbers.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../maps/presentation/screens/maps_screen.dart';
 import '../../../../../core/data/data_sources/local/hive.dart';
@@ -17,6 +22,7 @@ class CartDataLayout extends StatefulWidget {
 class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObserver{
   late CartDataCubit _cubit;
 
+  static const _paddingAll = EdgeInsets.all(16);
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -50,10 +56,10 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
+          elevation: AppNumbers.zero,
+          backgroundColor: AppColors.white,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+            icon: const Icon(Icons.arrow_back_ios, color: AppColors.black),
             onPressed: () => Navigator.pop(context),
           ),
           title: const Text(
@@ -61,19 +67,19 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
-              color: Colors.black,
+              color: AppColors.black,
             ),
           ),
           centerTitle: true,
         ),
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Color(0xFFF5F5F5),
         body: Column(
           children: [
             Expanded(
               child: ListView.separated(
-                padding: const EdgeInsets.all(16),
+                padding: _paddingAll,
                 itemCount: widget._shoppingList.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                separatorBuilder: (_, __) => AppSpacing.height_12,
                 itemBuilder: (context, index) =>
                     CartItemCard(
                       item: widget._shoppingList[index],
@@ -101,13 +107,13 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
         .fold(0, (sum, item) => sum + (item.price * item.item));
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: _paddingAll,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppBorders.borderRadius_12,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: AppColors.grey.withOpacity(0.1),
             spreadRadius: 2,
             blurRadius: 5,
             offset: const Offset(0, -2),
@@ -136,19 +142,17 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
 
   Widget _buildCheckoutButton() {
 
-    const fifty = 50.0;
-
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: _paddingAll,
       child: SizedBox(
         width: double.infinity,
-        height: fifty,
+        height: 50.0,
         child: ElevatedButton(
           onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FixedLocationPicker())),
           style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: AppBorders.borderRadius_8,
               )),
           child: const Text(
             'اطلب الآن',
@@ -178,20 +182,17 @@ class CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //numbers constants
-    const tow = 2.0;
-    const five = 5.0;
     const oneHundredTwenty = 120.0;
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.white,
+        borderRadius: AppBorders.borderRadius_12,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: tow,
-            blurRadius: five,
+            color: AppColors.grey.withOpacity(0.1),
+            spreadRadius: 2.0,
+            blurRadius: 5.0,
             offset: const Offset(0, 2),
           ),
         ],
@@ -210,7 +211,7 @@ class CartItemCard extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(12),
+              padding: AppPaddings.paddingAll_12,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -230,7 +231,7 @@ class CartItemCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  AppSpacing.height_8,
                   Text(
                     '${item.price} ج',
                     style: const TextStyle(
@@ -238,7 +239,7 @@ class CartItemCard extends StatelessWidget {
                       color: Colors.amber,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  AppSpacing.height_12,
                   Row(
                     children: [
                       IconButton(

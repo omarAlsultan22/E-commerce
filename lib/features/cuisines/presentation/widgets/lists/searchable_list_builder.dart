@@ -1,8 +1,12 @@
 import 'package:international_cuisine/features/evaluation/presentation/screens/evaluation_screen.dart';
 import 'package:international_cuisine/features/cart/presentation/screens/cart_data_screen.dart';
+import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import '../../../../user_info/presentation/screens/update_account_screen.dart';
+import '../../../../user_info/presentation/screens/user_info_screen.dart';
+import 'package:international_cuisine/core/constants/app_paddings.dart';
+import 'package:international_cuisine/core/constants/app_numbers.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
 import '../../../data/models/data_model.dart';
 import 'package:flutter/material.dart';
 import '../layouts/item_builder.dart';
@@ -40,6 +44,9 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   List<DataModel> _filteredData = [];
+
+  static const _white = AppColors.white;
+  static const _grey = AppColors.darkGrey;
 
   @override
   void initState() {
@@ -92,8 +99,11 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: Colors.grey[900],
-        appBar: _appBar(title: widget.title, context: context),
+        backgroundColor: _grey,
+        appBar: _appBar(
+            title: widget.title,
+            context: context
+        ),
         body: Column(
           children: [
             Padding(
@@ -102,16 +112,16 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'ابحث عن وجبة...',
-                  prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
+                  prefixIcon: Icon(Icons.search, color: AppColors.lightGrey400),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: CuisinesConstants.borderRadius,
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Colors.grey[800],
+                  fillColor: AppColors.mediumGrey,
                   contentPadding: const EdgeInsets.symmetric(vertical: 5),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: _white),
               ),
             ),
             Expanded(
@@ -120,7 +130,7 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                 builder: (context) =>
                     ListView.builder(
                         controller: _scrollController,
-                        padding: const EdgeInsets.all(10),
+                        padding: AppPaddings.paddingAll_10,
                         itemCount: _filteredData.length +
                             (widget.hasMore ? 1 : 0),
                         itemBuilder: (context, index) {
@@ -136,7 +146,7 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                               child: widget.hasMore && _searchController.text
                                   .isEmpty
                                   ? const CircularProgressIndicator(
-                                  color: Colors.white)
+                                  color: _white)
                                   : const SizedBox(),
                             );
                           }
@@ -145,22 +155,22 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                 fallback: (context) =>
                     Center(
                       child: _searchController.text.isEmpty ?
-                      CircularProgressIndicator(color: Colors.white) :
+                      CircularProgressIndicator(color: _white) :
                       Text('لا توجد نتائج متاحة',
-                          style: TextStyle(color: Colors.white, fontSize: 18)),
+                          style: TextStyle(color: _white, fontSize: 18)),
                     ),
               ),
             ),
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.amber,
+          backgroundColor: CuisinesConstants.amber,
           onPressed: () =>
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => CartDataScreen()),
               ),
-          child: const Icon(Icons.shopping_cart, color: Colors.black),
+          child: const Icon(Icons.shopping_cart, color: AppColors.black),
         ),
       ),
     );
@@ -169,40 +179,45 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
   PreferredSizeWidget _appBar({
     required final String title,
     required final BuildContext context
-  }) =>
-      AppBar(
-        elevation: 0,
-        titleSpacing: -10,
-        scrolledUnderElevation: 0,
-        backgroundColor: Colors.grey[900],
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+  }) {
+    const _zero = AppNumbers.zero;
+    return AppBar(
+      elevation: _zero,
+      titleSpacing: -10,
+      scrolledUnderElevation: _zero,
+      backgroundColor: _grey,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios, color: _white),
+        onPressed: () => Navigator.pop(context),
+      ),
+      actions: [
+        PopupMenuButton<String>(
+          icon: Icon(Icons.menu),
+          onSelected: (String value) {},
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem<String>(
+                  child: const Text('التقييم'),
+                  onTap: () => EvaluationScreen()
+              ),
+              PopupMenuItem<String>(
+                child: const Text('الاعدادات'),
+                onTap: () =>
+                    navigator(
+                        context: context, link: const UserInfoScreen()),
+              ),
+            ];
+          },
+        )
+      ],
+      title: Text(
+        title,
+        style: const TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: _white
         ),
-        actions: [
-          PopupMenuButton<String>(
-            icon: Icon(Icons.menu),
-            onSelected: (String value) {},
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem<String>(
-                    child: Text('التقييم'),
-                    onTap: () => EvaluationScreen()
-                ),
-                PopupMenuItem<String>(
-                  child: Text('الاعدادات'),
-                  onTap: () =>
-                      navigator(
-                          context: context, link: const UpdateAccountScreen()),
-                ),
-              ];
-            },
-          )
-        ],
-        title: Text(
-          title,
-          style: TextStyle(
-              fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-      );
+      ),
+    );
+  }
 }

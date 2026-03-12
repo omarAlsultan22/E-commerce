@@ -3,7 +3,7 @@ import 'package:international_cuisine/features/cart/data/models/order_model.dart
 import 'package:international_cuisine/core/data/repositories_impl/base_user_repository.dart';
 
 
-abstract class PaymentInvoiceRepository implements BaseUserRepository {
+abstract class PaymentInvoiceRepository implements BaseUserInfoRepository {
 
   Future<void> sendOrdersToDatabase({
     required UserInfoModel userInfo,

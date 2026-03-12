@@ -1,6 +1,6 @@
+import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 import 'package:international_cuisine/core/presentation/states/app_state.dart';
 import 'package:international_cuisine/core/data/models/user_info_model.dart';
-import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 import '../../../../core/errors/exceptions/app_exception.dart';
 
 
@@ -18,7 +18,7 @@ class PaymentInvoiceState {
 
   bool get isLoading => appState!.isLoading;
 
-  AppException? get failure => appState!.failure!;
+  AppException? get _failure => appState!.failure!;
 
   bool get listIsNotEmpty => shoppingList!.isNotEmpty;
 
@@ -42,8 +42,8 @@ class PaymentInvoiceState {
         OrderModel>? categoryData, UserInfoModel userModel) onLoaded,
     required R Function(AppException error) onError,
   }) {
-    if (failure != null) {
-      return onError(failure!);
+    if (_failure != null) {
+      return onError(_failure!);
     }
     if (isLoading) {
       return onLoading();

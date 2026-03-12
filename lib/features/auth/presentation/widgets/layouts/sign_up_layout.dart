@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import '../../screens/sgin_in_screen.dart';
+import '../../utils/validate/validate_email.dart';
+import '../../utils/validate/validate_password.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import '../../../../../core/presentation/widgets/validator.dart';
 import '../../../../../core/data/models/message_result_model.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_numbers.dart';
+import 'package:international_cuisine/core/constants/app_hint_texts.dart';
+import 'package:international_cuisine/core/constants/app_label_texts.dart';
 import '../../../../../core/presentation/widgets/navigation/navigator.dart';
+import '../../../../../core/presentation/utils/validate/validator_input.dart';
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
+import 'package:international_cuisine/features/auth/constants/auth_numbers_constants.dart';
+import 'package:international_cuisine/features/auth/presentation/widgets/auth_spacing.dart';
+import 'package:international_cuisine/features/auth/constants/auth_hint_texts_constants.dart';
+import 'package:international_cuisine/features/auth/constants/auth_label_texts_constants.dart';
 import 'package:international_cuisine/features/auth/presentation/operations/auth_operations.dart';
 
 
@@ -29,6 +40,21 @@ class _SignUpLayoutState extends State<SignUpLayout> {
 
   bool _isObscure = true;
   bool _isLoading = false;
+
+  //sizes
+  static const _height16 = AppSpacing.height_16;
+  static const _height24 = AppSpacing.height24;
+  static const _zero = AppNumbers.zero;
+
+  //labels
+  static const _firstName = AppLabelTexts.firstName;
+  static const _lastName = AppLabelTexts.lastName;
+  static const _phoneNumber = AppLabelTexts.phoneNumber;
+  static const _location = AppLabelTexts.location;
+
+  //colors
+  static const _black = AppColors.black;
+  static const _primaryAmber = AppColors.primaryAmber;
 
   @override
   void dispose() {
@@ -60,7 +86,7 @@ class _SignUpLayoutState extends State<SignUpLayout> {
     if (message.isSuccess) {
       QuickAlert.show(
           context: context,
-          text: 'تم إنشاء الحساب بنجاح',
+          text: 'تم انشاء الحساب بنجاح',
           type: QuickAlertType.success,
           showConfirmBtn: true,
           onConfirmBtnTap: () =>
@@ -87,15 +113,15 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: AppColors.darkGrey,
       appBar: AppBar(
         leading: InkWell(
           onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back, color: Colors.white),
+          child: const Icon(Icons.arrow_back, color: AppColors.white),
         ),
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        scrolledUnderElevation: 0,
+        elevation: _zero,
+        scrolledUnderElevation: _zero,
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -108,19 +134,19 @@ class _SignUpLayoutState extends State<SignUpLayout> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildHeader(context),
-                  const SizedBox(height: 24),
+                  _height24,
                   _buildFirstNameField(),
-                  const SizedBox(height: 16),
+                  _height16,
                   _buildLastNameField(),
-                  const SizedBox(height: 16),
+                  _height16,
                   _buildEmailField(),
-                  const SizedBox(height: 16),
+                  _height16,
                   _buildPasswordField(),
-                  const SizedBox(height: 16),
+                  _height16,
                   _buildPhoneField(),
-                  const SizedBox(height: 16),
+                  _height16,
                   _buildLocationField(),
-                  const SizedBox(height: 24),
+                  _height24,
                   _buildRegisterButton(context),
                 ],
               ),
@@ -142,7 +168,7 @@ class _SignUpLayoutState extends State<SignUpLayout> {
               .textTheme
               .headlineLarge
               ?.copyWith(
-            color: Colors.amber,
+            color: _primaryAmber,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -154,7 +180,7 @@ class _SignUpLayoutState extends State<SignUpLayout> {
               .textTheme
               .bodyMedium
               ?.copyWith(
-            color: Colors.grey[400],
+            color: AppColors.lightGrey400,
           ),
         ),
       ],
@@ -165,21 +191,22 @@ class _SignUpLayoutState extends State<SignUpLayout> {
     return BuildInputField(
       controller: _firstNameController,
       keyboardType: TextInputType.name,
-      labelText: "الاسم الأول",
-      hintText: "أدخل اسمك الأول",
+      labelText: _firstName,
+      hintText: AppHintTexts.firstName,
       prefixIcon: Icons.person,
-      validator: (value) => validator(value!, 'firstName'),
+      validator: (value) => ValidateInput.validator(value!, _firstName),
     );
   }
 
   Widget _buildLastNameField() {
+    ;
     return BuildInputField(
       controller: _lastNameController,
       keyboardType: TextInputType.name,
-      labelText: "الاسم الثاني",
-      hintText: "أدخل اسمك الثاني",
+      labelText: _lastName,
+      hintText: AppHintTexts.lastName,
       prefixIcon: Icons.person,
-      validator: (value) => validator(value!, 'lastName'),
+      validator: (value) => ValidateInput.validator(value!, _lastName),
     );
   }
 
@@ -187,10 +214,11 @@ class _SignUpLayoutState extends State<SignUpLayout> {
     return BuildInputField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
-      labelText: "البريد الإلكتروني",
-      hintText: "أدخل بريدك الإلكتروني",
+      labelText: AuthLabelTextsConstants.email,
+      hintText: AuthHintTextsConstants.email,
       prefixIcon: Icons.email,
-      validator: (value) => validator(value!, 'email'),
+      validator: (value) =>
+          ValidateEmail.validator(value!),
     );
   }
 
@@ -198,15 +226,15 @@ class _SignUpLayoutState extends State<SignUpLayout> {
     return BuildInputField(
       controller: _passwordController,
       keyboardType: TextInputType.visiblePassword,
-      labelText: "كلمة المرور",
-      hintText: "أدخل كلمة المرور",
+      labelText: AuthLabelTextsConstants.email,
+      hintText: AuthHintTextsConstants.password,
       prefixIcon: Icons.lock,
       obscureText: _isObscure,
-      validator: (value) => validator(value!, 'password'),
+      validator: (value) => ValidatePassword.validator(value!),
       suffixIcon: IconButton(
         icon: Icon(
           _isObscure ? Icons.visibility_off : Icons.visibility,
-          color: Colors.amber,
+          color: _primaryAmber,
         ),
         onPressed: _togglePasswordVisibility,
       ),
@@ -217,10 +245,10 @@ class _SignUpLayoutState extends State<SignUpLayout> {
     return BuildInputField(
       controller: _phoneController,
       keyboardType: TextInputType.phone,
-      labelText: "رقم الهاتف",
-      hintText: "أدخل رقم هاتفك",
+      labelText: _phoneNumber,
+      hintText: AppHintTexts.phoneNumber,
       prefixIcon: Icons.phone,
-      validator: (value) => validator(value!, 'phone'),
+      validator: (value) => ValidateInput.validator(value!, _phoneNumber),
     );
   }
 
@@ -228,10 +256,10 @@ class _SignUpLayoutState extends State<SignUpLayout> {
     return BuildInputField(
       controller: _locationController,
       keyboardType: TextInputType.streetAddress,
-      labelText: "الموقع",
-      hintText: "أدخل موقعك",
+      labelText: _location,
+      hintText: AppHintTexts.location,
       prefixIcon: Icons.location_on,
-      validator: (value) => validator(value!, 'location'),
+      validator: (value) => ValidateInput.validator(value!, _location),
     );
   }
 
@@ -239,23 +267,16 @@ class _SignUpLayoutState extends State<SignUpLayout> {
     return ElevatedButton(
       onPressed: _isLoading ? null : _handleRegister,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.amber,
-        foregroundColor: Colors.black,
+        backgroundColor: _primaryAmber,
+        foregroundColor: _black,
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(AuthNumbersConstants.fifty),
         ),
         minimumSize: const Size(double.infinity, 50),
       ),
       child: _isLoading
-          ? const SizedBox(
-        height: 24,
-        width: 24,
-        child: CircularProgressIndicator(
-          color: Colors.black,
-          strokeWidth: 2,
-        ),
-      )
+          ? AuthSpacing.sizedBox
           : const Text(
         "تسجيل",
         style: TextStyle(

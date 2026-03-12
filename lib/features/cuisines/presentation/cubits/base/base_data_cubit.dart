@@ -1,6 +1,6 @@
+import '../../states/categories_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:international_cuisine/core/presentation/states/app_state.dart';
-import '../../states/categories_states.dart';
 
 
 abstract class BaseCountriesCubit extends Cubit<CategoriesState> {

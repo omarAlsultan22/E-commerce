@@ -1,19 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/errors/error_handler.dart';
 import '../../domain/useCases/user_info_useCase.dart';
-import '../states/states/update_user_info_state.dart';
+import '../states/states/user_info_state.dart';
 import '../../../../core/errors/exceptions/app_exception.dart';
 import '../../../../core/data/models/message_result_model.dart';
 
 
-class UpdateUserInfoCubit extends Cubit<UpdateUserInfoState> {
+class UserInfoCubit extends Cubit<UserInfoState> {
   final UserInfoUseCase _userInfoUseCase;
 
-  UpdateUserInfoCubit({required UserInfoUseCase userInfoUseCase})
+  UserInfoCubit({required UserInfoUseCase userInfoUseCase})
       : _userInfoUseCase = userInfoUseCase,
-        super(UpdateUserInfoState());
+        super(UserInfoState());
 
-  static UpdateUserInfoCubit get(context) => BlocProvider.of(context);
+  static UserInfoCubit get(context) => BlocProvider.of(context);
 
 
   Future<MessageResultModel> updateInfo({

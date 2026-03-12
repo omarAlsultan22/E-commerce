@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/lists/searchable_list_builder.dart';
 import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
-import 'package:international_cuisine/features/cuisines/constants/constants_cuisines.dart';
+import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
 import 'package:international_cuisine/core/presentation/widgets/states/error_state_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/states/initial_state_widget.dart';
 
@@ -27,7 +27,6 @@ class _ChineseScreenState extends State<ChineseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const chineseCuisine = 'المطبخ الصيني';
     return ConnectivityAwareService(
         child: BlocBuilder<ChineseDataCubit, CategoriesState>(
           builder: (context, state) {
@@ -35,14 +34,14 @@ class _ChineseScreenState extends State<ChineseScreen> {
             return state.when(
                 onInitial: () =>
                 const InitialStateWidget(
-                    ConstantsCuisines.data, ConstantsCuisines.menu),
+                    CuisinesConstants.data, CuisinesConstants.menu),
                 onLoading: () => const LoadingStateWidget(),
                 onLoaded: (categoryData, searchData) =>
                     SearchableListBuilder(
                       isLocked: false,
                       dataList: categoryData!,
                       searchData: searchData!,
-                      title: chineseCuisine,
+                      title: 'المطبخ الصيني',
                       getMoreData: () => _cubit.getData(),
                       hasMore: state.hasMore!,
                       clearData: () => _cubit.clearDataSearch(),

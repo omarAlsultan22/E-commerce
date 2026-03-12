@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_snack_bar.dart';
 import 'package:international_cuisine/features/evaluation/presentation/operations/evaluation_operations.dart';
 
@@ -12,28 +14,29 @@ class EvaluationLayout extends StatefulWidget {
 }
 
 class _EvaluationLayoutState extends State<EvaluationLayout> {
-  bool isLoading = false;
+  bool _isLoading = false;
   final _textController = TextEditingController();
 
   Future<void> _onSendPressed() async {
-    setState(() => isLoading = true);
+    setState(() => _isLoading = true);
 
     final result = await widget._operations.sendEvaluation(
         evaluationText: _textController.text
     );
 
-    setState(() => isLoading = false);
+    setState(() => _isLoading = false);
 
     if (result.isSuccess) {
-      buildSnackBar('Sent successfully', Colors.green.shade700);
+      buildSnackBar('Sent successfully', AppColors.successGreen);
     }
     else {
-      buildSnackBar(result.error!, Colors.red.shade700);
+      buildSnackBar(result.error!, AppColors.errorRed);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    const _paddingAll12 = AppPaddings.paddingAll_12;
     return Scaffold(
       body: Image.asset(
         fit: BoxFit.fill,
@@ -58,12 +61,12 @@ class _EvaluationLayoutState extends State<EvaluationLayout> {
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 textInputAction: TextInputAction.newline,
-                style: TextStyle(backgroundColor: Colors.grey.shade700),
+                style: TextStyle(backgroundColor: Color(0xFF616161)),
               ),
             ),
-            IconButton(onPressed: () {}, icon: isLoading ? const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: SizedBox(
+            IconButton(onPressed: () {}, icon: _isLoading ? const Padding(
+              padding: _paddingAll12,
+              child: const SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(strokeWidth: 2),
@@ -72,7 +75,7 @@ class _EvaluationLayoutState extends State<EvaluationLayout> {
                 : GestureDetector(
               onTap: _onSendPressed,
               child: const Padding(
-                padding: EdgeInsets.all(12.0),
+                padding: _paddingAll12,
                 child: Icon(Icons.send, color: Colors.blue),
               ),
             )

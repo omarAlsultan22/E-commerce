@@ -3,28 +3,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/data/models/user_info_model.dart';
 import '../../domain/repositories/payment_invoice_repository.dart';
 import '../../presentation/utils/helpers/user_info_converter.dart';
+import 'package:international_cuisine/core/constants/app_keys.dart';
 import '../../../../core/data/data_sources/local/shared_preferences.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 
 
-class FirestoreInfoRepository implements PaymentInvoiceRepository {
+class FirestorePaymentInvoiceRepository implements PaymentInvoiceRepository {
   final FirebaseFirestore _repository;
 
-  FirestoreInfoRepository({required FirebaseFirestore repository})
+  FirestorePaymentInvoiceRepository({required FirebaseFirestore repository})
       : _repository = repository;
 
-  static const uidKey = 'uId';
-  static const locationKey = 'location';
-  static const processingOrders = 'processingOrders';
+  static const uId = AppKeys.uId;
 
   @override
   Future<UserInfoModel> getInfo() async {
     try {
-      final uId = await CacheHelper.getStringValue(key: uidKey);
-      final location = await CacheHelper.getStringValue(key: locationKey);
+      final userId = await CacheHelper.getStringValue(key: uId);
+      final location = await CacheHelper.getStringValue(key: AppKeys.location);
       final doc = await _repository
-          .collection('userInfo')
-          .doc(uId).get();
+          .collection(AppKeys.userInfo)
+          .doc(userId).get();
 
       if (!doc.exists) {
         throw Exception('User document does not exist');
@@ -48,7 +47,7 @@ class FirestoreInfoRepository implements PaymentInvoiceRepository {
         throw Exception('User model is null');
       }
 
-      final uId = await CacheHelper.getStringValue(key: uidKey);
+      final userId = await CacheHelper.getStringValue(key: uId);
 
       SendOrderModel data = SendOrderModel(
           userName: ('${userInfo.firstName} ${userInfo.lastName}'),
@@ -57,7 +56,7 @@ class FirestoreInfoRepository implements PaymentInvoiceRepository {
           shoppingList: shoppingList
       );
 
-      await _repository.collection(processingOrders).doc(uId).set(
+      await _repository.collection('processingOrders').doc(userId).set(
           data.toJson());
     } catch (e) {
       rethrow;

@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../../data/models/data_model.dart';
 import '../../../../cart/presentation/cubits/cart_data_cubit.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_numbers.dart';
+import 'package:international_cuisine/core/constants/app_borders.dart';
+import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_snack_bar.dart';
+import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
 import 'package:international_cuisine/features/cart/presentation/screens/cart_data_screen.dart';
 
 
-final List<String> mealSizes = ['صغير', 'وسط', 'كبير'];
-final List<String> items = List.generate(10, (index) => (index + 1).toString());
-final List<Color> mealColors = [Colors.amber, Colors.orange, Colors.red];
+final List<String> _mealSizes = ['صغير', 'وسط', 'كبير'];
+final List<String> _items = List.generate(10, (index) => (index + 1).toString());
+final List<Color> _mealColors = [CuisinesConstants.amber, Colors.orange, Colors.red];
 
 
 class ItemBuilder extends StatefulWidget {
@@ -49,8 +54,8 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
     );
 
     _colorAnimation = ColorTween(
-      begin: mealColors[0],
-      end: mealColors[1],
+      begin: _mealColors[0],
+      end: _mealColors[1],
     ).animate(_animationController);
 
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
@@ -69,9 +74,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
   void dispose() {
     _animationController.dispose();
     _sizeController.dispose();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      //CartCubit.get(context).loadCartFromPrefs();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
     super.dispose();
   }
 
@@ -89,11 +92,11 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
   }
 
   void displayResult() {
-    if (widget._dataModel.getSelectedItem <= 0) {
-      buildSnackBar('الكمية يجب أن تكون أكبر من الصفر', Colors.red);
+    if (widget._dataModel.getSelectedItem <= AppNumbers.zero) {
+      buildSnackBar('الكمية يجب أن تكون أكبر من الصفر', AppColors.errorRed);
       return;
     }
-    buildSnackBar('تمت الإضافة إلى السلة بنجاح', Colors.green[800]!);
+    buildSnackBar('تمت الإضافة إلى السلة بنجاح', AppColors.successGreen);
   }
 
   num _getSizePrice() {
@@ -116,11 +119,28 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
       return const Center(child: CircularProgressIndicator());
     }
 
+    //numbers
+    const _ten = 10.0;
+    const _towHundred = 200.0;
+
+    //spacing
+    const _sizedBox = SizedBox(width: 8.0);
+
+    //borders
+    const _borderRadiusTop = Radius.circular(15);
+    const _borderRadiusALl = AppBorders.borderRadius_12;
+
+    //colors
+    const _grey300 = AppColors.lightGrey300;
+    const _amber = CuisinesConstants.amber;
+    const _white = AppColors.white;
+    const _black = AppColors.black;
+
     return Card(
       elevation: 5,
-      margin: const EdgeInsets.all(10),
+      margin: AppPaddings.paddingAll_10,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: CuisinesConstants.borderRadius,
       ),
       child: Column(
         children: [
@@ -131,7 +151,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                 onTap: () {
                   setState(() {
                     _currentSizeIndex =
-                        (_currentSizeIndex + 1) % mealSizes.length;
+                        (_currentSizeIndex + 1) % _mealSizes.length;
                     _sizeController.animateToPage(
                       _currentSizeIndex,
                       duration: const Duration(milliseconds: 100),
@@ -140,7 +160,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
 
                     _colorAnimation = ColorTween(
                       begin: _colorAnimation.value,
-                      end: mealColors[_currentSizeIndex],
+                      end: _mealColors[_currentSizeIndex],
                     ).animate(_animationController);
 
                     _animationController
@@ -150,10 +170,10 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                 },
                 child: ClipRRect(
                   borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(15)),
+                      top: _borderRadiusTop),
                   child: Image.network(
                     widget._dataModel.orderImage!,
-                    height: 200,
+                    height: _towHundred,
                     width: double.infinity,
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
@@ -169,16 +189,16 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                     },
                     errorBuilder: (context, error, stackTrace) =>
                         Container(
-                          height: 200,
-                          color: Colors.grey[300],
+                          height: _towHundred,
+                          color: _grey300,
                           child: const Icon(Icons.error, size: 50),
                         ),
                   ),
                 ),
               ),
               Positioned(
-                top: 10,
-                right: 10,
+                top: _ten,
+                right: _ten,
                 child: AnimatedBuilder(
                   animation: _animationController,
                   builder: (context, child) {
@@ -192,7 +212,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                           borderRadius: BorderRadius.circular(50),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
+                              color: _black.withOpacity(0.3),
                               blurRadius: 5,
                               offset: const Offset(0, 2),
                             ),
@@ -204,13 +224,13 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                           child: PageView.builder(
                             controller: _sizeController,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: mealSizes.length,
+                            itemCount: _mealSizes.length,
                             itemBuilder: (context, index) {
                               return Center(
                                 child: Text(
-                                  mealSizes[index],
+                                  _mealSizes[index],
                                   style: const TextStyle(
-                                    color: Colors.white,
+                                    color: _white,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
                                   ),
@@ -229,16 +249,16 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                     vertical: 8, horizontal: 16),
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
+                  color: _black.withOpacity(0.6),
                   borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(15)),
+                      top: _borderRadiusTop),
                 ),
                 child: Column(
                   children: [
                     Text(
                       widget._dataModel.orderName!,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: _white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -260,7 +280,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                             index < _userRating
                                 ? Icons.star
                                 : Icons.star_border,
-                            color: Colors.amber,
+                            color: _amber,
                             size: 20,
                           ),
                         );
@@ -279,18 +299,18 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                   width: 70,
                   height: 38,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.grey[200],
+                    borderRadius: _borderRadiusALl,
+                    color: AppColors.lightGrey200,
                   ),
                   child: DropdownButtonFormField<String>(
-                    menuMaxHeight: 200,
-                    borderRadius: BorderRadius.circular(12),
+                    menuMaxHeight: _towHundred,
+                    borderRadius: _borderRadiusALl,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(horizontal: 8),
                     ),
                     value: widget._dataModel.selectedItem.toString(),
-                    items: items.map((item) =>
+                    items: _items.map((item) =>
                         DropdownMenuItem<String>(
                           value: item,
                           child: Text(
@@ -310,38 +330,38 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                     },
                   ),
                 ),
-                const SizedBox(width: 8),
+                _sizedBox,
                 Container(
                   width: 70,
                   child: MaterialButton(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: _borderRadiusALl,
                     ),
-                    color: Colors.grey[300],
+                    color: _grey300,
                     onPressed: () =>
                         CartDataCubit.get(context).addOrder(
                           dataModel: widget._dataModel,
-                          orderSize: mealSizes[_currentSizeIndex],
+                          orderSize: _mealSizes[_currentSizeIndex],
                         ).whenComplete(() => displayResult()),
                     child: Icon(
                       Icons.add_shopping_cart,
                       size: 24,
-                      color: Colors.black,
+                      color: AppColors.black,
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                _sizedBox,
                 Expanded(
                   child: MaterialButton(
                     height: 38,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: _borderRadiusALl,
                     ),
-                    color: Colors.amber,
+                    color: _amber,
                     onPressed: () {
                       CartDataCubit.get(context).addOrder(
                         dataModel: widget._dataModel,
-                        orderSize: mealSizes[_currentSizeIndex],
+                        orderSize: _mealSizes[_currentSizeIndex],
                       );
                       Navigator.push(
                         context,

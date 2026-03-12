@@ -7,7 +7,7 @@ import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import '../../../../core/presentation/widgets/states/error_state_widget.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
-import 'package:international_cuisine/features/cuisines/constants/constants_cuisines.dart';
+import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
 
 
 class FrenchScreen extends StatefulWidget {
@@ -27,7 +27,6 @@ class _FrenchScreenState extends State<FrenchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const frenchCuisine = 'المطبخ الفرنسي';
     return ConnectivityAwareService(
         child: BlocBuilder<FrenchDataCubit, CategoriesState>(
           builder: (context, state) {
@@ -35,14 +34,14 @@ class _FrenchScreenState extends State<FrenchScreen> {
             return state.when(
                 onInitial: () =>
                 const InitialStateWidget(
-                    ConstantsCuisines.data, ConstantsCuisines.menu),
+                    CuisinesConstants.data, CuisinesConstants.menu),
                 onLoading: () => const LoadingStateWidget(),
                 onLoaded: (categoryData, searchData) =>
                     SearchableListBuilder(
                       isLocked: false,
                       dataList: categoryData!,
                       searchData: searchData!,
-                      title: frenchCuisine,
+                      title: 'المطبخ الفرنسي',
                       getMoreData: () => _cubit.getData(),
                       hasMore: state.hasMore!,
                       clearData: () => _cubit.clearDataSearch(),

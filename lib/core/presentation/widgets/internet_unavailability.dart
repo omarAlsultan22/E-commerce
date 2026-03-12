@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_borders.dart';
 import '../../domain/services/connectivity_service/connectivity_service.dart';
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 
 
 class InternetUnavailability extends StatelessWidget {
@@ -7,16 +10,16 @@ class InternetUnavailability extends StatelessWidget {
 
   const InternetUnavailability({super.key, required this.onRetry});
 
-  static const imageUrl = 'assets/images/original_logo.png';
-
   @override
   Widget build(BuildContext context) {
+    const imageUrl = 'assets/images/original_logo.png';
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
           Container(
-            color: Colors.white,
+            color: AppColors.white,
           ),
 
           Opacity(
@@ -37,21 +40,21 @@ class InternetUnavailability extends StatelessWidget {
                 Icon(
                   Icons.wifi_off,
                   size: 80,
-                  color: Colors.grey[600],
+                  color: const Color(0xFF757575),
                 ),
 
                 const SizedBox(height: 20),
 
                 // النصوص
                 _buildText('OOPS!', 28.0),
-                const SizedBox(height: 8),
+                AppSpacing.height_8,
                 _buildText('NO INTERNET', 24.0),
                 const SizedBox(height: 20),
                 _buildText(
                   'Please check your network connection.',
                   16.0,
                   fontWeight: FontWeight.normal,
-                  color: Colors.grey[700],
+                  color: const Color(0xFF616161),
                 ),
 
                 const SizedBox(height: 40),
@@ -63,7 +66,7 @@ class InternetUnavailability extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: AppBorders.borderRadius_12,
                       ),
                     ),
                     child: _buildText('TRY AGAIN', 18.0),
@@ -95,7 +98,7 @@ class InternetUnavailability extends StatelessWidget {
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
-        color: Colors.grey[800],
+        color: AppColors.mediumGrey,
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:international_cuisine/features/invoice/presentation/screens/payment_invoice_screen.dart';
 import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +20,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   // Controllers
-  late double totalAmount;
+  late double _totalAmount;
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _amountController;
   final _cardNumberController = TextEditingController();
@@ -35,7 +37,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   bool _saveCard = false;
   final _secureStorage = const FlutterSecureStorage();
 
-
   //رابط الدفع https://paymob.xyz/SmeU4AVK/
 
   // Paymob Configuration
@@ -44,11 +45,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final String _vodafoneIntegrationId = '4629565';
   String _paymentToken = '';
 
+  //spacing
+  static const _verticalSpacing10 = SizedBox(height: 10.0);
+  static const _verticalSpacing15 = SizedBox(height: 15.0);
+  static const _verticalSpacing20 = SizedBox(height: 20.0);
+
   @override
   void initState() {
     super.initState();
     totalPrice();
-    _amountController = TextEditingController(text: '${totalAmount}');
+    _amountController = TextEditingController(text: '${_totalAmount}');
     _cardNumberController.text = '4242424242424242';
     _expiryController.text = '12/30';
     _cardHolderController.text = 'payment test';
@@ -60,7 +66,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void totalPrice() {
-    totalAmount = CartDataCubit
+    _totalAmount = CartDataCubit
         .get(context)
         .state
         .getShoppingList
@@ -191,11 +197,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
       body: json.encode({
         'auth_token': authToken,
         'delivery_needed': 'false',
-        'amount_cents': (totalAmount * 100).round().toString(),
+        'amount_cents': (_totalAmount * 100).round().toString(),
         'currency': 'EGP',
         'items': [{
           'name': 'International Cuisine Order',
-          'amount_cents': (totalAmount * 100).round().toString(),
+          'amount_cents': (_totalAmount * 100).round().toString(),
           'quantity': '1'
         }
         ],
@@ -381,11 +387,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _buildPaymentMethodSelector() {
+    const _verticalSpacing8 = SizedBox(width: 8.0);
+
     return Column(
       children: [
         const Text('طريقة الدفع',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 10),
+        _verticalSpacing10,
         Row(
           children: [
             Expanded(
@@ -396,7 +404,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     setState(() => _selectedPaymentMethod = 0),
               ),
             ),
-            const SizedBox(width: 8),
+            _verticalSpacing8,
             Expanded(
               child: ChoiceChip(
                 label: const Text('فوري'),
@@ -405,7 +413,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     setState(() => _selectedPaymentMethod = 1),
               ),
             ),
-            const SizedBox(width: 8),
+            _verticalSpacing8,
             Expanded(
               child: ChoiceChip(
                 label: const Text('فودافون كاش'),
@@ -425,7 +433,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     return Column(
       children: [
-        const SizedBox(height: 20),
+        _verticalSpacing20,
         TextFormField(
           controller: _cardNumberController,
           keyboardType: TextInputType.number,
@@ -447,7 +455,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             return null;
           },
         ),
-        const SizedBox(height: 15),
+        _verticalSpacing15,
         Row(
           children: [
             Expanded(
@@ -499,7 +507,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 15),
+        _verticalSpacing15,
         TextFormField(
           controller: _cardHolderController,
           decoration: const InputDecoration(
@@ -513,7 +521,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             return null;
           },
         ),
-        const SizedBox(height: 10),
+        _verticalSpacing10,
         CheckboxListTile(
           title: const Text('حفظ البطاقة للمرة القادمة'),
           value: _saveCard,
@@ -529,7 +537,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     return Column(
       children: [
-        const SizedBox(height: 20),
+        _verticalSpacing20,
         TextFormField(
           controller: _phoneController,
           keyboardType: TextInputType.phone,
@@ -547,7 +555,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             return null;
           },
         ),
-        const SizedBox(height: 15),
+        _verticalSpacing15,
         TextFormField(
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
@@ -571,6 +579,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const _verticalSpace = SizedBox(height: 30.0);
+
     return ConnectivityAwareService(
         child: Scaffold(
           appBar: AppBar(
@@ -586,24 +596,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 20),
+                    _verticalSpacing20,
                     const Text(
                       'المبلغ الإجمالي',
                       style: TextStyle(
                           fontSize: 18, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 10),
+                    _verticalSpacing10,
                     Text(
-                      '${totalAmount.toStringAsFixed(2)} جنيهاً',
+                      '${_totalAmount.toStringAsFixed(2)} جنيهاً',
                       style: const TextStyle(fontSize: 24, color: Colors.amber),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 30),
+                    _verticalSpace,
                     _buildPaymentMethodSelector(),
                     _buildCardForm(),
                     _buildMobileForm(),
-                    const SizedBox(height: 30),
+                    _verticalSpace,
                     ElevatedButton(
                       onPressed: _isLoading ? null : _processPayment,
                       style: ElevatedButton.styleFrom(
@@ -611,7 +621,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         backgroundColor: Colors.blue,
                       ),
                       child: _isLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
+                          ? const CircularProgressIndicator(color: AppColors.white)
                           : Text(
                         _selectedPaymentMethod == 1
                             ? 'إنشاء فاتورة فوري'
@@ -620,7 +630,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             fontSize: 18, color: Colors.white),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    _verticalSpacing20,
                     const Text(
                       'بياناتك محمية ولا يتم تخزين معلومات البطاقة على خوادمنا',
                       style: TextStyle(color: Colors.grey, fontSize: 12),

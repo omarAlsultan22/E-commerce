@@ -6,17 +6,20 @@ class LoadingStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const imageUrl = 'assets/images/original_logo.png';
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
         Image.asset(
-          fit: BoxFit.fill,
+          imageUrl,
+          fit: BoxFit.cover,
           height: double.infinity,
-          'assets/images/original_logo.png',
+          width: double.infinity,
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 50.0),
-          child: SizedBox(
+          child: const SizedBox(
             width: 25.0,
             height: 25.0,
             child: CircularProgressIndicator(

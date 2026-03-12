@@ -1,8 +1,7 @@
-import 'package:international_cuisine/features/cuisines/data/models/data_model.dart';
-
 import '../../../../core/errors/exceptions/app_exception.dart';
 import 'package:international_cuisine/core/presentation/states/app_state.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
+import 'package:international_cuisine/features/cuisines/data/models/data_model.dart';
 
 
 class CartDataState{

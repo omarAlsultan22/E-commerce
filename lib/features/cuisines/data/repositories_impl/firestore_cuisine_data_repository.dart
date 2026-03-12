@@ -12,9 +12,9 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     required FirebaseFirestore firestore
   }) : _firestore = firestore;
 
-  static const orderName = 'countriesData';
-  static const collectionId = 'countriesData';
-  static const docId = 'L8nSAa05FTdy6I47cOaf';
+  static const _orderName = 'countriesData';
+  static const _collectionId = 'countriesData';
+  static const _docId = 'L8nSAa05FTdy6I47cOaf';
 
   @override
   Future<PaginatedResult> getPaginatedData({
@@ -22,8 +22,8 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     required DocumentSnapshot? lastDocument,
     int pageSize = 5,
   }) async {
-    Query query = _firestore.collection(collectionId)
-        .doc(docId)
+    Query query = _firestore.collection(_collectionId)
+        .doc(_docId)
         .collection(collectionPath);
 
     if (lastDocument != null) {
@@ -69,11 +69,11 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     }
 
     var firestoreQuery = _firestore
-        .collection(collectionId)
-        .doc(docId)
+        .collection(_collectionId)
+        .doc(_docId)
         .collection(collectionPath)
-        .where(orderName, isGreaterThanOrEqualTo: normalizedQuery)
-        .where(orderName, isLessThanOrEqualTo: '$normalizedQuery\uf8ff');
+        .where(_orderName, isGreaterThanOrEqualTo: normalizedQuery)
+        .where(_orderName, isLessThanOrEqualTo: '$normalizedQuery\uf8ff');
 
     try {
       final snapshot = await firestoreQuery.get();
@@ -81,7 +81,7 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
       return snapshot.docs
           .where((doc) {
         final data = doc.data();
-        final fullName = data[orderName]?.toString().toLowerCase() ?? '';
+        final fullName = data[_orderName]?.toString().toLowerCase() ?? '';
         return fullName.contains(normalizedQuery);
       }).map((doc) {
         final data = doc.data();

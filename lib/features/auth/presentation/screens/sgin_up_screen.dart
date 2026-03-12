@@ -14,15 +14,15 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = FirebaseAuth.instance;
-    final authRepository = FirebaseAuthRepository(auth: auth);
-    final repository = FirebaseFirestore.instance;
-    final userInfoRepository = FirestoreInfoRepository(repository: repository);
-    final authUseCase = AuthUseCase(
-        authRepository: authRepository, userInfoRepository: userInfoRepository);
-    final authOperations = AuthOperations(authUseCase: authUseCase);
+    final _auth = FirebaseAuth.instance;
+    final _authRepository = FirebaseAuthRepository(auth: _auth);
+    final _repository = FirebaseFirestore.instance;
+    final _userInfoRepository = FirestoreUserInfoRepository(repository: _repository);
+    final _authUseCase = AuthUseCase(
+        authRepository: _authRepository, userInfoRepository: _userInfoRepository);
+    final _authOperations = AuthOperations(authUseCase: _authUseCase);
     return ConnectivityAwareService(
-        child: SignUpLayout(authOperations)
+        child: SignUpLayout(_authOperations)
     );
   }
 }

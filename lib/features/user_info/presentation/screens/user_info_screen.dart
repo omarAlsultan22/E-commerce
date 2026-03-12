@@ -1,44 +1,42 @@
-import 'package:international_cuisine/features/user_info/data/repositories_impl/firestore_user_info_repository.dart';
 import 'package:international_cuisine/core/presentation/widgets/states/loading_state_widget.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
 import '../../../../core/presentation/widgets/states/error_state_widget.dart';
 import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
-import '../widgets/layouts/update_account_layout.dart';
+import '../../data/repositories_impl/firestore_user_info_repository.dart';
+import 'package:international_cuisine/core/constants/app_keys.dart';
+import '../widgets/layouts/user_info_layout.dart';
 import '../../domain/useCases/user_info_useCase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../states/states/update_user_info_state.dart';
+import '../states/states/user_info_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubits/update_user_Info_cubit.dart';
+import '../cubits/user_info_cubit.dart';
 import 'package:flutter/material.dart';
 
 
-class UpdateAccountScreen extends StatelessWidget {
-  const UpdateAccountScreen({super.key});
-
-  static const String userInfo = 'userInfo';
-  static const IconData infoIcon = Icons.info;
+class UserInfoScreen extends StatelessWidget {
+  const UserInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final repository = FirebaseFirestore.instance;
-    final userInfoRepository = FirestoreInfoRepository(repository: repository);
-    final userInfoUseCase = UserInfoUseCase(
-        userInfoRepository: userInfoRepository);
+    final _repository = FirebaseFirestore.instance;
+    final _userInfoRepository = FirestoreUserInfoRepository(repository: _repository);
+    final _userInfoUseCase = UserInfoUseCase(
+        userInfoRepository: _userInfoRepository);
     return ConnectivityAwareService(
         child: BlocProvider(
             create: (context) =>
-                UpdateUserInfoCubit(userInfoUseCase: userInfoUseCase),
-            child: BlocBuilder<UpdateUserInfoCubit, UpdateUserInfoState>(
+                UserInfoCubit(userInfoUseCase: _userInfoUseCase),
+            child: BlocBuilder<UserInfoCubit, UserInfoState>(
                 builder: (context, state) {
-                  final cubit = UpdateUserInfoCubit.get(context);
+                  final cubit = UserInfoCubit.get(context);
                   return state.when(
                     onInitial: () =>
                     const InitialStateWidget(
-                        userInfo, infoIcon),
+                        AppKeys.userInfo, Icons.info),
                     onLoading: () =>
                     const LoadingStateWidget(),
                     onLoaded: () =>
-                        UpdateAccountLayout(
+                        UserInfoLayout(
                             firstName: state.firstName,
                             lastName: state.lastName,
                             userPhone: state.userPhone,

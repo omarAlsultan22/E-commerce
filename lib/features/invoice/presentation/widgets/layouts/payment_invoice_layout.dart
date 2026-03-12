@@ -1,3 +1,8 @@
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
+import 'package:international_cuisine/core/constants/app_paddings.dart';
+import 'package:international_cuisine/core/constants/app_borders.dart';
+import 'package:international_cuisine/core/constants/app_numbers.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
 import '../../../../home/presentation/screens/home_screen.dart';
 import '../../../../../core/data/models/user_info_model.dart';
 import '../../../../cart/data/models/order_model.dart';
@@ -22,26 +27,14 @@ class PaymentInvoiceLayout extends StatefulWidget {
 
 class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
 
-  //texts
-  static const quantity = 'الكمية';
-  static const  userName = 'الاسم:';
-  static const userAddress = 'العنوان:';
-  static const phoneNumber = 'الهاتف:';
-  static const deliveryTime = 'وقت التوصيل المتوقع: 45-30 دقيقة';
-  static const paid = 'تم الدفع بنجاح!';
-  static const notPaid = 'لم يتم الدفع!';
-
-  //numbers
-  static const eighty = 80.0;
-
   Widget _buildWidget() {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: _buildAppBar(
-            title: widget.isPaid ?  paid : notPaid
+            title: widget.isPaid ? 'تم الدفع بنجاح!' : 'لم يتم الدفع!'
         ),
-        backgroundColor: Colors.grey[100],
+        backgroundColor: const Color(0xFFF5F5F5),
         body: _buildBody(widget.shoppingList),
         bottomNavigationBar: _buildBottomBar(
             context: context,
@@ -54,23 +47,26 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
   PreferredSizeWidget _buildAppBar({
     required String title
   }) {
+    const zero = AppNumbers.zero;
+    const black = AppColors.black;
+
     return AppBar(
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      backgroundColor: Colors.white,
+      elevation: zero,
+      scrolledUnderElevation: zero,
+      backgroundColor: AppColors.white,
       automaticallyImplyLeading: false,
       title: Text(
         title,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 22,
-          color: Colors.black,
+          color: black,
         ),
       ),
       centerTitle: true,
       leading:
       IconButton(
-          icon: const Icon(Icons.home_filled, color: Colors.black),
+          icon: const Icon(Icons.home_filled, color: black),
           onPressed: () =>
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => HomeScreen()))
@@ -93,26 +89,27 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       itemCount: shoppingList.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      separatorBuilder: (context, index) => AppSpacing.height_12,
       itemBuilder: (context, index) => _buildDeliveryItem(shoppingList[index]),
     );
   }
 
   Widget _buildDeliveryItem(OrderModel orderModel) {
+    const eighty = 80.0;
     final totalPrice = orderModel.price * orderModel.item;
 
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppBorders.borderRadius_12,
       ),
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: AppPaddings.paddingAll_12,
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: AppBorders.borderRadius_8,
               child: Image.network(
                 orderModel.image,
                 width: eighty,
@@ -120,7 +117,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) =>
                     Container(
-                      color: Colors.grey[200],
+                      color: AppColors.lightGrey200,
                       child: const Icon(Icons.fastfood, size: 40),
                     ),
               ),
@@ -139,12 +136,12 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 8),
+                  AppSpacing.height_8,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        ' $quantity${orderModel.item}',
+                        'الكمية ${orderModel.item}',
                         style: const TextStyle(fontSize: 14),
                       ),
                       Text(
@@ -175,13 +172,13 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
     if (shoppingList.isEmpty) return const SizedBox.shrink();
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppPaddings.paddingAll_16,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: AppColors.grey.withOpacity(0.1),
             spreadRadius: 2,
             blurRadius: 8,
             offset: const Offset(0, -3),
@@ -193,7 +190,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildDeliveryInfo(userModel),
-          const SizedBox(height: 16),
+          AppSpacing.height_16,
           _buildTotalPrice(shoppingList),
         ],
       ),
@@ -212,11 +209,11 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
-        _buildInfoRow(' $userName${userModel.firstName + userModel.lastName}'),
-        _buildInfoRow(' $userAddress${userModel.userLocation!}'),
-        _buildInfoRow(' $phoneNumber${userModel.userPhone}'),
-        _buildInfoRow(deliveryTime),
+        AppSpacing.height_8,
+        _buildInfoRow('الاسم: ${userModel.firstName + userModel.lastName}'),
+        _buildInfoRow('العنوان: ${userModel.userLocation!}'),
+        _buildInfoRow('الهاتف: ${userModel.userPhone}'),
+        _buildInfoRow('وقت التوصيل المتوقع: 45-30 دقيقة'),
       ],
     );
   }
@@ -246,10 +243,10 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
         0, (sum, item) => sum + (item.price * item.item));
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: AppPaddings.paddingAll_12,
       decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
+        color: const Color(0xFFFAFAFA),
+        borderRadius: AppBorders.borderRadius_8,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

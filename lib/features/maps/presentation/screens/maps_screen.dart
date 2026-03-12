@@ -1,12 +1,15 @@
 import 'package:international_cuisine/features/payment/presentation/screens/payment_way_selection_screen.dart';
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator.dart';
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import '../../../../core/data/data_sources/local/shared_preferences.dart';
+import 'package:international_cuisine/core/constants/app_paddings.dart';
+import 'package:international_cuisine/core/constants/app_numbers.dart';
+import 'package:international_cuisine/core/constants/app_keys.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:location/location.dart' as loc;
+import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 
 
@@ -22,7 +25,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
   GoogleMapController? _mapController;
   final loc.Location _locationService = loc.Location();
 
-  static const String location = 'location';
+  static const _location = AppKeys.location;
 
   Set<Marker> _markers = {};
   LatLng? _initialPosition;
@@ -40,8 +43,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
 
   Future<void> _loadSavedLocation() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      final savedAddress = prefs.getString(location);
+      final savedAddress = await CacheHelper.getStringValue(key: _location);
 
       if (savedAddress != null && savedAddress.isNotEmpty) {
         setState(() {
@@ -180,11 +182,11 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
     if (_currentLocation == null || _currentAddress.isEmpty) return;
 
     try {
-      await CacheHelper.setStringValue(key: location, value: _currentAddress);
+      await CacheHelper.setStringValue(key: _location, value: _currentAddress);
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("تم حفظ العنوان بنجاح"),
           duration: Duration(seconds: 2),
         ),
@@ -218,7 +220,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
     return ConnectivityAwareService(
         child: Scaffold(
           appBar: AppBar(
-            title: Text("حدد موقع التوصيل"),
+            title: const Text("حدد موقع التوصيل"),
             actions: [
               IconButton(
                 icon: const Icon(Icons.my_location),
@@ -263,10 +265,10 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: const[
           CircularProgressIndicator(),
-          SizedBox(height: 16),
-          const Text("جاري تحميل الخريطة..."),
+          AppSpacing.height_16,
+          Text("جاري تحميل الخريطة..."),
         ],
       ),
     );
@@ -274,10 +276,10 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
 
   Widget _buildAddressPanel() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: AppPaddings.paddingAll_16,
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [
+        boxShadow: const[
           BoxShadow(
               color: Colors.black12,
               blurRadius: 10,
@@ -287,21 +289,21 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
       child: Column(
         children: [
           if (_isLoading) LinearProgressIndicator(),
-          SizedBox(height: 12),
-          Text(
+          AppSpacing.height_12,
+          const Text(
             "العنوان المحدد:",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
           ),
-          SizedBox(height: 8),
+          AppSpacing.height_8,
           Text(
             _currentAddress,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
-          SizedBox(height: 16),
+          AppSpacing.height_16,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -333,7 +335,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
       icon: Icon(icon),
       label: Text(label),
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: AppNumbers.twelve),
       ),
       onPressed: onPressed,
     );

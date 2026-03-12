@@ -2,6 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:international_cuisine/core/constants/app_keys.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_numbers.dart';
+import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/features/home/data/models/home_model.dart';
 
 // Screens
@@ -25,10 +29,14 @@ class HomeLayout extends StatefulWidget {
   State<HomeLayout> createState() => _HomeLayoutState();
 }
 
-class _HomeLayoutState extends State<HomeLayout>
-    with TickerProviderStateMixin {
+class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
+
+  static const _zero = AppNumbers.zero;
+  static const _white = AppColors.white;
+  static const _black = AppColors.black;
+
   late Timer _rotationTimer;
-  double _rotationAngle = 0.0;
+  double _rotationAngle = _zero;
   final double _secondsToComplete = 8.0;
 
   late AnimationController _slideController;
@@ -70,8 +78,11 @@ class _HomeLayoutState extends State<HomeLayout>
   }
 
   void _startRotationAnimation() {
+    const _threeHundredSixty = 360.0;
+
     const framesPerSecond = 60;
-    final anglePerFrame = 360.0 / (_secondsToComplete * framesPerSecond);
+    final anglePerFrame = _threeHundredSixty /
+        (_secondsToComplete * framesPerSecond);
 
     _rotationTimer = Timer.periodic(
       const Duration(milliseconds: 1000 ~/ framesPerSecond),
@@ -83,8 +94,8 @@ class _HomeLayoutState extends State<HomeLayout>
 
         setState(() {
           _rotationAngle += anglePerFrame;
-          if (_rotationAngle >= 360.0) {
-            _rotationAngle = 360.0;
+          if (_rotationAngle >= _threeHundredSixty) {
+            _rotationAngle = _threeHundredSixty;
             timer.cancel();
           }
         });
@@ -93,24 +104,28 @@ class _HomeLayoutState extends State<HomeLayout>
   }
 
   void _setupSlideAnimations() {
+    const _threeHundred = 300.0;
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
 
-    _leftColumnAnimation = Tween<double>(begin: 300.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: _slideController,
-        curve: Curves.easeOut,
-      ),
-    );
+    _leftColumnAnimation =
+        Tween<double>(begin: _threeHundred, end: _zero).animate(
+          CurvedAnimation(
+            parent: _slideController,
+            curve: Curves.easeOut,
+          ),
+        );
 
-    _rightColumnAnimation = Tween<double>(begin: -300.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: _slideController,
-        curve: Curves.easeOut,
-      ),
-    );
+    _rightColumnAnimation =
+        Tween<double>(begin: -_threeHundred, end: _zero).animate(
+          CurvedAnimation(
+            parent: _slideController,
+            curve: Curves.easeOut,
+          ),
+        );
 
     _slideController.forward();
   }
@@ -118,7 +133,7 @@ class _HomeLayoutState extends State<HomeLayout>
   Future<void> _signOut() async {
     try {
       final sharedPreferences = await SharedPreferences.getInstance();
-      await sharedPreferences.remove('uId');
+      await sharedPreferences.remove(AppKeys.uId);
       await FirebaseAuth.instance.signOut();
 
       if (mounted) {
@@ -161,29 +176,31 @@ class _HomeLayoutState extends State<HomeLayout>
   }
 
   Widget _buildHomeScreen() {
+    const _grey = Color(0xFF212121);
+
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: _grey,
         appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Colors.grey[900],
+          elevation: _zero,
+          backgroundColor: _grey,
           centerTitle: true,
           title: const Text(
             'اختر مطبخك',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: _white,
             ),
           ),
           leading: IconButton(
             onPressed: _signOut,
-            icon: const Icon(Icons.logout, color: Colors.white),
+            icon: const Icon(Icons.logout, color: _white),
             tooltip: 'تسجيل الخروج',
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: AppPaddings.paddingAll_10,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +221,7 @@ class _HomeLayoutState extends State<HomeLayout>
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(
-              _showSlideAnimation ? _leftColumnAnimation.value : 0.0, 0.0),
+              _showSlideAnimation ? _leftColumnAnimation.value : _zero, _zero),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -225,7 +242,7 @@ class _HomeLayoutState extends State<HomeLayout>
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(
-              _showSlideAnimation ? _rightColumnAnimation.value : 0.0, 0.0),
+              _showSlideAnimation ? _rightColumnAnimation.value : _zero, _zero),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -245,34 +262,36 @@ class _HomeLayoutState extends State<HomeLayout>
       return const SizedBox(); // Handle out of bounds
     }
 
-    final cuisine = widget.homeData[index];
+    const _spacing = 155.0;
+    final _cuisine = widget.homeData[index];
+    const _borderRadius = BorderRadius.all(Radius.circular(16));
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () => _navigateToCuisineScreen(screen),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: _borderRadius,
         child: Container(
-          width: 155,
-          height: 155,
+          width: _spacing,
+          height: _spacing,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: _borderRadius,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: _black.withOpacity(0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: _borderRadius,
             child: Stack(
               fit: StackFit.expand,
               children: [
-                _buildCuisineImage(cuisine.image),
+                _buildCuisineImage(_cuisine.image),
                 _buildCuisineOverlay(),
-                _buildCuisineTitle(cuisine.title),
+                _buildCuisineTitle(_cuisine.title),
               ],
             ),
           ),
@@ -296,16 +315,16 @@ class _HomeLayoutState extends State<HomeLayout>
                   ? loadingProgress.cumulativeBytesLoaded /
                   loadingProgress.expectedTotalBytes!
                   : null,
-              color: Colors.white,
+              color: _white,
             ),
           );
         },
         errorBuilder: (context, error, stackTrace) {
           return Container(
-            color: Colors.grey[800],
+            color: Color(0xFF424242),
             child: const Icon(
               Icons.broken_image,
-              color: Colors.white,
+              color: _white,
               size: 50,
             ),
           );
@@ -315,15 +334,17 @@ class _HomeLayoutState extends State<HomeLayout>
   }
 
   Widget _buildCuisineOverlay() {
+    const transparent = AppColors.transparent;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.transparent,
-            Colors.transparent,
-            Colors.black.withOpacity(0.8),
+            transparent,
+            transparent,
+            _black.withOpacity(0.8),
           ],
           stops: const [0.0, 0.5, 1.0],
         ),
@@ -344,11 +365,11 @@ class _HomeLayoutState extends State<HomeLayout>
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Colors.white,
+            color: _white,
             shadows: [
               Shadow(
                 blurRadius: 6,
-                color: Colors.black,
+                color: _black,
                 offset: Offset(2, 2),
               ),
             ],

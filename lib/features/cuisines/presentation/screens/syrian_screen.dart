@@ -4,7 +4,7 @@ import '../states/categories_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/lists/searchable_list_builder.dart';
 import '../../../../core/presentation/widgets/states/error_state_widget.dart';
-import 'package:international_cuisine/features/cuisines/constants/constants_cuisines.dart';
+import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
 import 'package:international_cuisine/core/presentation/screens/connectivity_aware_screen.dart';
 import 'package:international_cuisine/core/presentation/widgets/states/initial_state_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/states/loading_state_widget.dart';
@@ -27,7 +27,6 @@ class _SyrianScreenState extends State<SyrianScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const syrianCuisine = 'المطبخ السوري';
     return ConnectivityAwareService(
         child: BlocBuilder<SyrianDataCubit, CategoriesState>(
             builder: (context, state) {
@@ -35,14 +34,14 @@ class _SyrianScreenState extends State<SyrianScreen> {
               return state.when(
                   onInitial: () =>
                   const InitialStateWidget(
-                      ConstantsCuisines.data, ConstantsCuisines.menu),
+                      CuisinesConstants.data, CuisinesConstants.menu),
                   onLoading: () => const LoadingStateWidget(),
                   onLoaded: (categoryData, searchData) =>
                       SearchableListBuilder(
                         isLocked: false,
                         dataList: categoryData!,
                         searchData: searchData!,
-                        title: syrianCuisine,
+                        title: 'المطبخ السوري',
                         getMoreData: () => _cubit.getData(),
                         hasMore: state.hasMore!,
                         clearData: () => _cubit.clearDataSearch(),

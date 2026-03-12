@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/presentation/widgets/states/error_state_widget.dart';
 import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
+import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import 'package:international_cuisine/features/cart/presentation/widgets/layouts/cart_data_layout.dart';
 
 
@@ -31,10 +32,13 @@ class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObse
                       children: [
                         Icon(Icons.shopping_cart_outlined, size: 60,
                             color: Colors.grey),
-                        const SizedBox(height: 16),
+                        AppSpacing.height_16,
                         const Text(
                           'عربة التسوق فارغة',
-                          style: TextStyle(fontSize: 20, color: Colors.grey),
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.grey
+                          ),
                         ),
                       ],
                     ),
