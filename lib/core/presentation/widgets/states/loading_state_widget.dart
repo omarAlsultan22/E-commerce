@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../utils/helpers/image_helpers.dart';
+import 'package:international_cuisine/core/constants/app_assets.dart';
 
 
 class LoadingStateWidget extends StatelessWidget {
@@ -6,16 +8,23 @@ class LoadingStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const imageUrl = 'assets/images/original_logo.png';
-
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
         Image.asset(
-          imageUrl,
+          AppAssets.originalLogo,
           fit: BoxFit.cover,
           height: double.infinity,
           width: double.infinity,
+          cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
+              context,
+              targetHeight: double.infinity,
+              qualityFactor: 1.5
+          ),
+          cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
+              context,
+              targetWidth: double.infinity
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 50.0),

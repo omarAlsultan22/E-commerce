@@ -36,11 +36,6 @@ class _SignInLayoutState extends State<SignInLayout> {
   bool _isObscure = true;
   bool _isLoading = false;
 
-  //spaces
-  static const _height16 = AppSpacing.height_16;
-
-  //colors
-  static const _black = AppColors.black;
   static const _primaryAmber = AppColors.primaryAmber;
 
   @override
@@ -62,6 +57,8 @@ class _SignInLayoutState extends State<SignInLayout> {
   }
 
   Widget _buildScaffold(BuildContext context) {
+    const _verticalSpacing = AppSpacing.height_16;
+
     return Scaffold(
       backgroundColor: AppColors.darkGrey,
       body: Center(
@@ -77,11 +74,11 @@ class _SignInLayoutState extends State<SignInLayout> {
                   _buildHeader(context),
                   AppSpacing.height_32,
                   _buildEmailField(),
-                  _height16,
+                  _verticalSpacing,
                   _buildPasswordField(),
                   AppSpacing.height24,
                   _buildLoginButton(context),
-                  _height16,
+                  _verticalSpacing,
                   _buildSignUpButton(),
                 ],
               ),
@@ -244,7 +241,7 @@ class _SignInLayoutState extends State<SignInLayout> {
   ButtonStyle _loginButtonStyle() {
     return ElevatedButton.styleFrom(
       backgroundColor: _primaryAmber,
-      foregroundColor: _black,
+      foregroundColor: AppColors.black,
       padding: const EdgeInsets.symmetric(vertical: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AuthNumbersConstants.fifty),

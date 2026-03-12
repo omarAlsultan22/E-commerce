@@ -41,21 +41,6 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   bool _isObscure = true;
   bool _isLoading = false;
 
-  //numbers
-  static const _zero = AppNumbers.zero;
-
-  //spaces
-  static const _height16 = AppSpacing.height_16;
-  static const _height24 = AppSpacing.height24;
-
-  //labels
-  static const _firstName = AppLabelTexts.firstName;
-  static const _lastName = AppLabelTexts.lastName;
-  static const _phoneNumber = AppLabelTexts.phoneNumber;
-  static const _location = AppLabelTexts.location;
-
-  //colors
-  static const _black = AppColors.black;
   static const _primaryAmber = AppColors.primaryAmber;
 
   @override
@@ -114,6 +99,10 @@ class _SignUpLayoutState extends State<SignUpLayout> {
 
   @override
   Widget build(BuildContext context) {
+    const _zero = AppNumbers.zero;
+    const _height16 = AppSpacing.height_16;
+    const _height24 = AppSpacing.height24;
+
     return Scaffold(
       backgroundColor: AppColors.darkGrey,
       appBar: AppBar(
@@ -190,6 +179,8 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   }
 
   Widget _buildFirstNameField() {
+    const _firstName = AppLabelTexts.firstName;
+
     return BuildInputField(
       controller: _firstNameController,
       keyboardType: TextInputType.name,
@@ -201,7 +192,8 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   }
 
   Widget _buildLastNameField() {
-    ;
+    const _lastName = AppLabelTexts.lastName;
+
     return BuildInputField(
       controller: _lastNameController,
       keyboardType: TextInputType.name,
@@ -244,6 +236,8 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   }
 
   Widget _buildPhoneField() {
+    const _phoneNumber = AppLabelTexts.phoneNumber;
+
     return BuildInputField(
       controller: _phoneController,
       keyboardType: TextInputType.phone,
@@ -255,6 +249,8 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   }
 
   Widget _buildLocationField() {
+    const _location = AppLabelTexts.location;
+
     return BuildInputField(
       controller: _locationController,
       keyboardType: TextInputType.streetAddress,
@@ -270,7 +266,7 @@ class _SignUpLayoutState extends State<SignUpLayout> {
       onPressed: _isLoading ? null : _handleRegister,
       style: ElevatedButton.styleFrom(
         backgroundColor: _primaryAmber,
-        foregroundColor: _black,
+        foregroundColor: AppColors.black,
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AuthNumbersConstants.fifty),

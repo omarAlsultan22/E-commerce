@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/core/constants/app_assets.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
 import '../../domain/services/connectivity_service/connectivity_service.dart';
@@ -12,7 +13,6 @@ class InternetUnavailability extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const imageUrl = 'assets/images/original_logo.png';
 
     return Scaffold(
       body: Stack(
@@ -25,7 +25,7 @@ class InternetUnavailability extends StatelessWidget {
           Opacity(
             opacity: 0.3,
             child: Image.asset(
-              imageUrl,
+              AppAssets.originalLogo,
               fit: BoxFit.contain,
             ),
           ),

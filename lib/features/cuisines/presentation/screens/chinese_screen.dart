@@ -34,7 +34,8 @@ class _ChineseScreenState extends State<ChineseScreen> {
             return state.when(
                 onInitial: () =>
                 const InitialStateWidget(
-                    CuisinesConstants.data, CuisinesConstants.menu),
+                    CuisinesConstants.data, CuisinesConstants.menu
+                ),
                 onLoading: () => const LoadingStateWidget(),
                 onLoaded: (categoryData, searchData) =>
                     SearchableListBuilder(

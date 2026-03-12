@@ -1,3 +1,4 @@
+import 'package:international_cuisine/core/presentation/utils/helpers/image_helpers.dart';
 import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
@@ -183,7 +184,7 @@ class CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const oneHundredTwenty = 120.0;
+    const _oneHundredTwenty = 120.0;
 
     return Container(
       decoration: BoxDecoration(
@@ -205,8 +206,17 @@ class CartItemCard extends StatelessWidget {
                 right: Radius.circular(12)),
             child: CachedNetworkImage(
               imageUrl: item.image,
-              width: oneHundredTwenty,
-              height: oneHundredTwenty,
+              width: _oneHundredTwenty,
+              height: _oneHundredTwenty,
+              memCacheHeight: ImageHelpers.calculateOptimalCacheHeight(
+                context,
+                targetHeight: _oneHundredTwenty,
+                qualityFactor: 1.5
+              ),
+              memCacheWidth: ImageHelpers.calculateOptimalCacheWidth(
+                  context,
+                  targetWidth: _oneHundredTwenty
+              ),
               fit: BoxFit.cover,
             ),
           ),

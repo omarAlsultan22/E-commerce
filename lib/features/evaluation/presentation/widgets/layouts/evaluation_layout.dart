@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
+import '../../../../../core/presentation/utils/helpers/image_helpers.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_snack_bar.dart';
 import 'package:international_cuisine/features/evaluation/presentation/operations/evaluation_operations.dart';
 
@@ -36,13 +37,24 @@ class _EvaluationLayoutState extends State<EvaluationLayout> {
 
   @override
   Widget build(BuildContext context) {
+    const _imageUrl = 'assets/images/original_logo.png';
     const _paddingAll12 = AppPaddings.paddingAll_12;
 
     return Scaffold(
       body: Image.asset(
+        _imageUrl,
         fit: BoxFit.fill,
         height: double.infinity,
-        'assets/images/original_logo.png',
+        width: double.infinity,
+        cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
+            context,
+            targetHeight: double.infinity,
+            qualityFactor: 1.5
+        ),
+        cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
+            context,
+            targetWidth: double.infinity
+        ),
       ),
       bottomNavigationBar:
       Row(

@@ -35,9 +35,6 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   bool _isObscureNew = false;
   bool _isObscureConfirm = false;
 
-  //spaces
-  static const _height_16 = AppSpacing.height_16;
-
   //colors
   static const _white = AppColors.white;
   static const _errorRed = AppColors.errorRed;
@@ -127,6 +124,8 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   }
 
   Widget _buildBody() {
+    const _verticalSpacing = AppSpacing.height_16;
+
     return IgnorePointer(
       ignoring: _isLoading,
       child: Container(
@@ -139,11 +138,11 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
               child: Column(
                 children: [
                   _buildEmailField(),
-                  _height_16,
+                  _verticalSpacing,
                   _buildCurrentPasswordField(),
-                  _height_16,
+                  _verticalSpacing,
                   _buildNewPasswordField(),
-                  _height_16,
+                  _verticalSpacing,
                   _buildConfirmPasswordField(),
                   if (_isLoading) _buildLoadingIndicator(),
                 ],

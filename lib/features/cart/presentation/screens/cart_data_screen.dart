@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
 import '../cubits/cart_data_cubit.dart';
 import '../states/cart_data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,8 @@ class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
+    const _grey = AppColors.grey;
+
     return ConnectivityAwareService(
         child: BlocBuilder<CartDataCubit, CartDataState>(
             builder: (context, state) {
@@ -31,13 +34,13 @@ class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObse
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.shopping_cart_outlined, size: 60,
-                            color: Colors.grey),
+                            color: _grey),
                         AppSpacing.height_16,
                         const Text(
                           'عربة التسوق فارغة',
                           style: TextStyle(
                               fontSize: 20,
-                              color: Colors.grey
+                              color: _grey
                           ),
                         ),
                       ],

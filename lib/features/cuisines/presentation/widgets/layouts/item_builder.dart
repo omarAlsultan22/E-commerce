@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/core/presentation/utils/helpers/image_helpers.dart';
 import '../../../data/models/data_model.dart';
 import '../../../../cart/presentation/cubits/cart_data_cubit.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
@@ -175,6 +176,15 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
                     widget._dataModel.orderImage!,
                     height: _towHundred,
                     width: double.infinity,
+                    cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
+                        context,
+                        targetHeight: _towHundred,
+                        qualityFactor: 1.5
+                    ),
+                    cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
+                        context,
+                        targetWidth: double.infinity
+                    ),
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;

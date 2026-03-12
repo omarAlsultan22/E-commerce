@@ -42,16 +42,8 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   bool _isLoading = false;
   late UserInfoCubit _cubit;
 
-  //sizes
+  //spaces
   static const _verticalSpacing8 = AppSpacing.height_8;
-  static const _verticalSpacing16 = AppSpacing.height_16;
-  static const _verticalSpacing24 = AppSpacing.height24;
-
-  //labels
-  static const _firstName = AppLabelTexts.firstName;
-  static const _lastName = AppLabelTexts.lastName;
-  static const _phoneNumber = AppLabelTexts.phoneNumber;
-  static const _location = AppLabelTexts.location;
 
   //colors
   static const _white = AppColors.white;
@@ -132,6 +124,8 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   }
 
   Widget _buildFormContent(BuildContext context, UserInfoCubit cubit) {
+    const _verticalSpacing16 = AppSpacing.height_16;
+
     return IgnorePointer(
       ignoring: _isLoading,
       child: SingleChildScrollView(
@@ -187,6 +181,8 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   }
 
   Widget _buildFirstNameField() {
+    const _firstName = AppLabelTexts.firstName;
+
     return _buildCustomInputField(
       controller: _firstNameController,
       label: _firstName,
@@ -197,6 +193,8 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   }
 
   Widget _buildSecondNameField() {
+    const _lastName = AppLabelTexts.lastName;
+
     return _buildCustomInputField(
       controller: _lastNameController,
       label: _lastName,
@@ -207,6 +205,8 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   }
 
   Widget _buildPhoneField() {
+    const _phoneNumber = AppLabelTexts.phoneNumber;
+
     return _buildCustomInputField(
       controller: _phoneController,
       label: _phoneNumber,
@@ -218,6 +218,8 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   }
 
   Widget _buildLocationField() {
+    const _location = AppLabelTexts.location;
+
     return _buildCustomInputField(
       controller: _locationController,
       label: _location,
@@ -295,7 +297,7 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   Widget _buildLoadingIndicator() {
     return const Column(
       children: [
-        _verticalSpacing24,
+        AppSpacing.height24,
         Center(
           child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(_primaryAmber),

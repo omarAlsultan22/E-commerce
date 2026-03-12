@@ -1,4 +1,5 @@
 import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
+import '../../../../../core/presentation/utils/helpers/image_helpers.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
 import 'package:international_cuisine/core/constants/app_numbers.dart';
@@ -95,7 +96,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
   }
 
   Widget _buildDeliveryItem(OrderModel orderModel) {
-    const eighty = 80.0;
+    const _eighty = 80.0;
     final totalPrice = orderModel.price * orderModel.item;
 
     return Card(
@@ -112,8 +113,17 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
               borderRadius: AppBorders.borderRadius_8,
               child: Image.network(
                 orderModel.image,
-                width: eighty,
-                height: eighty,
+                width: _eighty,
+                height: _eighty,
+                cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
+                    context,
+                    targetHeight: _eighty,
+                    qualityFactor: 1.5
+                ),
+                cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
+                    context,
+                    targetWidth: _eighty
+                ),
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) =>
                     Container(
