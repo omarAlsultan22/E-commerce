@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../screens/sgin_up_screen.dart';
-import '../../operations/auth_operations.dart';
 import '../../utils/validate/validate_email.dart';
 import '../../utils/validate/validate_password.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -18,11 +17,12 @@ import 'package:international_cuisine/core/presentation/widgets/build_input_fiel
 import 'package:international_cuisine/features/auth/constants/auth_numbers_constants.dart';
 import 'package:international_cuisine/features/auth/presentation/widgets/auth_spacing.dart';
 import 'package:international_cuisine/features/auth/constants/auth_hint_texts_constants.dart';
+import 'package:international_cuisine/features/auth/presentation/services/auth_services.dart';
 
 
 class SignInLayout extends StatefulWidget {
-  final AuthOperations _authOperations;
-  const SignInLayout(this._authOperations, {super.key});
+  final AuthServices _authServices;
+  const SignInLayout(this._authServices, {super.key});
 
   @override
   State<SignInLayout> createState() => _SignInLayoutState();
@@ -205,7 +205,7 @@ class _SignInLayoutState extends State<SignInLayout> {
     if (_formKey.currentState!.validate()) {
       _hideKeyboard();
       setState(() => _isLoading = true);
-      final message = await widget._authOperations.signIn(
+      final message = await widget._authServices.signIn(
         userEmail: _emailController.text.trim(),
         userPassword: _passwordController.text,
       );

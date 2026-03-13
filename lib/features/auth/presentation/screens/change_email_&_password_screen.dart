@@ -6,7 +6,7 @@ import '../widgets/layouts/change_email_&_password_layout.dart';
 import '../../data/repositories_impl/firebase_auth_repository.dart';
 import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import '../../../user_info/data/repositories_impl/firestore_user_info_repository.dart';
-import 'package:international_cuisine/features/auth/presentation/operations/auth_operations.dart';
+import 'package:international_cuisine/features/auth/presentation/services/auth_services.dart';
 
 
 class ChangeEmailAndPasswordScreen extends StatelessWidget {
@@ -20,9 +20,9 @@ class ChangeEmailAndPasswordScreen extends StatelessWidget {
     final _userInfoRepository = FirestoreUserInfoRepository(repository: _repository);
     final _authUseCase = AuthUseCase(
         authRepository: _authRepository, userInfoRepository: _userInfoRepository);
-    final _authOperations = AuthOperations(authUseCase: _authUseCase);
+    final _authServices = AuthServices(authUseCase: _authUseCase);
     return ConnectivityAwareService(
-        child: ChangeEmailAndPasswordLayout(_authOperations)
+        child: ChangeEmailAndPasswordLayout(_authServices)
     );
   }
 }

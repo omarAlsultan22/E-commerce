@@ -1,4 +1,4 @@
-import 'package:international_cuisine/features/auth/presentation/operations/auth_operations.dart';
+import 'package:international_cuisine/features/auth/presentation/services/auth_services.dart';
 import 'package:international_cuisine/features/auth/presentation/screens/sgin_in_screen.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
@@ -16,8 +16,8 @@ import 'package:flutter/material.dart';
 
 
 class ChangeEmailAndPasswordLayout extends StatefulWidget {
-  final AuthOperations _authOperations;
-  const ChangeEmailAndPasswordLayout(this._authOperations, {super.key});
+  final AuthServices _authServices;
+  const ChangeEmailAndPasswordLayout(this._authServices, {super.key});
 
   @override
   State<ChangeEmailAndPasswordLayout> createState() => _ChangeEmailAndPasswordLayoutState();
@@ -266,7 +266,7 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   Future<void> _saveChanges() async {
     setState(() => _isLoading = true);
 
-    final message = await widget._authOperations.changeEmailAndPassword(
+    final message = await widget._authServices.changeEmailAndPassword(
         newEmail: _newEmailController.text,
         currentPassword: _currentPasswordController.text,
         newPassword: _newPasswordController.text

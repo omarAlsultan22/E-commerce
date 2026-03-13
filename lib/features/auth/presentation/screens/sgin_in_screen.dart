@@ -1,5 +1,5 @@
 import 'package:international_cuisine/features/auth/data/repositories_impl/firebase_auth_repository.dart';
-import 'package:international_cuisine/features/auth/presentation/operations/auth_operations.dart';
+import 'package:international_cuisine/features/auth/presentation/services/auth_services.dart';
 import '../../../user_info/data/repositories_impl/firestore_user_info_repository.dart';
 import 'package:international_cuisine/features/auth/domain/useCases/auth_useCase.dart';
 import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
@@ -20,9 +20,9 @@ class SignInScreen extends StatelessWidget {
     final _userInfoRepository = FirestoreUserInfoRepository(repository: _repository);
     final _authUseCase = AuthUseCase(
         authRepository: _authRepository, userInfoRepository: _userInfoRepository);
-    final _authOperations = AuthOperations(authUseCase: _authUseCase);
+    final _authServices = AuthServices(authUseCase: _authUseCase);
     return ConnectivityAwareService(
-        child: SignInLayout(_authOperations)
+        child: SignInLayout(_authServices)
     );
   }
 }

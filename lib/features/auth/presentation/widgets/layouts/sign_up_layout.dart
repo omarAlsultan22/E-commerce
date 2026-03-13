@@ -15,14 +15,14 @@ import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import 'package:international_cuisine/features/auth/constants/auth_numbers_constants.dart';
 import 'package:international_cuisine/features/auth/presentation/widgets/auth_spacing.dart';
+import 'package:international_cuisine/features/auth/presentation/services/auth_services.dart';
 import 'package:international_cuisine/features/auth/constants/auth_hint_texts_constants.dart';
 import 'package:international_cuisine/features/auth/constants/auth_label_texts_constants.dart';
-import 'package:international_cuisine/features/auth/presentation/operations/auth_operations.dart';
 
 
 class SignUpLayout extends StatefulWidget {
-  final AuthOperations _authOperations;
-  const SignUpLayout(this._authOperations,{super.key});
+  final AuthServices _authServices;
+  const SignUpLayout(this._authServices,{super.key});
 
   @override
   State<SignUpLayout> createState() => _SignUpLayoutState();
@@ -57,7 +57,7 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    final message = await widget._authOperations.signUp(
+    final message = await widget._authServices.signUp(
       userEmail: _emailController.text,
       userPassword: _passwordController.text,
       firstName: _firstNameController.text,

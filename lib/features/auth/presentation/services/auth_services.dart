@@ -6,10 +6,10 @@ import '../../../../../core/errors/exceptions/app_exception.dart';
 import 'package:international_cuisine/features/auth/errors/auth_error_handler.dart';
 
 
-class AuthOperations {
+class AuthServices {
   final AuthUseCase _authUseCase;
 
-  AuthOperations({required AuthUseCase authUseCase})
+  AuthServices({required AuthUseCase authUseCase})
       : _authUseCase = authUseCase;
 
   Future<MessageResultModel> signIn({
