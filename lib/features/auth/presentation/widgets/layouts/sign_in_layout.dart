@@ -64,23 +64,25 @@ class _SignInLayoutState extends State<SignInLayout> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildHeader(context),
-                  AppSpacing.height_32,
-                  _buildEmailField(),
-                  _verticalSpacing,
-                  _buildPasswordField(),
-                  AppSpacing.height24,
-                  _buildLoginButton(context),
-                  _verticalSpacing,
-                  _buildSignUpButton(),
-                ],
+          child: RepaintBoundary(
+            child: Form(
+              key: _formKey,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildHeader(context),
+                    AppSpacing.height_32,
+                    _buildEmailField(),
+                    _verticalSpacing,
+                    _buildPasswordField(),
+                    AppSpacing.height24,
+                    _buildLoginButton(context),
+                    _verticalSpacing,
+                    _buildSignUpButton(),
+                  ],
+                ),
               ),
             ),
           ),

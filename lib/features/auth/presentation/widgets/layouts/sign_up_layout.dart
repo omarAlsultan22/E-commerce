@@ -117,29 +117,31 @@ class _SignUpLayoutState extends State<SignUpLayout> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildHeader(context),
-                  _height24,
-                  _buildFirstNameField(),
-                  _height16,
-                  _buildLastNameField(),
-                  _height16,
-                  _buildEmailField(),
-                  _height16,
-                  _buildPasswordField(),
-                  _height16,
-                  _buildPhoneField(),
-                  _height16,
-                  _buildLocationField(),
-                  _height24,
-                  _buildRegisterButton(context),
-                ],
+          child: RepaintBoundary(
+            child: Form(
+              key: _formKey,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildHeader(context),
+                    _height24,
+                    _buildFirstNameField(),
+                    _height16,
+                    _buildLastNameField(),
+                    _height16,
+                    _buildEmailField(),
+                    _height16,
+                    _buildPasswordField(),
+                    _height16,
+                    _buildPhoneField(),
+                    _height16,
+                    _buildLocationField(),
+                    _height24,
+                    _buildRegisterButton(context),
+                  ],
+                ),
               ),
             ),
           ),

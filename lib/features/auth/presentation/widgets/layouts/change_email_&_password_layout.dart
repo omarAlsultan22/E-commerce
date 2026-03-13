@@ -133,19 +133,21 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  _buildEmailField(),
-                  _verticalSpacing,
-                  _buildCurrentPasswordField(),
-                  _verticalSpacing,
-                  _buildNewPasswordField(),
-                  _verticalSpacing,
-                  _buildConfirmPasswordField(),
-                  if (_isLoading) _buildLoadingIndicator(),
-                ],
+            child: RepaintBoundary(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    _buildEmailField(),
+                    _verticalSpacing,
+                    _buildCurrentPasswordField(),
+                    _verticalSpacing,
+                    _buildNewPasswordField(),
+                    _verticalSpacing,
+                    _buildConfirmPasswordField(),
+                    if (_isLoading) _buildLoadingIndicator(),
+                  ],
+                ),
               ),
             ),
           ),
