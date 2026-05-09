@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 
 
-class AppBorders {
-  static const borderRadius_8 = BorderRadius.all(Radius.circular(8));
-  static const borderRadius_12 = BorderRadius.all(Radius.circular(12));
+abstract class AppBorders {
+  static const double _small = 8.0;
+  static const double _medium = 12.0;
+  static const borderRadius_8 = BorderRadius.all(Radius.circular(_small));
+  static const borderRadius_12 = BorderRadius.all(Radius.circular(_medium));
 }

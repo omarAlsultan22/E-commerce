@@ -1,30 +1,31 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../domain/repositories/auth_repository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:international_cuisine/core/constants/app_durations.dart';
+import 'package:international_cuisine/core/data/data_sources/remote/firebase_auth.dart';
 
 
 class FirebaseAuthRepository implements AuthRepository {
-  final FirebaseAuth _auth;
+  final FirebaseAuthService _authService;
 
   FirebaseAuthRepository({
-    required FirebaseAuth auth,
+    required FirebaseAuthService authService,
     FlutterSecureStorage? storage
   })
-      : _auth = auth;
+      : _authService = authService;
 
   @override
   Future<UserCredential> signIn({
-    required String userEmail,
-    required String userPassword
+    required String email,
+    required String password
   }) async {
-    return await _auth.signInWithEmailAndPassword(
-      email: userEmail,
-      password: userPassword,
+    return await _authService.signIn(
+      email: email,
+      password: password,
     ).then((value) {
       return value;
     });
   }
-
 
   @override
   Future<UserCredential> signUp({
@@ -32,7 +33,7 @@ class FirebaseAuthRepository implements AuthRepository {
     required String password
   }) async {
     try {
-      return await _auth.createUserWithEmailAndPassword(
+      return await _authService.signUp(
         email: email,
         password: password,
       );
@@ -41,20 +42,38 @@ class FirebaseAuthRepository implements AuthRepository {
     }
   }
 
-
   @override
-  Future<User?> updateProfile({
+  Future<void> updateProfile({
     required String newEmail,
     required String currentPassword,
     required String newPassword
   }) async {
-    final user = _auth.currentUser;
-    return user;
+    try {
+      final user = await _authService.updateProfile(
+          newEmail: newEmail,
+          currentPassword: currentPassword,
+          newPassword: newPassword
+      );
+      if (user != null) {
+        AuthCredential credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: currentPassword,
+        );
+        await user.reauthenticateWithCredential(credential).timeout(
+            AppDurations.seconds);
+        await user.verifyBeforeUpdateEmail(newEmail).timeout(
+            AppDurations.seconds).then((_) {
+          user.updatePassword(newPassword).timeout(AppDurations.seconds);
+        });
+      }
+    }
+    catch (e) {
+      rethrow;
+    }
   }
-
 
   @override
   Future<void> signOut() async {
-    _auth.signOut();
+    _authService.signOut();
   }
 }

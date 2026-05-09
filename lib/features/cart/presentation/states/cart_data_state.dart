@@ -1,23 +1,19 @@
-import '../../../../core/errors/exceptions/app_exception.dart';
-import 'package:international_cuisine/core/presentation/states/app_state.dart';
-import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 import 'package:international_cuisine/features/cuisines/data/models/data_model.dart';
+import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
+import 'package:international_cuisine/features/cart/data/models/order_model.dart';
+import '../../../../core/presentation/states/base/main_app_sub_state.dart';
+import '../../../../core/presentation/states/base/main_app_sup_state.dart';
+import '../../../../core/presentation/states/base/main_loaded_state.dart';
+import '../../../../core/errors/exceptions/base/app_exception.dart';
 
 
-class CartDataState{
-  final AppState? appState;
-  final List<OrderModel>? shoppingList;
-
-  const CartDataState({
-    this.appState,
-    this.shoppingList,
+class CartDataState extends MainAppSupState<List<OrderModel>, Never>{
+  CartDataState({
+    super.firstModel,
+    required super.subState,
   });
 
-  bool get isLoading => appState!.isLoading;
-
-  AppException? get failure => appState!.failure;
-
-  List<OrderModel> get getShoppingList => shoppingList ?? [];
+  List<OrderModel> get getShoppingList => firstModel ?? [];
 
   int getTotalPrice() {
     int totalPrice = 0;
@@ -58,32 +54,38 @@ class CartDataState{
     getShoppingList.clear();
   }
 
-  CartDataState copyWith({
-    AppState? appState,
-    List<OrderModel>? shoppingList,
+  LoadedState get dataModels =>
+      SingleModelSuccessState<List<OrderModel>>(
+          firstModel: firstModel,
+      );
+
+  @override
+  CartDataState updateState({
+    List<OrderModel>? firstModel,
+    Never? secondModel,
+    bool? isConnected,
+    MainAppSubState? subState
   }) {
     return CartDataState(
-      appState: appState ?? this.appState,
-      shoppingList: shoppingList ?? this.shoppingList,
+        subState: subState ?? this.subState,
+        firstModel: firstModel ?? this.firstModel,
     );
   }
 
+  @override
   R when<R>({
+    R Function()? onConnection,
     required R Function() onInitial,
     required R Function() onLoading,
-    required R Function(List<OrderModel> data) onLoaded,
-    required R Function(AppException error) onError,
+    required R Function(LoadedState) onLoaded,
+    required R Function(AppException) onError
   }) {
-    if (failure != null) {
-      return onError(failure!);
-    }
-    if (isLoading) {
-      return onLoading();
-    }
-    if (getShoppingList.isNotEmpty) {
-      return onLoaded(getShoppingList);
-    }
-    return onInitial();
+    return subState.when(
+        onInitial: onInitial,
+        onLoading: onLoading,
+        onLoaded: () =>
+            onLoaded.call(dataModels),
+        onError: (failure) => onError.call(failure));
   }
 }
 

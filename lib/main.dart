@@ -11,14 +11,19 @@ import 'core/domain/services/connectivity_service/connectivity_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final _cacheHelper = CacheHelper();
+  final _hiveStore = HiveStore();
+
   try {
-    await CacheHelper.init();
-    await HiveStore.init();
+    await _cacheHelper.init();
+    await _hiveStore.init();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    final _hasInternet = await ConnectivityService.checkInternetConnection();
+    final _connectivityService = ConnectivityService();
+    final _hasInternet = await _connectivityService.checkInternetConnection();
+
     if (!_hasInternet) {
       throw Exception();
     }
@@ -28,5 +33,4 @@ void main() async {
     runApp(InternetUnavailability(onRetry: () => MyApp()));
   }
 }
-
 

@@ -1,4 +1,4 @@
-import '../../../../core/data/models/user_info_model.dart';
+import '../../../../core/data/models/user_model.dart';
 import '../repositories/user_info_repository.dart';
 
 
@@ -10,7 +10,7 @@ class UserInfoUseCase {
   })
       :_repository = userInfoRepository;
 
-  Future<UserInfoModel> getInfoExecute() async {
+  Future<UserModel> getInfoExecute() async {
     try {
       return await _repository.getInfo();
     }

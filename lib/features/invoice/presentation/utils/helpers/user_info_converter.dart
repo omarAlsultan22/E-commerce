@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../../../core/data/models/user_info_model.dart';
+import '../../../../../core/data/models/user_model.dart';
 
 
 class UserInfoConverter {
-  final UserInfoModel userModel;
+  final UserModel userModel;
 
   UserInfoConverter({required this.userModel});
 
@@ -16,13 +16,13 @@ class UserInfoConverter {
 
     if (Location.isEmpty) {
       return UserInfoConverter(
-        userModel: UserInfoModel.fromJson(modelMap),
+        userModel: UserModel.fromJson(modelMap),
       );
     }
 
     modelMap['location'] = Location;
     return UserInfoConverter(
-      userModel: UserInfoModel.fromJson(modelMap),
+      userModel: UserModel.fromJson(modelMap),
     );
   }
 }

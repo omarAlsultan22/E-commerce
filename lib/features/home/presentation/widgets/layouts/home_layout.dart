@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:international_cuisine/core/constants/app_keys.dart';
+import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
-import 'package:international_cuisine/core/constants/app_numbers.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/features/home/data/models/home_model.dart';
 
@@ -31,12 +31,17 @@ class HomeLayout extends StatefulWidget {
 
 class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
 
-  static const _zero = AppNumbers.zero;
-  static const _white = AppColors.white;
-  static const _black = AppColors.black;
+  //values
+  static const _startPoint = 300.0;
+  static const _endPoint = AppValues.none;
+  static const _fullAngle = 360.0;
+
+  //spaces
+  static const _spacing155 = 155.0;
+  static const _borderRadius = BorderRadius.all(Radius.circular(16));
 
   late Timer _rotationTimer;
-  double _rotationAngle = _zero;
+  double _rotationAngle = _endPoint;
   final double _secondsToComplete = 8.0;
 
   late AnimationController _slideController;
@@ -78,14 +83,11 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
   }
 
   void _startRotationAnimation() {
-    const _threeHundredSixty = 360.0;
-
-    const framesPerSecond = 60;
-    final anglePerFrame = _threeHundredSixty /
-        (_secondsToComplete * framesPerSecond);
+    final anglePerFrame = _fullAngle /
+        (_secondsToComplete * 60);
 
     _rotationTimer = Timer.periodic(
-      const Duration(milliseconds: 1000 ~/ framesPerSecond),
+      const Duration(milliseconds: 1000 ~/ 60),
           (timer) {
         if (!mounted) {
           timer.cancel();
@@ -94,8 +96,8 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
 
         setState(() {
           _rotationAngle += anglePerFrame;
-          if (_rotationAngle >= _threeHundredSixty) {
-            _rotationAngle = _threeHundredSixty;
+          if (_rotationAngle >= _fullAngle) {
+            _rotationAngle = _fullAngle;
             timer.cancel();
           }
         });
@@ -104,15 +106,13 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
   }
 
   void _setupSlideAnimations() {
-    const _threeHundred = 300.0;
-
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
 
     _leftColumnAnimation =
-        Tween<double>(begin: _threeHundred, end: _zero).animate(
+        Tween<double>(begin: _startPoint, end: _endPoint).animate(
           CurvedAnimation(
             parent: _slideController,
             curve: Curves.easeOut,
@@ -120,7 +120,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
         );
 
     _rightColumnAnimation =
-        Tween<double>(begin: -_threeHundred, end: _zero).animate(
+        Tween<double>(begin: -_startPoint, end: _endPoint).animate(
           CurvedAnimation(
             parent: _slideController,
             curve: Curves.easeOut,
@@ -176,37 +176,35 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
   }
 
   Widget _buildHomeScreen() {
-    const _grey = Color(0xFF212121);
-
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: _grey,
+        backgroundColor: AppColors.grey,
         appBar: AppBar(
-          elevation: _zero,
-          backgroundColor: _grey,
+          elevation: AppValues.none,
+          backgroundColor: AppColors.grey,
           centerTitle: true,
           title: const Text(
             'اختر مطبخك',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: _white,
+              color: AppColors.white,
             ),
           ),
           leading: IconButton(
             onPressed: _signOut,
-            icon: const Icon(Icons.logout, color: _white),
+            icon: const Icon(Icons.logout, color: AppColors.white),
             tooltip: 'تسجيل الخروج',
           ),
         ),
         body: Padding(
-          padding: AppPaddings.paddingAll_10,
+          padding: AppPaddings.all_vSmall,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildLeftColumn(),
-              const SizedBox(width: 10),
+              const SizedBox(width: 10.0),
               _buildRightColumn(),
             ],
           ),
@@ -221,14 +219,15 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(
-              _showSlideAnimation ? _leftColumnAnimation.value : _zero, _zero),
+              _showSlideAnimation ? _leftColumnAnimation.value : _endPoint,
+              _endPoint),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _buildCuisineCard(0, EgyptianScreen()),
-              _buildCuisineCard(2, TurkishScreen()),
-              _buildCuisineCard(4, ChineseScreen()),
-              _buildCuisineCard(6, ItalianScreen()),
+              _buildCuisineCard(index: 0, screen: EgyptianScreen()),
+              _buildCuisineCard(index: 2, screen: TurkishScreen()),
+              _buildCuisineCard(index: 4, screen: ChineseScreen()),
+              _buildCuisineCard(index: 6, screen: ItalianScreen()),
             ],
           ),
         );
@@ -242,14 +241,15 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(
-              _showSlideAnimation ? _rightColumnAnimation.value : _zero, _zero),
+              _showSlideAnimation ? _rightColumnAnimation.value : _endPoint,
+              _endPoint),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _buildCuisineCard(1, SyrianScreen()),
-              _buildCuisineCard(3, MexicanScreen()),
-              _buildCuisineCard(5, JapaneseScreen()),
-              _buildCuisineCard(7, FrenchScreen()),
+              _buildCuisineCard(index: 1, screen: SyrianScreen()),
+              _buildCuisineCard(index: 3, screen: MexicanScreen()),
+              _buildCuisineCard(index: 5, screen: JapaneseScreen()),
+              _buildCuisineCard(index: 7, screen: FrenchScreen()),
             ],
           ),
         );
@@ -257,14 +257,15 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildCuisineCard(int index, Widget screen) {
+  Widget _buildCuisineCard({
+    required int index,
+    required Widget screen
+  }) {
     if (index >= widget.homeData.length) {
       return const SizedBox(); // Handle out of bounds
     }
 
-    const _spacing = 155.0;
     final _cuisine = widget.homeData[index];
-    const _borderRadius = BorderRadius.all(Radius.circular(16));
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -272,15 +273,15 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
         onTap: () => _navigateToCuisineScreen(screen),
         borderRadius: _borderRadius,
         child: Container(
-          width: _spacing,
-          height: _spacing,
+          width: _spacing155,
+          height: _spacing155,
           decoration: BoxDecoration(
             borderRadius: _borderRadius,
             boxShadow: [
               BoxShadow(
-                color: _black.withOpacity(0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+                color: AppColors.black.withOpacity(0.3),
+                blurRadius: 8.0,
+                offset: const Offset(AppValues.none, 4.0),
               ),
             ],
           ),
@@ -315,7 +316,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                   ? loadingProgress.cumulativeBytesLoaded /
                   loadingProgress.expectedTotalBytes!
                   : null,
-              color: _white,
+              color: AppColors.white,
             ),
           );
         },
@@ -324,8 +325,8 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
             color: Color(0xFF424242),
             child: const Icon(
               Icons.broken_image,
-              color: _white,
-              size: 50,
+              color: AppColors.white,
+              size: 50.0,
             ),
           );
         },
@@ -334,19 +335,17 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
   }
 
   Widget _buildCuisineOverlay() {
-    const transparent = AppColors.transparent;
-
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            transparent,
-            transparent,
-            _black.withOpacity(0.8),
+            AppColors.transparent,
+            AppColors.transparent,
+            AppColors.black.withOpacity(0.8),
           ],
-          stops: const [0.0, 0.5, 1.0],
+          stops: const [AppValues.none, 0.5, 1.0],
         ),
       ),
     );
@@ -354,23 +353,23 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
 
   Widget _buildCuisineTitle(String title) {
     return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 12,
+      left: AppValues.none,
+      right: AppValues.none,
+      bottom: 12.0,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Text(
           title,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: _white,
+            fontSize: 20.0,
+            color: AppColors.white,
             shadows: [
               Shadow(
-                blurRadius: 6,
-                color: _black,
-                offset: Offset(2, 2),
+                blurRadius: 6.0,
+                color: AppColors.black,
+                offset: Offset(2.0, 2.0),
               ),
             ],
           ),

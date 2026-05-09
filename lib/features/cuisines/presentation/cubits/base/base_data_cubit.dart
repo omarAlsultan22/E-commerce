@@ -1,18 +1,24 @@
+import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
+
 import '../../states/categories_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:international_cuisine/core/presentation/states/app_state.dart';
+import 'package:international_cuisine/features/cuisines/data/models/categories_model.dart';
 
 
 abstract class BaseCountriesCubit extends Cubit<CategoriesState> {
   BaseCountriesCubit()
-      : super(CategoriesState(
-      hasMore: true,
-      appState: AppState(),
-      categoryData: const [],
-      searchData: const [],
-  ));
+      : super(
+      CategoriesState(
+        subState: InitialState(),
+        firstModel: CategoriesModel(),
+      )
+  );
 
-  Future<void> getData();
+  void startMonitoring();
+
+  void handleConnectionChange();
+
+  Future<void> fetchData({required bool isLoadingMore});
 
   Future<void> updateRating({
     required int index,

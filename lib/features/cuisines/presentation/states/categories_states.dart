@@ -1,77 +1,74 @@
-import 'package:international_cuisine/core/presentation/states/app_state.dart';
-import '../../../../core/errors/exceptions/app_exception.dart';
+import 'package:international_cuisine/features/cuisines/data/models/categories_model.dart';
+import '../../../../core/presentation/states/base/main_app_sub_state.dart';
+import '../../../../core/presentation/states/base/main_app_sup_state.dart';
+import '../../../../core/presentation/states/base/main_loaded_state.dart';
+import '../../../../core/errors/exceptions/base/app_exception.dart';
+import '../../../../core/presentation/states/loaded_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../data/models/data_model.dart';
 
 
-class CategoriesState {
-  final bool? hasMore;
-  final AppState? appState;
-  List<DataModel>? categoryData;
-  final List<DataModel>? searchData;
-  final DocumentSnapshot? lastDocument;
-
-   CategoriesState({
-    this.appState,
-    this.hasMore,
-    this.categoryData,
-    this.searchData,
-    this.lastDocument
+class CategoriesState extends MainAppSupState<CategoriesModel, Never> {
+  CategoriesState({
+    super.firstModel,
+    required super.subState,
   });
 
+  bool get hasMore => firstModel!.hasMore;
 
-  bool get _isLoading => appState!.isLoading;
+  DocumentSnapshot get lastDocument => firstModel!.lastDocument!;
 
-  AppException? get _failure => appState!.failure;
+  List<DataModel> get categoryData => firstModel!.categoryData!;
 
+  bool get categoryDataIsEmpty => categoryData.isEmpty;
 
-  DataModel currentDataModel(int index) => categoryData![index];
+  DataModel currentDataModel(int index) => firstModel!.currentDataModel(index);
 
+  LoadedState get dataModels =>
+      SingleModelSuccessState<CategoriesModel>(
+        firstModel: firstModel,
+      );
 
   CategoriesState updateRating({
     required int index,
     required DataModel newModel
   }) {
-    final updatedList = List<DataModel>.from(categoryData ?? []);
+    final updatedList = List<DataModel>.from(categoryData);
     updatedList[index] = newModel;
 
-    return copyWith(categoryData: updatedList);
+    return updateState(
+        firstModel: firstModel!.copyWith(categoryData: updatedList));
   }
 
+  CategoriesModel updateSearchList(List<DataModel> searchData) =>
+      firstModel!.copyWith(searchData: searchData);
 
-  CategoriesState copyWith({
-    bool? hasMore,
-    AppState? appState,
-    List<DataModel>? categoryData,
-    List<DataModel>? searchData,
-    DocumentSnapshot? lastDocument
+  @override
+  CategoriesState updateState({
+    CategoriesModel? firstModel,
+    Never? secondModel,
+    MainAppSubState? subState
   }) {
     return CategoriesState(
-        hasMore: hasMore ?? this.hasMore,
-        appState: appState ?? this.appState,
-        categoryData: categoryData ?? this.categoryData,
-        searchData: searchData ?? this.searchData,
-        lastDocument: lastDocument ?? this.lastDocument
+      subState: subState ?? this.subState,
+      firstModel: firstModel ?? this.firstModel,
     );
   }
 
+  @override
   R when<R>({
+    R Function()? onConnection,
     required R Function() onInitial,
     required R Function() onLoading,
-    required R Function(List<DataModel>? categoryData, List<
-        DataModel>? searchData) onLoaded,
-    required R Function(AppException error) onError,
+    required R Function(LoadedState) onLoaded,
+    required R Function(AppException) onError
   }) {
-    if (_failure != null) {
-      return onError(_failure!);
-    }
-    if (_isLoading) {
-      return onLoading();
-    }
-    if (categoryData!.isNotEmpty) {
-      return onLoaded(categoryData, searchData);
-    }
-    return onInitial();
+    return subState.when(
+        onInitial: onInitial,
+        onLoading: onLoading,
+        onLoaded: () =>
+            onLoaded.call(dataModels),
+        onError: (failure) => onError.call(failure));
   }
 }
 

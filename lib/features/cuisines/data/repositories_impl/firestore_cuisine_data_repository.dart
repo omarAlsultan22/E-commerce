@@ -1,15 +1,17 @@
 import '../models/data_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../../core/constants/app_durations.dart';
+import '../../utils/helpers/cuisine_data_converter.dart';
 import '../../../../core/data/models/paginated_result.dart';
-import '../../presentation/utils/helpers/cuisine_data_converter.dart';
+import '../../../../core/data/data_sources/remote/firestore.dart';
 import 'package:international_cuisine/features/cuisines/domain/repositories/cuisine_data_repository.dart';
 
 
 class FirestoreCuisineDataRepository implements CuisineDataRepository {
-  final FirebaseFirestore _firestore;
+  final FirestoreService _firestore;
 
   FirestoreCuisineDataRepository({
-    required FirebaseFirestore firestore
+    required FirestoreService firestore
   }) : _firestore = firestore;
 
   static const _orderName = 'countriesData';
@@ -22,15 +24,17 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     required DocumentSnapshot? lastDocument,
     int pageSize = 5,
   }) async {
-    Query query = _firestore.collection(_collectionId)
-        .doc(_docId)
-        .collection(collectionPath);
+    Query query = _firestore.getSubCollection(
+        docId: _docId,
+        subCollectionPath: collectionPath,
+        superCollectionPath: _collectionId);
 
     if (lastDocument != null) {
       query = query.startAfterDocument(lastDocument);
     }
     try {
-      final querySnapshot = await query.limit(pageSize).get();
+      final querySnapshot = await query.limit(pageSize).get().timeout(
+          AppDurations.seconds);
 
 
       if (querySnapshot.docs.isEmpty) {
@@ -56,7 +60,6 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     }
   }
 
-
   @override
   Future<List<DataModel>> searchByPartialMatch({
     required String collectionPath,
@@ -69,14 +72,15 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     }
 
     var firestoreQuery = _firestore
-        .collection(_collectionId)
-        .doc(_docId)
-        .collection(collectionPath)
+        .getSubCollection(
+        docId: _docId,
+        subCollectionPath: collectionPath,
+        superCollectionPath: _collectionId)
         .where(_orderName, isGreaterThanOrEqualTo: normalizedQuery)
         .where(_orderName, isLessThanOrEqualTo: '$normalizedQuery\uf8ff');
 
     try {
-      final snapshot = await firestoreQuery.get();
+      final snapshot = await firestoreQuery.get().timeout(AppDurations.seconds);
 
       return snapshot.docs
           .where((doc) {
@@ -93,7 +97,6 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     }
   }
 
-
   @override
   Future<void> updateRating({
     required String collectionId,
@@ -101,8 +104,11 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     required int rating
   }) async {
     try {
-      return await _firestore.collection(collectionId).doc(index).update(
-          {'rating': rating});
+      return await _firestore.updateDocument(
+        collectionPath: 'collectionId',
+        data: {'rating': rating},
+        docId: index,
+      );
     }
     catch (e) {
       rethrow;

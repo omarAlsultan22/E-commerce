@@ -1,14 +1,14 @@
 import 'package:international_cuisine/core/presentation/widgets/states/loading_state_widget.dart';
+import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
+import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
+import 'package:international_cuisine/core/data/data_sources/remote/firestore.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
-import '../../../../core/presentation/widgets/states/error_state_widget.dart';
-import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
 import '../../data/repositories_impl/firestore_user_info_repository.dart';
 import 'package:international_cuisine/core/constants/app_keys.dart';
-import '../widgets/layouts/user_info_layout.dart';
 import '../../domain/useCases/user_info_useCase.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../states/states/user_info_state.dart';
+import '../widgets/layouts/user_info_layout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../states/states/user_info_state.dart';
 import '../cubits/user_info_cubit.dart';
 import 'package:flutter/material.dart';
 
@@ -18,36 +18,43 @@ class UserInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _repository = FirebaseFirestore.instance;
-    final _userInfoRepository = FirestoreUserInfoRepository(repository: _repository);
+    final _repository = FirestoreService();
+    final _cacheHelper = CacheHelper();
+    final _userInfoRepository = FirestoreUserInfoRepository(
+        repository: _repository, cacheHelper: _cacheHelper);
     final _userInfoUseCase = UserInfoUseCase(
         userInfoRepository: _userInfoRepository);
-    return ConnectivityAwareService(
-        child: BlocProvider(
-            create: (context) =>
-                UserInfoCubit(userInfoUseCase: _userInfoUseCase),
-            child: BlocBuilder<UserInfoCubit, UserInfoState>(
-                builder: (context, state) {
-                  final cubit = UserInfoCubit.get(context);
-                  return state.when(
-                    onInitial: () =>
-                    const InitialStateWidget(
-                        AppKeys.userInfo, Icons.info),
-                    onLoading: () =>
-                    const LoadingStateWidget(),
-                    onLoaded: () =>
-                        UserInfoLayout(
-                            firstName: state.firstName,
-                            lastName: state.lastName,
-                            userPhone: state.userPhone,
-                            userLocation: state.userLocation!
-                        ),
-                    onError: (error) =>
-                        ErrorStateWidget(error: error.message,
-                            onRetry: () => cubit.getInfo()),
-                  );
-                }
-            )
+    final _connectivityProvider = ConnectivityProvider();
+    return BlocProvider(
+        create: (context) =>
+            UserInfoCubit(
+                userInfoUseCase: _userInfoUseCase,
+                connectivityProvider: _connectivityProvider),
+        child: BlocBuilder<UserInfoCubit, UserInfoState>(
+            builder: (context, state) {
+              final cubit = UserInfoCubit.get(context);
+              return state.when(
+                  onInitial: () =>
+                  const InitialStateWidget(
+                      AppKeys.userInfo, Icons.info),
+                  onLoading: () =>
+                  const LoadingStateWidget(),
+                  onLoaded: (loadedState) =>
+                      UserInfoLayout(
+                        userModel: loadedState.firstModel,
+                        messageResult: loadedState.secondModel,
+                        onUpdate: (userModel) =>
+                            cubit.updateInfo(
+                              firstName: userModel.firstName,
+                              lastName: userModel.lastName,
+                              userPhone: userModel.userPhone,
+                              userLocation: userModel.userLocation,
+                            ),
+                      ),
+                  onError: (error) =>
+                      error.buildErrorWidget(onRetry: () => cubit.getInfo())
+              );
+            }
         )
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-class AppColors {
+mixin AppColors {
   static const primaryBrown = Color(0xFF3E2723);
   static const primaryAmber = Color(0xFFFFB300);
   static const lightAmber = Color(0xFFFFCA28);

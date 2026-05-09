@@ -5,12 +5,15 @@ import 'package:international_cuisine/features/cart/data/models/order_model.dart
 
 
 class CartDataUseCase {
+  final CacheHelper _cacheHelper;
   ShoppingListRepository _repository;
 
   CartDataUseCase({
+    required CacheHelper cacheHelper,
     required ShoppingListRepository repository
   })
-      : _repository = repository;
+      : _repository = repository,
+        _cacheHelper = cacheHelper;
 
   static const time = AppKeys.time;
 
@@ -19,7 +22,7 @@ class CartDataUseCase {
   }) async {
     try {
       _repository.saveDataToHive(shoppingList: shoppingList);
-      await CacheHelper.setIntValue(key: time, value: DateTime
+      await _cacheHelper.setIntValue(key: time, value: DateTime
           .now()
           .millisecondsSinceEpoch);
     }
@@ -30,7 +33,7 @@ class CartDataUseCase {
 
   Future<List<OrderModel>> getCartDataExecute() async {
     try {
-      final savedTime = await CacheHelper.getIntValue(key: time) ??
+      final savedTime = await _cacheHelper.getIntValue(key: time) ??
           0;
       final currentTime = DateTime
           .now()
@@ -40,7 +43,7 @@ class CartDataUseCase {
 
       if (savedTime == 0 || currentTime - savedTime > expiryMilliseconds) {
         print('Cart data expired or not found, removing...');
-        await CacheHelper.removeValue(key: time);
+        await _cacheHelper.removeValue(key: time);
         return [];
       } else {
         return _repository.getDataFromHive();

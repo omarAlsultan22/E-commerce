@@ -1,28 +1,57 @@
-import 'package:international_cuisine/features/auth/presentation/services/auth_services.dart';
+import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 import '../../../user_info/data/repositories_impl/firestore_user_info_repository.dart';
-import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
+import 'package:international_cuisine/core/data/data_sources/remote/firestore.dart';
+import '../../../../core/data/data_sources/local/shared_preferences.dart';
+import '../../../../core/data/data_sources/remote/firebase_auth.dart';
 import '../../data/repositories_impl/firebase_auth_repository.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../../domain/useCases/auth_useCase.dart';
+import '../../../../core/presentation/states/message_state.dart';
+import '../../domain/useCases/sign_up_useCase.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/layouts/sign_up_layout.dart';
 import 'package:flutter/material.dart';
+import '../cubits/sign_up_cubit.dart';
 
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _auth = FirebaseAuth.instance;
-    final _authRepository = FirebaseAuthRepository(auth: _auth);
-    final _repository = FirebaseFirestore.instance;
-    final _userInfoRepository = FirestoreUserInfoRepository(repository: _repository);
-    final _authUseCase = AuthUseCase(
-        authRepository: _authRepository, userInfoRepository: _userInfoRepository);
-    final _authServices = AuthServices(authUseCase: _authUseCase);
-    return ConnectivityAwareService(
-        child: SignUpLayout(_authServices)
+    final _cacheHelper = CacheHelper();
+    final _authService = FirebaseAuthService();
+    final _repository = FirestoreService();
+    final _authRepository = FirebaseAuthRepository(authService: _authService);
+    final _settingsRepository = FirestoreUserInfoRepository(
+        repository: _repository, cacheHelper: _cacheHelper);
+    final _useCase = SignUpUseCase(
+        authRepository: _authRepository,
+        settingsRepository: _settingsRepository,
+        cacheHelper: _cacheHelper);
+    final _connectivityService = ConnectivityService();
+    final _cubit = SignUpCubit(
+        useCase: _useCase, connectivityService: _connectivityService);
+    return BlocBuilder<SignUpCubit, AuthState>(
+        builder: (context, state) {
+          return SignUpLayout(
+              messageResult: state.messageResult!,
+              onUpdate: ({
+                required String firstName,
+                required String lastName,
+                required String userEmail,
+                required String userPassword,
+                required String userPhone,
+                required String userLocation
+              }) =>
+                  _cubit.signUp(
+                      firstName: firstName,
+                      lastName: lastName,
+                      userEmail: userEmail,
+                      userPassword: userPassword,
+                      userPhone: userPhone,
+                      userLocation: userLocation
+                  )
+          );
+        }
     );
   }
 }

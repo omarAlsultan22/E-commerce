@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:international_cuisine/core/constants/app_assets.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_values.dart';
 import '../../../../core/presentation/utils/helpers/image_helpers.dart';
+import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
 
 
 class IntroScreen extends StatelessWidget {
@@ -20,7 +22,7 @@ class IntroScreen extends StatelessWidget {
           cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
               context,
               targetHeight: double.infinity,
-              qualityFactor: 1.5
+              qualityFactor: AppValues.qualityFactor
           ),
           cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
               context,
@@ -28,15 +30,12 @@ class IntroScreen extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(bottom: 50.0),
-          child: SizedBox(
-            width: 25.0,
-            height: 25.0,
-            child: CircularProgressIndicator(
-              color: AppColors.white,
-              strokeWidth: 2.0,
-            ),
-          ),
+            padding: const EdgeInsets.only(bottom: 50.0),
+            child: const LoadingWidget(
+                spacing: 25,
+                strokeWidth: 2,
+                color: AppColors.white
+            )
         ),
       ],
     );

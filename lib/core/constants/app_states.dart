@@ -1,4 +1,3 @@
-class AppStates {
-  static const success = 'تم التحديث بنجاح';
-  static const failed = 'فشل التحديث: ';
+mixin AppStates {
+  static const noInternetMessage = 'لا يوجد اتصال بالإنترنت';
 }

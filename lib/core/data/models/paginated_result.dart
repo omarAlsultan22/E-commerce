@@ -3,9 +3,9 @@ import 'package:international_cuisine/features/cuisines/data/models/data_model.d
 
 
 class PaginatedResult {
+  final bool hasMoreData;
   final List<DataModel> dataList;
   final DocumentSnapshot? lastDocument;
-  final bool hasMoreData;
 
   PaginatedResult({
     required this.dataList,

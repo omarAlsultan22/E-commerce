@@ -3,7 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 
 class ConnectivityService {
-  static Future<bool> checkInternetConnection() async {
+  Future<bool> checkInternetConnection() async {
     try {
       final connectivityResult = await Connectivity().checkConnectivity();
       if (connectivityResult == ConnectivityResult.none) {

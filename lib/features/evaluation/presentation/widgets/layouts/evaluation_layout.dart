@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_assets.dart';
+import '../../../../../core/presentation/widgets/loading_widget.dart';
+import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import '../../../../../core/presentation/utils/helpers/image_helpers.dart';
-import 'package:international_cuisine/core/presentation/widgets/build_snack_bar.dart';
-import 'package:international_cuisine/features/evaluation/presentation/operations/evaluation_operations.dart';
 
 
 class EvaluationLayout extends StatefulWidget {
-  final EvaluationOperations _operations;
-  const EvaluationLayout(this._operations, {super.key});
+  final void Function(String) onUpdate;
+  const EvaluationLayout({
+    super.key,
+    required this.onUpdate,
+  });
 
   @override
   State<EvaluationLayout> createState() => _EvaluationLayoutState();
@@ -16,40 +19,38 @@ class EvaluationLayout extends StatefulWidget {
 
 class _EvaluationLayoutState extends State<EvaluationLayout> {
   bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
 
   Future<void> _onSendPressed() async {
-    setState(() => _isLoading = true);
+    if (_formKey.currentState!.validate()) {
+      _hideKeyboard();
+      await _performRegistration();
+    }
+  }
 
-    final result = await widget._operations.sendEvaluation(
-        evaluationText: _textController.text
+  Future<void> _performRegistration() async {
+    widget.onUpdate(
+      _textController.text,
     );
+  }
 
-    setState(() => _isLoading = false);
-
-    if (result.isSuccess) {
-      buildSnackBar('Sent successfully', AppColors.successGreen);
-    }
-    else {
-      buildSnackBar(result.error!, AppColors.errorRed);
-    }
+  void _hideKeyboard() {
+    FocusScope.of(context).unfocus();
   }
 
   @override
   Widget build(BuildContext context) {
-    const _imageUrl = 'assets/images/original_logo.png';
-    const _paddingAll12 = AppPaddings.paddingAll_12;
-
     return Scaffold(
       body: Image.asset(
-        _imageUrl,
+        AppAssets.originalLogo,
         fit: BoxFit.fill,
         height: double.infinity,
         width: double.infinity,
         cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
             context,
             targetHeight: double.infinity,
-            qualityFactor: 1.5
+            qualityFactor: AppValues.qualityFactor
         ),
         cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
             context,
@@ -65,11 +66,12 @@ class _EvaluationLayoutState extends State<EvaluationLayout> {
                 decoration: InputDecoration(
                   hintText: 'اكتب رسالة...',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16.0),
                 ),
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
@@ -78,17 +80,16 @@ class _EvaluationLayoutState extends State<EvaluationLayout> {
               ),
             ),
             IconButton(onPressed: () {}, icon: _isLoading ? const Padding(
-              padding: _paddingAll12,
-              child: const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
+              padding: AppPaddings.all_Small,
+              child: const LoadingWidget(
+                spacing: 20.0,
+                strokeWidth: 2.0,
               ),
             )
                 : GestureDetector(
               onTap: _onSendPressed,
               child: const Padding(
-                padding: _paddingAll12,
+                padding: AppPaddings.all_Small,
                 child: Icon(Icons.send, color: Colors.blue),
               ),
             )

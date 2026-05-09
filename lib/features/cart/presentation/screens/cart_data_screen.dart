@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:international_cuisine/core/constants/app_colors.dart';
 import '../cubits/cart_data_cubit.dart';
 import '../states/cart_data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/presentation/widgets/states/error_state_widget.dart';
-import '../../../../core/presentation/screens/connectivity_aware_screen.dart';
+import '../../../../core/data/data_sources/local/hive.dart';
+import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_spaces.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
-import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import 'package:international_cuisine/features/cart/presentation/widgets/layouts/cart_data_layout.dart';
 
 
@@ -21,41 +20,39 @@ class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
-    const _grey = AppColors.grey;
-
-    return ConnectivityAwareService(
-        child: BlocBuilder<CartDataCubit, CartDataState>(
-            builder: (context, state) {
-              final cubit = CartDataCubit.get(context);
-              return state.when(
-                  onInitial: () =>
-                  const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.shopping_cart_outlined, size: 60,
-                            color: _grey),
-                        AppSpacing.height_16,
-                        const Text(
-                          'عربة التسوق فارغة',
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: _grey
-                          ),
-                        ),
-                      ],
+    final _hiveStore = HiveStore();
+    return BlocBuilder<CartDataCubit, CartDataState>(
+        builder: (context, state) {
+          final cubit = CartDataCubit.get(context);
+          return state.when(
+              onInitial: () =>
+              const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.shopping_cart_outlined, size: 60.0,
+                        color: AppColors.grey),
+                    AppSpaces.verticalSpacing_16,
+                    const Text(
+                      'عربة التسوق فارغة',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: AppColors.grey
+                      ),
                     ),
+                  ],
+                ),
+              ),
+              onLoading: () => const LoadingStateWidget(),
+              onLoaded: (dataModels) =>
+                  CartDataLayout(
+                      hiveStore: _hiveStore,
+                      shoppingList: dataModels.firstModel
                   ),
-                  onLoading: () => const LoadingStateWidget(),
-                  onLoaded: (shoppingList) =>
-                      CartDataLayout(shoppingList),
-                  onError: (error) =>
-                      ErrorStateWidget(
-                          error: error.message,
-                          onRetry: () => cubit.getCartData())
-              );
-            }
-        )
+              onError: (error) =>
+                  error.buildErrorWidget(onRetry: cubit.getCartData)
+          );
+        }
     );
   }
 }

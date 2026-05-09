@@ -1,6 +1,11 @@
 import 'package:international_cuisine/features/cuisines/domain/useCases/cuisine_data_useCase.dart';
-import 'package:international_cuisine/core/errors/exceptions/app_exception.dart';
+import 'package:international_cuisine/features/cuisines/data/models/categories_model.dart';
+import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
+import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
+import 'package:international_cuisine/core/errors/exceptions/base/app_exception.dart';
+import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
 import 'package:international_cuisine/core/errors/error_handler.dart';
+import '../../../../core/errors/exceptions/network_exception.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'base/base_data_cubit.dart';
@@ -8,50 +13,91 @@ import 'base/base_data_cubit.dart';
 
 class ChineseDataCubit extends BaseCountriesCubit {
   final CuisineDataUseCase _dataUseCases;
+  final ConnectivityProvider _connectivityProvider;
 
   ChineseDataCubit({
     required CuisineDataUseCase dataUseCases,
-
+    required ConnectivityProvider connectivityProvider
   })
-      : _dataUseCases = dataUseCases;
+      : _dataUseCases = dataUseCases,
+        _connectivityProvider = connectivityProvider;
 
   static ChineseDataCubit get(BuildContext context) =>
       BlocProvider.of<ChineseDataCubit>(context);
 
-  static const String chinese = 'chinese';
+  static const _chinese = 'chinese';
 
-  Future<void> getData() async {
-    if (!state.hasMore!) return;
+  void startMonitoring() {
+    _connectivityProvider.addListener(handleConnectionChange);
+  }
 
-    final appState = state.appState!;
-    try {
-      final newState = await _dataUseCases.getDataExecute(
-          chinese,
-          state.lastDocument
-      );
-      emit(state.copyWith(
-          appState: appState.copyWith(isLoading: false),
-          categoryData: [...state.categoryData!, ...newState.dataList],
-          lastDocument: newState.lastDocument,
-          hasMore: newState.hasMoreData)
-      );
-    } on AppException catch (e) {
-      final failure = ErrorHandler.handleException(e);
-      emit(state.copyWith(
-          appState: appState.copyWith(isLoading: false, failure: failure)));
+  void handleConnectionChange() {
+    if (_connectivityProvider.isConnected && state.firstModel == null) {
+      getInitialData();
     }
   }
+
+  @override
+  Future<void> fetchData({required bool isLoadingMore}) async {
+    if (!state.hasMore) return;
+
+    if (!isLoadingMore && state.categoryDataIsEmpty) {
+      emit(state.updateState(subState: LoadingState()));
+    }
+
+    try {
+      final newState = await _dataUseCases.getDataExecute(
+          _chinese,
+          isLoadingMore ? state.lastDocument : null
+      );
+
+      emit(state.updateState(firstModel: CategoriesModel(
+          categoryData: isLoadingMore
+              ? [...state.categoryData, ...newState.dataList]
+              : newState.dataList,
+          lastDocument: newState.lastDocument,
+          hasMore: newState.hasMoreData),
+        subState: SuccessState(),
+      ));
+    } on AppException catch (e) {
+      final failure = ErrorHandler.handleException(e);
+      emit(state.updateState(
+        subState: ErrorState(failure: failure),
+      ));
+    }
+  }
+
+  Future<void> getInitialData() async {
+    if (!_connectivityProvider.isConnected && state.firstModel == null) {
+      final connectivityService = ConnectivityService();
+      emit(
+          state.updateState(
+            subState: ErrorState(
+              failure: NetworkException(
+                  connectivityService: connectivityService
+              ),
+            ),
+          )
+      );
+      return;
+    }
+    await fetchData(isLoadingMore: false);
+  }
+
+  Future<void> loadMoreData() async {
+    if (!state.hasMore) return;
+    await fetchData(isLoadingMore: true);
+  }
+
 
   @override
   Future<void> updateRating({
     required int index,
     required int rating
   }) async {
-    final appState = state.appState!;
-
     try {
       _dataUseCases.updateRatingExecute(
-          collectionId: chinese,
+          collectionId: _chinese,
           index: index.toString(),
           rating: rating
       );
@@ -61,28 +107,36 @@ class ChineseDataCubit extends BaseCountriesCubit {
     }
     on AppException catch (e) {
       final failure = ErrorHandler.handleException(e);
-      emit(state.copyWith(appState: appState.copyWith(failure: failure)));
+      emit(state.updateState(
+        subState: ErrorState(failure: failure),
+      ));
     }
   }
 
   @override
   Future<void> getDataSearch(String searchText) async {
-    final appState = state.appState!;
-
     try {
       final _searchData = await _dataUseCases.getDataSearchExecute(
-          query: searchText, collectionPath: chinese);
+          query: searchText, collectionPath: _chinese);
 
-      emit(state.copyWith(searchData: _searchData));
+      emit(state.updateState(firstModel: state.updateSearchList(_searchData)));
     }
     on AppException catch (e) {
       final failure = ErrorHandler.handleException(e);
-      emit(state.copyWith(appState: appState.copyWith(failure: failure)));
+      emit(state.updateState(
+        subState: ErrorState(failure: failure),
+      ));
     }
   }
 
   @override
   void clearDataSearch() {
-    emit(state.copyWith(searchData: []));
+    emit(state.updateState(firstModel: state.updateSearchList([])));
+  }
+
+  @override
+  Future<void> close() {
+    _connectivityProvider.removeListener(handleConnectionChange);
+    return super.close();
   }
 }

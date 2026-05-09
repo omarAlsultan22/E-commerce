@@ -6,14 +6,14 @@ class HiveStore {
   static Box<List<OrderModel>>? _box;
   static const String _boxName = 'shoppingList';
 
-  static Box<List<OrderModel>> get box {
+  Box<List<OrderModel>> get box {
     if (_box == null || !_box!.isOpen) {
       throw Exception('HiveOperations not initialized or box is closed. Call init() first.');
     }
     return _box!;
   }
 
-  static Future<void> init() async {
+  Future<void> init() async {
     await Hive.initFlutter();
     Hive.registerAdapter(OrderModelAdapter());
     _box = await Hive.openBox<List<OrderModel>>('shoppingList');
@@ -75,7 +75,7 @@ class HiveStore {
   }
 
 
-  static Future<void> closeBox() async {
+  Future<void> closeBox() async {
     try {
       await _box?.close();
     } catch (e) {

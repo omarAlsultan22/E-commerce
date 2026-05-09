@@ -1,4 +1,4 @@
-import '../../../../core/data/models/user_info_model.dart';
+import '../../../../core/data/models/user_model.dart';
 import '../repositories/payment_invoice_repository.dart';
 import '../../../cart/data/models/order_model.dart';
 
@@ -11,7 +11,7 @@ class PaymentInvoiceUseCase {
   })
       :_repository = userInfoRepository;
 
-  Future<UserInfoModel> getInfoExecute() async {
+  Future<UserModel> getInfoExecute() async {
     try {
       return await _repository.getInfo();
     }
@@ -21,7 +21,7 @@ class PaymentInvoiceUseCase {
   }
 
   Future<void> sendDataExecute({
-    required UserInfoModel userInfo,
+    required UserModel userInfo,
     required List<OrderModel> shoppingList,
   }) async {
     try {

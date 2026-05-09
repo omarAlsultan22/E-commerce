@@ -3,13 +3,18 @@ import 'package:international_cuisine/core/constants/app_assets.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
 import '../../domain/services/connectivity_service/connectivity_service.dart';
-import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
+import 'package:international_cuisine/core/constants/app_spaces.dart';
 
 
 class InternetUnavailability extends StatelessWidget {
-  final VoidCallback onRetry;
+  final VoidCallback? onRetry;
+  final ConnectivityService? connectivityService;
 
-  const InternetUnavailability({super.key, required this.onRetry});
+  const InternetUnavailability({
+  super.key,
+  this.onRetry,
+  this.connectivityService
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +52,7 @@ class InternetUnavailability extends StatelessWidget {
 
                 // النصوص
                 _buildText('OOPS!', 28.0),
-                AppSpacing.height_8,
+                AppSpaces.verticalSpacing_8,
                 _buildText('NO INTERNET', 24.0),
                 const SizedBox(height: 20),
                 _buildText(
@@ -81,9 +86,9 @@ class InternetUnavailability extends StatelessWidget {
   }
 
   Future<void> _hasInternet() async {
-    final hasInternet = await ConnectivityService.checkInternetConnection();
+    final hasInternet = await connectivityService!.checkInternetConnection();
     if (hasInternet) {
-      onRetry();
+      onRetry?.call();
     }
   }
 

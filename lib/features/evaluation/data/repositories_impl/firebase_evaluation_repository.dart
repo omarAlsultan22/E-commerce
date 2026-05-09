@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../../core/data/data_sources/remote/firestore.dart';
 import '../../domain/repositories/evaluation_repositories.dart';
 
 
 class FirebaseEvaluationRepository implements EvaluationRepository {
-  final FirebaseFirestore _firestore;
+  final FirestoreService _firestore;
 
-  FirebaseEvaluationRepository({required FirebaseFirestore firestore})
+  FirebaseEvaluationRepository({required FirestoreService firestore})
       : _firestore = firestore;
 
   static const String evaluationId = 'evaluation';
@@ -14,9 +14,13 @@ class FirebaseEvaluationRepository implements EvaluationRepository {
   @override
   Future<void> sendEvaluation({required String evaluationValue}) async {
     try {
-      await _firestore.collection(evaluationId).doc().set({
-        evaluationKey: evaluationValue
-      });
+      await _firestore.setData(
+          collectionPath: evaluationId,
+          docId: '',
+          data: {
+            evaluationKey: evaluationValue
+          }
+      );
     }
     catch (e) {
       throw Exception('Sent failed ${e.toString()}');

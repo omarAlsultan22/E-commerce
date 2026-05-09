@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/useCases/cart_data_useCase.dart';
 import '../../../cuisines/data/models/data_model.dart';
 import 'package:international_cuisine/core/errors/error_handler.dart';
-import 'package:international_cuisine/core/presentation/states/app_state.dart';
-import 'package:international_cuisine/core/errors/exceptions/app_exception.dart';
+import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
+import 'package:international_cuisine/core/errors/exceptions/base/app_exception.dart';
 
 
 class CartDataCubit extends Cubit<CartDataState> {
@@ -16,11 +16,14 @@ class CartDataCubit extends Cubit<CartDataState> {
   })
       :
         _useCase = useCase,
-        super(CartDataState(
-          appState: AppState(),
-          shoppingList: const []));
+        super(
+          CartDataState(
+              firstModel: [],
+              subState: InitialState()));
 
   static CartDataCubit get(context) => BlocProvider.of(context);
+
+  List<OrderModel> get getData => state.getShoppingList;
 
   Future<void> addOrder({
     required String orderSize,
@@ -34,70 +37,53 @@ class CartDataCubit extends Cubit<CartDataState> {
     );
     final shoppingList = state.addOrder(
         dataModel: dataModel, orderModel: orderModel);
-    emit(state.copyWith(shoppingList: shoppingList));
+    emit(state.updateState(firstModel: shoppingList));
   }
 
-
   void removeItem(int index) {
-    final appState = state.appState!;
     try {
       state.removeItem(index);
       _useCase.removeItemExecute(index: index);
-      emit(state.copyWith());
+      emit(state.updateState());
     }
     on AppException catch (e) {
-      final exception = ErrorHandler.handleException(e);
-      emit(state.copyWith(appState: appState.copyWith(failure: exception)));
+      final failure = ErrorHandler.handleException(e);
+      emit(state.updateState(subState: ErrorState(failure: failure)));
     }
   }
-
 
   void updateItemQuantity(int index, int newQuantity) {
     final shoppingList = state.updateItemQuantity(index, newQuantity);
-    emit(state.copyWith(shoppingList: shoppingList));
+    emit(state.updateState(firstModel: shoppingList));
   }
-
-
-  void clearCart() {
-    final appState = state.appState!;
-    try {
-      state.clearCart();
-      _useCase.clearCartExecute();
-      emit(state.copyWith());
-    }
-    on AppException catch (e) {
-      final exception = ErrorHandler.handleException(e);
-      emit(state.copyWith(appState: appState.copyWith(failure: exception)));
-    }
-  }
-
 
   int getTotalPrice() {
     return state.getTotalPrice();
   }
 
   Future<void> saveCartToHive() async {
-    final appState = state.appState!;
     try {
       await _useCase.saveCartDataExecute(shoppingList: state.getShoppingList);
     }
     on AppException catch (e) {
-      final exception = ErrorHandler.handleException(e);
-      emit(state.copyWith(appState: appState.copyWith(failure: exception)));
+      final failure = ErrorHandler.handleException(e);
+      emit(state.updateState(subState: ErrorState(failure: failure)));
     }
   }
 
   Future<void> getCartData() async {
-    final appState = state.appState!;
+    emit(state.updateState(subState: LoadingState()));
     try {
       final shoppingList = await _useCase.getCartDataExecute();
-      emit(state.copyWith(shoppingList: shoppingList,
-          appState: appState.copyWith(isLoading: false)));
+      if (shoppingList.isEmpty) {
+        emit(state.updateState(subState: InitialState()));
+      }
+      emit(state.updateState(
+          firstModel: shoppingList, subState: SuccessState()));
     }
     on AppException catch (e) {
-      final exception = ErrorHandler.handleException(e);
-      emit(state.copyWith(
-          appState: appState.copyWith(failure: exception, isLoading: false)));
+      final failure = ErrorHandler.handleException(e);
+      emit(state.updateState(subState: ErrorState(failure: failure)));
     }
   }
 }

@@ -1,4 +1,4 @@
-class AppKeys {
+mixin AppKeys {
   static const uId = 'uId';
   static const userInfo = 'userInfo';
   static const location = 'location';

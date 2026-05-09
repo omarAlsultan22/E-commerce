@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:international_cuisine/core/constants/app_borders.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_borders.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 
 
@@ -19,7 +19,7 @@ class PaymentFieldLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: AppPaddings.paddingAll_12,
+      padding: AppPaddings.all_Small,
       child: Container(
         height: 200.0,
         width: double.infinity,
@@ -29,9 +29,9 @@ class PaymentFieldLayout extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: AppColors.grey.withOpacity(0.1),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 2),
+              spreadRadius: 2.0,
+              blurRadius: 5.0,
+              offset: const Offset(0.0, 2.0),
             ),
           ],
         ),

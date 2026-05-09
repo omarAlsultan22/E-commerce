@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../../core/data/models/user_info_model.dart';
+import '../../../../core/data/models/user_model.dart';
 import 'package:international_cuisine/core/data/repositories_impl/base_user_repository.dart';
 
 
 abstract class UserInfoRepository implements BaseUserInfoRepository{
-  Future<void> setInfo({
-    required UserInfoModel userModel,
+
+  Future<void> createUserInfo({
+    required UserModel userModel,
     required UserCredential userCredential
   });
 

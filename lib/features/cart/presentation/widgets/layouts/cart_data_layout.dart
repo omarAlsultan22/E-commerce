@@ -1,11 +1,14 @@
+import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 import 'package:international_cuisine/core/presentation/utils/helpers/image_helpers.dart';
-import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
+import '../../../../location/presentation/screens/fixed_location_picker_screen.dart';
+import 'package:international_cuisine/core/constants/app_text_styles.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
-import 'package:international_cuisine/core/constants/app_numbers.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_values.dart';
+import 'package:international_cuisine/core/constants/app_spaces.dart';
+import 'package:international_cuisine/core/constants/app_sizes.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../maps/presentation/screens/maps_screen.dart';
 import '../../../../../core/data/data_sources/local/hive.dart';
 import '../../../data/models/order_model.dart';
 import '../../cubits/cart_data_cubit.dart';
@@ -13,24 +16,26 @@ import 'package:flutter/material.dart';
 
 
 class CartDataLayout extends StatefulWidget {
-  final List<OrderModel> _shoppingList;
-  const CartDataLayout(this._shoppingList, {super.key});
-
+  final HiveStore hiveStore;
+  final List<OrderModel> shoppingList;
+  const CartDataLayout({
+    required this.hiveStore,
+    required this.shoppingList,
+    super.key
+  });
   @override
   State<CartDataLayout> createState() => _CartDataLayoutState();
 }
 
-class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObserver{
+class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObserver {
   late CartDataCubit _cubit;
-
-  static const _paddingAll = EdgeInsets.all(16);
-  static const _amber =  AppColors.primaryAmber;
+  final _cacheHelper = CacheHelper();
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if(state == AppLifecycleState.paused){
+    if (state == AppLifecycleState.paused) {
       CartDataCubit.get(context).saveCartToHive();
-      await HiveStore.closeBox();
+      await widget.hiveStore.closeBox();
     }
     super.didChangeAppLifecycleState(state);
   }
@@ -58,7 +63,7 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          elevation: AppNumbers.zero,
+          elevation: AppValues.none,
           backgroundColor: AppColors.white,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: AppColors.black),
@@ -68,8 +73,7 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
             'عربة التسوق',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 25,
-              color: AppColors.black,
+              fontSize: 25.0,
             ),
           ),
           centerTitle: true,
@@ -79,12 +83,12 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
           children: [
             Expanded(
               child: ListView.separated(
-                padding: _paddingAll,
-                itemCount: widget._shoppingList.length,
-                separatorBuilder: (_, __) => AppSpacing.height_12,
+                padding: AppPaddings.all_medium,
+                itemCount: widget.shoppingList.length,
+                separatorBuilder: (_, __) => AppSpaces.verticalSpacing_12,
                 itemBuilder: (context, index) =>
                     CartItemCard(
-                      item: widget._shoppingList[index],
+                      order: widget.shoppingList[index],
                       onRemove: () => _cubit.removeItem(index),
                       onQuantityChanged: (newQuantity) {
                         if (newQuantity > 0) {
@@ -96,7 +100,7 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
                     ),
               ),
             ),
-            _buildOrderSummary(widget._shoppingList),
+            _buildOrderSummary(widget.shoppingList),
             _buildCheckoutButton(),
           ],
         ),
@@ -109,16 +113,16 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
         .fold(0, (sum, item) => sum + (item.price * item.item));
 
     return Container(
-      padding: _paddingAll,
+      padding: AppPaddings.all_medium,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: AppBorders.borderRadius_12,
         boxShadow: [
           BoxShadow(
             color: AppColors.grey.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, -2),
+            spreadRadius: 2.0,
+            blurRadius: 5.0,
+            offset: const Offset(0.0, -2.0),
           ),
         ],
       ),
@@ -127,14 +131,14 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
         children: [
           const Text(
             'المجموع الكلي:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: AppTextStyles.textStyle18,
           ),
           Text(
             '$totalAmount ج',
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 20.0,
               fontWeight: FontWeight.bold,
-              color: _amber,
+              color: AppColors.primaryAmber,
             ),
           ),
         ],
@@ -143,25 +147,27 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
   }
 
   Widget _buildCheckoutButton() {
-
     return Padding(
-      padding: _paddingAll,
+      padding: AppPaddings.all_medium,
       child: SizedBox(
         width: double.infinity,
         height: 50.0,
         child: ElevatedButton(
-          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FixedLocationPicker())),
+          onPressed: () =>
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                  FixedLocationPicker(cacheHelper: _cacheHelper)
+              )
+              ),
           style: ElevatedButton.styleFrom(
-              backgroundColor: _amber,
+              backgroundColor: AppColors.primaryAmber,
               shape: RoundedRectangleBorder(
                 borderRadius: AppBorders.borderRadius_8,
               )),
-          child: const Text(
+          child: Text(
             'اطلب الآن',
             style: TextStyle(
-              color: Colors.black,
               fontWeight: FontWeight.bold,
-              fontSize: 18,
+              fontSize: AppSizes.fontSize18,
             ),
           ),
         ),
@@ -172,20 +178,26 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
 
 
 class CartItemCard extends StatelessWidget {
-  final OrderModel item;
+  final OrderModel order;
   final VoidCallback onRemove;
   final Function(int) onQuantityChanged;
 
   const CartItemCard({
-    required this.item,
+    required this.order,
     required this.onRemove,
     required this.onQuantityChanged,
   });
 
+  //spaces
+  static const _spacing120 = 120.0;
+
+  //sizes
+  static const _iconSize = 20.0;
+  static const _borderRadius = 20.0;
+  static const _fontSize = AppSizes.fontSize16;
+
   @override
   Widget build(BuildContext context) {
-    const _oneHundredTwenty = 120.0;
-
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -195,34 +207,34 @@ class CartItemCard extends StatelessWidget {
             color: AppColors.grey.withOpacity(0.1),
             spreadRadius: 2.0,
             blurRadius: 5.0,
-            offset: const Offset(0, 2),
+            offset: const Offset(0.0, 2.0),
           ),
         ],
       ),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.horizontal(
-                right: Radius.circular(12)),
+            borderRadius: BorderRadius.horizontal(
+                right: Radius.circular(_borderRadius)),
             child: CachedNetworkImage(
-              imageUrl: item.image,
-              width: _oneHundredTwenty,
-              height: _oneHundredTwenty,
+              imageUrl: order.image,
+              width: _spacing120,
+              height: _spacing120,
               memCacheHeight: ImageHelpers.calculateOptimalCacheHeight(
-                context,
-                targetHeight: _oneHundredTwenty,
-                qualityFactor: 1.5
+                  context,
+                  targetHeight: _spacing120,
+                  qualityFactor: AppValues.qualityFactor
               ),
               memCacheWidth: ImageHelpers.calculateOptimalCacheWidth(
                   context,
-                  targetWidth: _oneHundredTwenty
+                  targetWidth: _spacing120
               ),
               fit: BoxFit.cover,
             ),
           ),
           Expanded(
             child: Padding(
-              padding: AppPaddings.paddingAll_12,
+              padding: AppPaddings.all_Small,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -230,23 +242,23 @@ class CartItemCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        item.order,
+                        order.order,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: AppSizes.fontSize18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close, size: 20),
+                        icon: const Icon(Icons.close, size: _iconSize),
                         onPressed: onRemove,
                       ),
                     ],
                   ),
-                  AppSpacing.height_8,
+                  AppSpaces.verticalSpacing_8,
                   Text(
-                    '${item.price} ج',
+                    '${order.price} ج',
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: _fontSize,
                       color: AppColors.primaryAmber,
                     ),
                   ),
@@ -254,21 +266,21 @@ class CartItemCard extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.remove),
-                        onPressed: () => onQuantityChanged(item.item - 1),
+                        onPressed: () => onQuantityChanged(order.item - 1),
                       ),
                       Text(
-                        item.item.toString(),
-                        style: const TextStyle(fontSize: 16),
+                        order.item.toString(),
+                        style: const TextStyle(fontSize: _fontSize),
                       ),
                       IconButton(
                         icon: const Icon(Icons.add),
-                        onPressed: () => onQuantityChanged(item.item + 1),
+                        onPressed: () => onQuantityChanged(order.item + 1),
                       ),
                       const Spacer(),
                       Text(
-                        '${item.price * item.item} ج',
+                        '${order.price * order.item} ج',
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: _fontSize,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

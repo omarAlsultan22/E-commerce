@@ -1,18 +1,18 @@
-import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
 import '../../../../../core/presentation/utils/helpers/image_helpers.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
-import 'package:international_cuisine/core/constants/app_numbers.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_values.dart';
+import 'package:international_cuisine/core/constants/app_spaces.dart';
 import '../../../../home/presentation/screens/home_screen.dart';
-import '../../../../../core/data/models/user_info_model.dart';
+import '../../../../../core/data/models/user_model.dart';
 import '../../../../cart/data/models/order_model.dart';
 import 'package:flutter/material.dart';
 
 
 class PaymentInvoiceLayout extends StatefulWidget {
   final bool isPaid;
-  final UserInfoModel userInfoModel;
+  final UserModel userInfoModel;
   final List<OrderModel> shoppingList;
 
   const PaymentInvoiceLayout({
@@ -27,6 +27,8 @@ class PaymentInvoiceLayout extends StatefulWidget {
 }
 
 class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
+
+  static const _spacing = 80.0;
 
   Widget _buildWidget() {
     return Directionality(
@@ -48,12 +50,9 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
   PreferredSizeWidget _buildAppBar({
     required String title
   }) {
-    const zero = AppNumbers.zero;
-    const black = AppColors.black;
-
     return AppBar(
-      elevation: zero,
-      scrolledUnderElevation: zero,
+      elevation: AppValues.none,
+      scrolledUnderElevation: AppValues.none,
       backgroundColor: AppColors.white,
       automaticallyImplyLeading: false,
       title: Text(
@@ -61,13 +60,13 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 22,
-          color: black,
+          color: AppColors.black,
         ),
       ),
       centerTitle: true,
       leading:
       IconButton(
-          icon: const Icon(Icons.home_filled, color: black),
+          icon: const Icon(Icons.home_filled, color: AppColors.black),
           onPressed: () =>
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => HomeScreen()))
@@ -90,13 +89,12 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       itemCount: shoppingList.length,
-      separatorBuilder: (context, index) => AppSpacing.height_12,
+      separatorBuilder: (context, index) => AppSpaces.verticalSpacing_12,
       itemBuilder: (context, index) => _buildDeliveryItem(shoppingList[index]),
     );
   }
 
   Widget _buildDeliveryItem(OrderModel orderModel) {
-    const _eighty = 80.0;
     final totalPrice = orderModel.price * orderModel.item;
 
     return Card(
@@ -106,23 +104,23 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
       ),
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: AppPaddings.paddingAll_12,
+        padding: AppPaddings.all_Small,
         child: Row(
           children: [
             ClipRRect(
               borderRadius: AppBorders.borderRadius_8,
               child: Image.network(
                 orderModel.image,
-                width: _eighty,
-                height: _eighty,
+                width: _spacing,
+                height: _spacing,
                 cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
                     context,
-                    targetHeight: _eighty,
+                    targetHeight: _spacing,
                     qualityFactor: 1.5
                 ),
                 cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
                     context,
-                    targetWidth: _eighty
+                    targetWidth: _spacing
                 ),
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) =>
@@ -146,7 +144,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  AppSpacing.height_8,
+                  AppSpaces.verticalSpacing_8,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -177,12 +175,12 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
   Widget _buildBottomBar({
     required BuildContext context,
     required List<OrderModel> shoppingList,
-    required UserInfoModel userModel
+    required UserModel userModel
   }) {
     if (shoppingList.isEmpty) return const SizedBox.shrink();
 
     return Container(
-      padding: AppPaddings.paddingAll_16,
+      padding: AppPaddings.all_medium,
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
@@ -200,7 +198,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildDeliveryInfo(userModel),
-          AppSpacing.height_16,
+          AppSpaces.verticalSpacing_16,
           _buildTotalPrice(shoppingList),
         ],
       ),
@@ -208,7 +206,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
   }
 
 
-  Widget _buildDeliveryInfo(UserInfoModel userModel) {
+  Widget _buildDeliveryInfo(UserModel userModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -219,7 +217,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        AppSpacing.height_8,
+        AppSpaces.verticalSpacing_8,
         _buildInfoRow('الاسم: ${userModel.firstName + userModel.lastName}'),
         _buildInfoRow('العنوان: ${userModel.userLocation!}'),
         _buildInfoRow('الهاتف: ${userModel.userPhone}'),
@@ -253,7 +251,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
         0, (sum, item) => sum + (item.price * item.item));
 
     return Container(
-      padding: AppPaddings.paddingAll_12,
+      padding: AppPaddings.all_Small,
       decoration: BoxDecoration(
         color: const Color(0xFFFAFAFA),
         borderRadius: AppBorders.borderRadius_8,

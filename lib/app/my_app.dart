@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:international_cuisine/core/data/data_sources/local/hive.dart';
 import '../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/features/home/presentation/screens/home_screen.dart';
 
@@ -18,6 +16,11 @@ import '../features/cuisines/presentation/cubits/turkish_data_cubit.dart';
 import '../features/cuisines/presentation/cubits/chinese_data_cubit.dart';
 import '../features/cuisines/presentation/cubits/japanese_data_cubit.dart';
 import '../features/cuisines/presentation/cubits/egyptian_data_cubit.dart';
+
+//dataSources
+import '../core/data/data_sources/remote/firestore.dart';
+import 'package:international_cuisine/core/data/data_sources/local/hive.dart';
+import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 
 //useCases
 import 'package:international_cuisine/features/home/domain/useCases/home_data_useCase.dart';
@@ -35,22 +38,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     //home useCase
-    final _firestoreRepository = FirebaseFirestore.instance;
+    final _homeRepository = FirestoreService();
     final _userInfoRepository = FirestoreHomeDataRepository(
-        repository: _firestoreRepository);
+        repository: _homeRepository);
     final _homeDataUseCase = HomeDataUseCase(
         userInfoRepository: _userInfoRepository);
 
     //cuisine useCase
-    final _firestore = FirebaseFirestore.instance;
-    final _repository = FirestoreCuisineDataRepository(firestore: _firestore);
+    final cuisineRepository = FirestoreService();
+    final _repository = FirestoreCuisineDataRepository(firestore: cuisineRepository);
     final _dataUseCases = CuisineDataUseCase(repository: _repository);
+    final _connectivityProvider = ConnectivityProvider();
 
     //cart useCase
     final _hiveStore = HiveStore();
     final _hiveRepository = HiveShoppingListRepository(hiveStore: _hiveStore);
-    final _cartUseCase = CartDataUseCase(repository: _hiveRepository);
+    final _cacheHelper = CacheHelper();
+    final _cartUseCase = CartDataUseCase(repository: _hiveRepository, cacheHelper: _cacheHelper);
 
     return MultiProvider(
         providers: [
@@ -58,25 +64,34 @@ class MyApp extends StatelessWidget {
           //connections
           BlocProvider<HomeDataCubit>(
             create: (context) =>
-            HomeDataCubit(homeDataUseCase: _homeDataUseCase)
+            HomeDataCubit(homeDataUseCase: _homeDataUseCase,
+                connectivityProvider: _connectivityProvider)
               ..getData(),
           ),
           BlocProvider(create: (context) =>
-              ChineseDataCubit(dataUseCases: _dataUseCases)),
+              ChineseDataCubit(dataUseCases: _dataUseCases,
+                  connectivityProvider: _connectivityProvider)),
           BlocProvider(create: (context) =>
-              EgyptianDataCubit(dataUseCases: _dataUseCases)),
+              EgyptianDataCubit(dataUseCases: _dataUseCases,
+                  connectivityProvider: _connectivityProvider)),
           BlocProvider(create: (context) =>
-              FrenchDataCubit(dataUseCases: _dataUseCases)),
+              FrenchDataCubit(dataUseCases: _dataUseCases,
+                  connectivityProvider: _connectivityProvider)),
           BlocProvider(create: (context) =>
-              ItalianDataCubit(dataUseCases: _dataUseCases)),
+              ItalianDataCubit(dataUseCases: _dataUseCases,
+                  connectivityProvider: _connectivityProvider)),
           BlocProvider(create: (context) =>
-              JapaneseDataCubit(dataUseCases: _dataUseCases)),
+              JapaneseDataCubit(dataUseCases: _dataUseCases,
+                  connectivityProvider: _connectivityProvider)),
           BlocProvider(create: (context) =>
-              MexicanDataCubit(dataUseCases: _dataUseCases)),
+              MexicanDataCubit(dataUseCases: _dataUseCases,
+                  connectivityProvider: _connectivityProvider)),
           BlocProvider(create: (context) =>
-              SyrianDataCubit(dataUseCases: _dataUseCases)),
+              SyrianDataCubit(dataUseCases: _dataUseCases,
+                  connectivityProvider: _connectivityProvider)),
           BlocProvider(create: (context) =>
-              TurkishDataCubit(dataUseCases: _dataUseCases)),
+              TurkishDataCubit(dataUseCases: _dataUseCases,
+                  connectivityProvider: _connectivityProvider)),
           BlocProvider<CartDataCubit>(
               create: (context) =>
               CartDataCubit(useCase: _cartUseCase)

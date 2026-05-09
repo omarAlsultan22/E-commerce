@@ -1,12 +1,10 @@
-import 'app_exception.dart';
+import 'base/app_exception.dart';
 
 
-class ServerException extends AppException {
-  final int? statusCode;
-
-  const ServerException({
-    this.statusCode,
-    super.stackTrace,
+class ServerException extends AppException{
+  ServerException({
+    super.code,
     required super.message,
+    required super.statusCode
   });
 }

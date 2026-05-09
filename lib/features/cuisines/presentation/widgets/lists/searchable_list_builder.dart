@@ -5,34 +5,32 @@ import 'package:international_cuisine/core/presentation/widgets/navigation/navig
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import '../../../../user_info/presentation/screens/user_info_screen.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
-import 'package:international_cuisine/core/constants/app_numbers.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_values.dart';
+import 'package:international_cuisine/core/constants/app_sizes.dart';
+import '../../../data/models/categories_model.dart';
 import '../../../data/models/data_model.dart';
 import 'package:flutter/material.dart';
-import '../layouts/item_builder.dart';
+import '../item_builder.dart';
 
 
 class SearchableListBuilder extends StatefulWidget {
   bool isLocked;
   final String title;
-  final bool hasMore;
-  final List<DataModel> dataList;
-  final List<DataModel> searchData;
-  final VoidCallback getMoreData;
   final VoidCallback clearData;
+  final VoidCallback getMoreData;
+  final CategoriesModel categoriesModel;
   final void Function(String) getSearchData;
   final void Function(int, int) updateRate;
 
   SearchableListBuilder({
     this.isLocked = false,
     required this.title,
-    required this.getMoreData,
-    required this.hasMore,
     required this.clearData,
     required this.updateRate,
-    required this.dataList,
-    required this.searchData,
+    required this.getMoreData,
     required this.getSearchData,
+    required this.categoriesModel,
     Key? key,
   }) : super(key: key);
 
@@ -45,9 +43,6 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
   final ScrollController _scrollController = ScrollController();
   List<DataModel> _filteredData = [];
 
-  static const _white = AppColors.white;
-  static const _grey = AppColors.darkGrey;
-
   @override
   void initState() {
     super.initState();
@@ -58,7 +53,7 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
   void _onScrollData() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 50.0 &&
-        widget.hasMore && !widget.isLocked && _searchController.text.isEmpty) {
+        widget.categoriesModel.hasMore && !widget.isLocked && _searchController.text.isEmpty) {
       widget.isLocked = true;
       widget.getMoreData();
     }
@@ -78,28 +73,28 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
     if (query.isNotEmpty) {
       widget.getSearchData(query);
       setState(() {
-        _filteredData = widget.searchData.isEmpty
-            ? widget.dataList
-            : widget.searchData;
+        _filteredData = (widget.categoriesModel.searchDataIsEmpty
+            ? widget.categoriesModel.categoryData
+            : widget.categoriesModel.searchData)!;
       });
     }
     else {
       widget.clearData();
       setState(() {
-        _filteredData = widget.dataList;
+        _filteredData = widget.categoriesModel.categoryData!;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.dataList.isNotEmpty && _searchController.text.isEmpty) {
-      _filteredData = widget.dataList;
+    if (!widget.categoriesModel.categoryDataIsEmpty && _searchController.text.isEmpty) {
+      _filteredData = widget.categoriesModel.categoryData!;
     }
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: _grey,
+        backgroundColor: AppColors.darkGrey,
         appBar: _appBar(
             title: widget.title,
             context: context
@@ -107,7 +102,7 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
               child: TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -119,9 +114,9 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                   ),
                   filled: true,
                   fillColor: AppColors.mediumGrey,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 5.0),
                 ),
-                style: TextStyle(color: _white),
+                style: TextStyle(color: AppColors.white),
               ),
             ),
             Expanded(
@@ -130,9 +125,9 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                 builder: (context) =>
                     ListView.builder(
                         controller: _scrollController,
-                        padding: AppPaddings.paddingAll_10,
+                        padding: AppPaddings.all_vSmall,
                         itemCount: _filteredData.length +
-                            (widget.hasMore ? 1 : 0),
+                            (widget.categoriesModel.hasMore ? 1 : 0),
                         itemBuilder: (context, index) {
                           if (index < _filteredData.length) {
                             return ItemBuilder(
@@ -143,10 +138,10 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                             );
                           } else {
                             return Center(
-                              child: widget.hasMore && _searchController.text
+                              child: widget.categoriesModel.hasMore && _searchController.text
                                   .isEmpty
                                   ? const CircularProgressIndicator(
-                                  color: _white)
+                                  color: AppColors.white)
                                   : const SizedBox(),
                             );
                           }
@@ -155,9 +150,9 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                 fallback: (context) =>
                     Center(
                       child: _searchController.text.isEmpty ?
-                      CircularProgressIndicator(color: _white) :
+                      CircularProgressIndicator(color: AppColors.white) :
                       Text('لا توجد نتائج متاحة',
-                          style: TextStyle(color: _white, fontSize: 18)),
+                          style: TextStyle(color: AppColors.white, fontSize: AppSizes.fontSize18)),
                     ),
               ),
             ),
@@ -180,14 +175,13 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
     required final String title,
     required final BuildContext context
   }) {
-    const _zero = AppNumbers.zero;
     return AppBar(
-      elevation: _zero,
-      titleSpacing: -10,
-      scrolledUnderElevation: _zero,
-      backgroundColor: _grey,
+      elevation: AppValues.none,
+      titleSpacing: -10.0,
+      scrolledUnderElevation: AppValues.none,
+      backgroundColor: AppColors.darkGrey,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: _white),
+        icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
         onPressed: () => Navigator.pop(context),
       ),
       actions: [
@@ -213,9 +207,9 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
       title: Text(
         title,
         style: const TextStyle(
-            fontSize: 25,
+            fontSize: 25.0,
             fontWeight: FontWeight.bold,
-            color: _white
+            color: AppColors.white
         ),
       ),
     );

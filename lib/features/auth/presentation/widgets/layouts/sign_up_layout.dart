@@ -1,28 +1,38 @@
 import 'package:flutter/material.dart';
-import '../../screens/sgin_in_screen.dart';
 import '../../utils/validate/validate_email.dart';
 import '../../utils/validate/validate_password.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
-import '../../../../../core/data/models/message_result_model.dart';
+import '../../../../../core/constants/app_text_styles.dart';
+import '../../../../../core/data/models/message_result.dart';
+import 'package:international_cuisine/core/constants/app_values.dart';
+import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
-import 'package:international_cuisine/core/constants/app_numbers.dart';
-import 'package:international_cuisine/core/constants/app_hint_texts.dart';
+import '../../../../../core/presentation/widgets/build_snack_bar.dart';
+import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_label_texts.dart';
 import '../../../../../core/presentation/widgets/navigation/navigator.dart';
 import '../../../../../core/presentation/utils/validate/validator_input.dart';
-import 'package:international_cuisine/core/presentation/widgets/app_spacing.dart';
+import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
-import 'package:international_cuisine/features/auth/constants/auth_numbers_constants.dart';
-import 'package:international_cuisine/features/auth/presentation/widgets/auth_spacing.dart';
-import 'package:international_cuisine/features/auth/presentation/services/auth_services.dart';
 import 'package:international_cuisine/features/auth/constants/auth_hint_texts_constants.dart';
 import 'package:international_cuisine/features/auth/constants/auth_label_texts_constants.dart';
 
 
 class SignUpLayout extends StatefulWidget {
-  final AuthServices _authServices;
-  const SignUpLayout(this._authServices,{super.key});
+  final void Function({
+  required String firstName,
+  required String lastName,
+  required String userEmail,
+  required String userPassword,
+  required String userPhone,
+  required String userLocation
+  }) onUpdate;
+  final MessageResult messageResult;
+
+  const SignUpLayout({
+    super.key,
+    required this.onUpdate,
+    required this.messageResult
+  });
 
   @override
   State<SignUpLayout> createState() => _SignUpLayoutState();
@@ -39,9 +49,9 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   final _locationController = TextEditingController();
 
   bool _isObscure = true;
-  bool _isLoading = false;
 
-  static const _primaryAmber = AppColors.primaryAmber;
+  static const _spacing16 = AppSpaces.verticalSpacing_16;
+  static const _spacing24 = AppSpaces.verticalSpacing_24;
 
   @override
   void dispose() {
@@ -54,42 +64,43 @@ class _SignUpLayoutState extends State<SignUpLayout> {
     super.dispose();
   }
 
-  Future<void> _handleRegister() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
-    final message = await widget._authServices.signUp(
-      userEmail: _emailController.text,
-      userPassword: _passwordController.text,
-      firstName: _firstNameController.text,
-      lastName: _lastNameController.text,
-      userPhone: _phoneController.text,
-      userLocation: _locationController.text,
+  @override
+  void didUpdateWidget(covariant SignUpLayout oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.messageResult.message != null) {
+      _showMessageResult(widget.messageResult);
+    }
+    setState(() {});
+  }
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      _hideKeyboard();
+      await _performRegistration();
+    }
+  }
+
+  Future<void> _performRegistration() async {
+    widget.onUpdate(
+        firstName: _firstNameController.text.trim(),
+        lastName: _lastNameController.text.trim(),
+        userEmail: _emailController.text.trim(),
+        userPassword: _passwordController.text,
+        userPhone: _phoneController.text.trim(),
+        userLocation: _locationController.text.trim()
     );
-    setState(() => _isLoading = false);
-    _showMessageResult(message);
   }
 
-  void _showMessageResult(MessageResultModel message) {
-    if (message.isSuccess) {
-      QuickAlert.show(
-          context: context,
-          text: 'تم انشاء الحساب بنجاح',
-          type: QuickAlertType.success,
-          showConfirmBtn: true,
-          onConfirmBtnTap: () =>
-              navigator(link: const SignInScreen(), context: context)
-      );
-    }
-    else {
-      QuickAlert.show(
-        context: context,
-        text: 'فشل انشاء الحساب: ${message.error.toString()}',
-        type: QuickAlertType.error,
-        showCancelBtn: true,
-      );
-    }
+  void _hideKeyboard() {
+    FocusScope.of(context).unfocus();
   }
 
+  void _showMessageResult(MessageResult messageResult) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        BuildSnackBar.build(messageResult.message!, messageResult.color!)
+    );
+    navigator(context: context);
+  }
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -99,10 +110,6 @@ class _SignUpLayoutState extends State<SignUpLayout> {
 
   @override
   Widget build(BuildContext context) {
-    const _zero = AppNumbers.zero;
-    const _height16 = AppSpacing.height_16;
-    const _height24 = AppSpacing.height24;
-
     return Scaffold(
       backgroundColor: AppColors.darkGrey,
       appBar: AppBar(
@@ -111,12 +118,12 @@ class _SignUpLayoutState extends State<SignUpLayout> {
           child: const Icon(Icons.arrow_back, color: AppColors.white),
         ),
         backgroundColor: Colors.transparent,
-        elevation: _zero,
-        scrolledUnderElevation: _zero,
+        elevation: AppValues.none,
+        scrolledUnderElevation: AppValues.none,
       ),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: AppPaddings.all_large,
           child: RepaintBoundary(
             child: Form(
               key: _formKey,
@@ -126,19 +133,19 @@ class _SignUpLayoutState extends State<SignUpLayout> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _buildHeader(context),
-                    _height24,
+                    _spacing24,
                     _buildFirstNameField(),
-                    _height16,
+                    _spacing16,
                     _buildLastNameField(),
-                    _height16,
+                    _spacing16,
                     _buildEmailField(),
-                    _height16,
+                    _spacing16,
                     _buildPasswordField(),
-                    _height16,
+                    _spacing16,
                     _buildPhoneField(),
-                    _height16,
+                    _spacing16,
                     _buildLocationField(),
-                    _height24,
+                    _spacing24,
                     _buildRegisterButton(context),
                   ],
                 ),
@@ -161,11 +168,11 @@ class _SignUpLayoutState extends State<SignUpLayout> {
               .textTheme
               .headlineLarge
               ?.copyWith(
-            color: _primaryAmber,
+            color: AppColors.primaryAmber,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 8.0),
         Text(
           'سجل الان كي تنضم إلى عالم السعادة',
           style: Theme
@@ -181,28 +188,26 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   }
 
   Widget _buildFirstNameField() {
-    const _firstName = AppLabelTexts.firstName;
-
     return BuildInputField(
       controller: _firstNameController,
       keyboardType: TextInputType.name,
-      labelText: _firstName,
-      hintText: AppHintTexts.firstName,
+      labelText: AppLabelTexts.firstName,
+      hintText: 'ادخل اسمك الأول',
       prefixIcon: Icons.person,
-      validator: (value) => ValidateInput.validator(value!, _firstName),
+      validator: (value) =>
+          ValidateInput.validator(value!, AppLabelTexts.firstName),
     );
   }
 
   Widget _buildLastNameField() {
-    const _lastName = AppLabelTexts.lastName;
-
     return BuildInputField(
       controller: _lastNameController,
       keyboardType: TextInputType.name,
-      labelText: _lastName,
-      hintText: AppHintTexts.lastName,
+      labelText: AppLabelTexts.lastName,
+      hintText: 'ادخل اسمك الثاني',
       prefixIcon: Icons.person,
-      validator: (value) => ValidateInput.validator(value!, _lastName),
+      validator: (value) =>
+          ValidateInput.validator(value!, AppLabelTexts.lastName),
     );
   }
 
@@ -230,7 +235,7 @@ class _SignUpLayoutState extends State<SignUpLayout> {
       suffixIcon: IconButton(
         icon: Icon(
           _isObscure ? Icons.visibility_off : Icons.visibility,
-          color: _primaryAmber,
+          color: AppColors.primaryAmber,
         ),
         onPressed: _togglePasswordVisibility,
       ),
@@ -238,51 +243,46 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   }
 
   Widget _buildPhoneField() {
-    const _phoneNumber = AppLabelTexts.phoneNumber;
-
     return BuildInputField(
       controller: _phoneController,
       keyboardType: TextInputType.phone,
-      labelText: _phoneNumber,
-      hintText: AppHintTexts.phoneNumber,
+      labelText: AppLabelTexts.phoneNumber,
+      hintText: 'ادخل رقم هاتفك',
       prefixIcon: Icons.phone,
-      validator: (value) => ValidateInput.validator(value!, _phoneNumber),
+      validator: (value) =>
+          ValidateInput.validator(value!, AppLabelTexts.phoneNumber),
     );
   }
 
   Widget _buildLocationField() {
-    const _location = AppLabelTexts.location;
-
     return BuildInputField(
       controller: _locationController,
       keyboardType: TextInputType.streetAddress,
-      labelText: _location,
-      hintText: AppHintTexts.location,
+      labelText: AppLabelTexts.location,
+      hintText: 'ادخل عنوانك',
       prefixIcon: Icons.location_on,
-      validator: (value) => ValidateInput.validator(value!, _location),
+      validator: (value) =>
+          ValidateInput.validator(value!, AppLabelTexts.location),
     );
   }
 
   Widget _buildRegisterButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: _isLoading ? null : _handleRegister,
+      onPressed: widget.messageResult.isLoading ? null : _submitForm,
       style: ElevatedButton.styleFrom(
-        backgroundColor: _primaryAmber,
+        backgroundColor: AppColors.primaryAmber,
         foregroundColor: AppColors.black,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AuthNumbersConstants.fifty),
+          borderRadius: BorderRadius.circular(50.0),
         ),
-        minimumSize: const Size(double.infinity, 50),
+        minimumSize: const Size(double.infinity, 50.0),
       ),
-      child: _isLoading
-          ? AuthSpacing.sizedBox
+      child: widget.messageResult.isLoading
+          ? const LoadingWidget()
           : const Text(
         "تسجيل",
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
+        style: AppTextStyles.textStyle18,
       ),
     );
   }

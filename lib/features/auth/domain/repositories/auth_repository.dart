@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthRepository {
   Future<UserCredential> signIn({
-    required String userEmail,
-    required String userPassword,
+    required String email,
+    required String password,
   });
 
   Future<UserCredential> signUp({
@@ -12,7 +12,7 @@ abstract class AuthRepository {
     required String password,
   });
 
-  Future<User?> updateProfile({
+  Future<void> updateProfile({
     required String newEmail,
     required String currentPassword,
     required String newPassword

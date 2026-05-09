@@ -1,56 +1,52 @@
-import '../../../../../core/data/models/user_info_model.dart';
-import '../../../../../core/presentation/states/app_state.dart';
-import '../../../../../core/errors/exceptions/app_exception.dart';
-import '../../../../../core/presentation/states/base/when_states.dart';
+import '../../../../../core/data/models/user_model.dart';
+import '../../../../../core/presentation/states/loaded_states.dart';
+import '../../../../../core/errors/exceptions/base/app_exception.dart';
+import 'package:international_cuisine/core/data/models/message_result.dart';
+import 'package:international_cuisine/core/presentation/states/base/main_loaded_state.dart';
+import 'package:international_cuisine/core/presentation/states/base/main_app_sup_state.dart';
+import 'package:international_cuisine/core/presentation/states/base/main_app_sub_state.dart';
 
 
-class UserInfoState implements WhenStates {
-  final UserInfoModel? userModel;
-  final AppState? appState;
+class UserInfoState extends MainAppSupState<UserModel, MessageResult>{
+  UserInfoState({
+    super.firstModel,
+    super.secondModel,
+    required super.subState,
+  });
 
-  UserInfoState({this.userModel, this.appState});
+  UserModel? get userModel => firstModel;
 
-  String get firstName => userModel!.firstName;
+  LoadedState get dataModels =>
+      MultiModelSuccessState<UserModel, MessageResult>(
+          firstModel: firstModel,
+          secondModel: secondModel
+      );
 
-  String get lastName => userModel!.lastName;
-
-  String get userPhone => userModel!.userPhone;
-
-  String? get userLocation => userModel!.userLocation;
-
-  bool get isLoading => appState!.isLoading;
-
-  AppException? get _failure => appState!.failure;
-
+  @override
   UserInfoState updateState({
-    UserInfoModel? userModel,
-    AppState? appState
+    UserModel? firstModel,
+    MessageResult? secondModel,
+    MainAppSubState? subState
   }) {
     return UserInfoState(
-        userModel: userModel ?? this.userModel,
-        appState: appState ?? this.appState
+        subState: subState ?? this.subState,
+        firstModel: firstModel ?? this.firstModel,
+        secondModel: secondModel ?? this.secondModel,
     );
   }
-
 
   @override
   R when<R>({
     required R Function() onInitial,
     required R Function() onLoading,
-    required R Function() onLoaded,
-    required R Function(AppException error) onError}) {
-    if (_failure != null) {
-      return onError(_failure!);
-    }
-
-    if (isLoading) {
-      return onLoading();
-    }
-
-    if (!isLoading && userModel != null) {
-      return onLoaded();
-    }
-
-    return onInitial();
+    required R Function(LoadedState) onLoaded,
+    required R Function(AppException) onError
+  }) {
+    return subState.when(
+        onInitial: onInitial,
+        onLoading: onLoading,
+        onLoaded: () =>
+            onLoaded.call(dataModels),
+        onError: (failure) => onError.call(failure));
   }
 }
