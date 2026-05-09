@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:international_cuisine/core/constants/app_paddings.dart';
-import 'package:international_cuisine/core/constants/app_text_styles.dart';
 import '../../screens/sgin_up_screen.dart';
 import '../../utils/validate/validate_email.dart';
 import '../../utils/validate/validate_password.dart';
@@ -12,6 +10,8 @@ import 'package:international_cuisine/core/constants/app_sizes.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
+import 'package:international_cuisine/core/constants/app_paddings.dart';
+import 'package:international_cuisine/core/constants/app_text_styles.dart';
 import '../../../../../core/presentation/widgets/navigation/navigator.dart';
 import '../../../../../core/data/data_sources/local/shared_preferences.dart';
 import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
