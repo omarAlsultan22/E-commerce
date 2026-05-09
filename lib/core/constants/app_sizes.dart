@@ -1,4 +1,4 @@
 mixin class AppSizes {
-  static const fontSize16 = 16.0;
-  static const fontSize18 = 18.0;
+  static const double fontSize16 = 16.0;
+  static const double fontSize18 = 18.0;
 }

@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
 
-class CuisinesConstants {
-  //keys
-  static const data = 'data';
-
-  //icons
-  static const menu = Icons.menu;
-
-  //borders
-  static const borderRadius = BorderRadius.all(Radius.circular(15));
+abstract class CuisinesConstants {
+  static const String data = 'data';
+  static const IconData menu = Icons.menu;
+  static const BorderRadius borderRadius = BorderRadius.all(Radius.circular(15));
 }

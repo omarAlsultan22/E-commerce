@@ -1,3 +1,3 @@
 mixin AppStates {
-  static const noInternetMessage = 'لا يوجد اتصال بالإنترنت';
+  static const String noInternetMessage = 'لا يوجد اتصال بالإنترنت';
 }

@@ -1,4 +1,4 @@
-class AuthLabelTextsConstants {
-  static const email = "البريد الإلكتروني";
-  static const password = "كلمة المرور";
+mixin AuthLabelTextsConstants {
+  static const String email = "البريد الإلكتروني";
+  static const String password = "كلمة المرور";
 }

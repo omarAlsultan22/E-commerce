@@ -1,7 +1,7 @@
 mixin AppKeys {
-  static const uId = 'uId';
-  static const userInfo = 'userInfo';
-  static const location = 'location';
-  static const cartData = 'cartData';
-  static const time = 'cart_saved_time';
+  static const String uId = 'uId';
+  static const String userInfo = 'userInfo';
+  static const String location = 'location';
+  static const String cartData = 'cartData';
+  static const String time = 'cart_saved_time';
 }

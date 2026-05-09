@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
 
 
-class AppTextStyles {
+abstract class AppTextStyles {
   static const TextStyle textStyle16 = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: AppSizes.fontSize16,

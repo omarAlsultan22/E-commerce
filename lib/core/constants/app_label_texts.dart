@@ -1,6 +1,6 @@
 mixin AppLabelTexts {
-  static const firstName = 'الاسم الأول';
-  static const lastName = 'الاسم الثاني';
-  static const phoneNumber = 'رقم الهاتف';
-  static const location = 'العنوان';
+  static const String firstName = 'الاسم الأول';
+  static const String lastName = 'الاسم الثاني';
+  static const String phoneNumber = 'رقم الهاتف';
+  static const String location = 'العنوان';
 }

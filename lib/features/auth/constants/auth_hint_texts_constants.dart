@@ -1,4 +1,4 @@
-class  AuthHintTextsConstants {
-  static const email = "أدخل البريد الإلكتروني";
-  static const password = "أدخل كلمة المرور";
+mixin AuthHintTextsConstants {
+  static const String email = "أدخل البريد الإلكتروني";
+  static const String password = "أدخل كلمة المرور";
 }
