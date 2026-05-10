@@ -3,7 +3,7 @@ import '../../../../core/errors/error_handler.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/message_state.dart';
 import '../../../../core/errors/exceptions/base/app_exception.dart';
-import 'package:international_cuisine/core/constants/app_states.dart';
+import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../domain/useCases/change_email_and_password_useCase.dart';
 import 'package:international_cuisine/core/errors/exceptions/network_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
@@ -33,7 +33,7 @@ class ChangeEmailAndPasswordCubit extends Cubit<AuthState> {
       emit(
         state.updateState(
           messageResult: MessageResult.error(
-              error: NetworkException(message: AppStates.noInternetMessage)),
+              error: NetworkException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;

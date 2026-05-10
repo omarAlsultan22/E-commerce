@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../screens/sgin_up_screen.dart';
 import '../../utils/validate/validate_email.dart';
+import '../../screens/forget_password_screen.dart';
 import '../../utils/validate/validate_password.dart';
 import '../../../constants/auth_label_texts_constants.dart';
 import '../../../../../core/data/models/message_result.dart';
@@ -44,6 +45,8 @@ class _SignInLayoutState extends State<SignInLayout> {
 
   bool _isObscure = true;
 
+  static const _verticalSpacing = AppSpaces.verticalSpacing_16;
+
   @override
   void initState() {
     _checkExistingUser();
@@ -72,8 +75,6 @@ class _SignInLayoutState extends State<SignInLayout> {
   }
 
   Widget _buildScaffold(BuildContext context) {
-    const _verticalSpacing = AppSpaces.verticalSpacing_16;
-
     return Scaffold(
       backgroundColor: AppColors.darkGrey,
       body: Center(
@@ -96,6 +97,7 @@ class _SignInLayoutState extends State<SignInLayout> {
                     _buildLoginButton(context),
                     _verticalSpacing,
                     _buildSignUpButton(),
+                    _buildForgetPasswordLink()
                   ],
                 ),
               ),
@@ -194,6 +196,29 @@ class _SignInLayoutState extends State<SignInLayout> {
         style: TextStyle(
           fontSize: AppSizes.fontSize16,
           decoration: TextDecoration.underline,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildForgetPasswordLink() {
+    return Center(
+      child: TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (
+                  context) => const ForgetPasswordScreen(),
+            ),
+          );
+        },
+        child: const Text(
+          'نسيت كلمة المرور؟',
+          style: TextStyle(
+            color: Colors.blue,
+            decoration: TextDecoration.underline,
+          ),
         ),
       ),
     );

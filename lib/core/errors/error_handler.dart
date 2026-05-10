@@ -30,6 +30,11 @@ class ErrorHandler {
           return FirebaseAppException(message: 'البيانات غير موجودة');
         case 'already-exists':
           return FirebaseAppException(message: 'البيانات موجودة مسبقاً');
+        case 'user-not-found':
+          return FirebaseAppException(
+              message: 'لم يتم تسجيل أي مستخدم بهذا البريد الإلكتروني');
+        case 'invalid-email':
+          return FirebaseAppException(message: 'عنوان البريد الإلكتروني غير صالح');
         default:
           return FirebaseAppException(message: 'خطأ في Firebase');
       }

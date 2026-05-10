@@ -23,11 +23,11 @@ class MessageResult {
     );
   }
 
-  factory MessageResult.success(){
+  factory MessageResult.success({String? message}){
     return MessageResult(
         isLoading: false,
         color: AppColors.successGreen,
-        message: 'تم التحديث بنجاح'
+        message: message ?? 'تم التحديث بنجاح'
     );
   }
 

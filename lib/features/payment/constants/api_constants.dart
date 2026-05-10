@@ -1,4 +1,8 @@
 class ApiConstants {
+  // API Headers
+  static const String contentType = 'Content-Type';
+  static const String applicationJson = 'application/json';
+
   // Paymob API Endpoints
   static const String paymobAuthUrl = 'https://accept.paymob.com/api/auth/tokens';
   static const String paymobOrderUrl = 'https://accept.paymob.com/api/ecommerce/orders';
@@ -7,8 +11,4 @@ class ApiConstants {
 
   // Fawry API Endpoint
   static const String fawryUrl = 'https://atfawry.fawrystaging.com/ECommerceWeb/Fawry/payments/charge';
-
-  // API Headers
-  static const String contentType = 'Content-Type';
-  static const String applicationJson = 'application/json';
 }
