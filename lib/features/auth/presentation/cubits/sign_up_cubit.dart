@@ -1,10 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/errors/error_handler.dart';
 import '../../domain/useCases/sign_up_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
+import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/message_state.dart';
 import '../../../../core/errors/exceptions/network_exception.dart';
-import '../../../../core/errors/exceptions/base/app_exception.dart';
 import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 
@@ -37,7 +36,7 @@ class SignUpCubit extends Cubit<AuthState> {
       emit(
         state.updateState(
           messageResult: MessageResult.error(
-              error: NetworkException(message: AppStrings.noInternetMessage)),
+              error: AppNetworkException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;
@@ -54,8 +53,12 @@ class SignUpCubit extends Cubit<AuthState> {
       );
       emit(AuthState(
           messageResult: MessageResult.success()));
-    } on AppException catch (e) {
-      final exception = ErrorHandler.handleException(e);
+    } catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
       emit(
           AuthState(
               messageResult: MessageResult.error(

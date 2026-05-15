@@ -1,11 +1,10 @@
 import '../states/states/user_info_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/errors/error_handler.dart';
 import '../../domain/useCases/user_info_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
+import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
 import '../../../../core/errors/exceptions/network_exception.dart';
-import '../../../../core/errors/exceptions/base/app_exception.dart';
 import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/domain/services/connectivity_service/connectivity_service.dart';
@@ -53,7 +52,7 @@ class UserInfoCubit extends Cubit<UserInfoState> {
       emit(
           buildState(
             MessageResult.error(
-              error: NetworkException(message: AppStrings.noInternetMessage
+              error: AppNetworkException(message: AppStrings.noInternetMessage
               ),
             ),
           )
@@ -72,8 +71,12 @@ class UserInfoCubit extends Cubit<UserInfoState> {
       );
       emit(buildState(MessageResult.success()));
     }
-    on AppException catch (e) {
-      final exception = ErrorHandler.handleException(e);
+    catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
       emit(
           buildState(
               MessageResult.error(
@@ -89,7 +92,7 @@ class UserInfoCubit extends Cubit<UserInfoState> {
       final _connectivityService = ConnectivityService();
       emit(state.updateState(
         subState: ErrorState(
-          failure: NetworkException(connectivityService: _connectivityService),
+          failure: AppNetworkException(connectivityService: _connectivityService),
         ),
       ));
       return;
@@ -104,8 +107,12 @@ class UserInfoCubit extends Cubit<UserInfoState> {
               firstModel: userModel,
               subState: SuccessState()));
     }
-    on AppException catch (e) {
-      final exception = ErrorHandler.handleException(e);
+    catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
       emit(
           state.updateState(
               subState: ErrorState(

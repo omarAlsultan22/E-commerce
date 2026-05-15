@@ -3,9 +3,8 @@ import '../../data/models/order_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/useCases/cart_data_useCase.dart';
 import '../../../cuisines/data/models/data_model.dart';
-import 'package:international_cuisine/core/errors/error_handler.dart';
+import '../../../../core/errors/mappers/error_handler.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
-import 'package:international_cuisine/core/errors/exceptions/base/app_exception.dart';
 
 
 class CartDataCubit extends Cubit<CartDataState> {
@@ -46,9 +45,13 @@ class CartDataCubit extends Cubit<CartDataState> {
       _useCase.removeItemExecute(index: index);
       emit(state.updateState());
     }
-    on AppException catch (e) {
-      final failure = ErrorHandler.handleException(e);
-      emit(state.updateState(subState: ErrorState(failure: failure)));
+    catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
+      emit(state.updateState(subState: ErrorState(failure: exception)));
     }
   }
 
@@ -65,9 +68,13 @@ class CartDataCubit extends Cubit<CartDataState> {
     try {
       await _useCase.saveCartDataExecute(shoppingList: state.getShoppingList);
     }
-    on AppException catch (e) {
-      final failure = ErrorHandler.handleException(e);
-      emit(state.updateState(subState: ErrorState(failure: failure)));
+    catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
+      emit(state.updateState(subState: ErrorState(failure: exception)));
     }
   }
 
@@ -81,9 +88,13 @@ class CartDataCubit extends Cubit<CartDataState> {
       emit(state.updateState(
           firstModel: shoppingList, subState: SuccessState()));
     }
-    on AppException catch (e) {
-      final failure = ErrorHandler.handleException(e);
-      emit(state.updateState(subState: ErrorState(failure: failure)));
+    catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
+      emit(state.updateState(subState: ErrorState(failure: exception)));
     }
   }
 }

@@ -1,12 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:provider/provider.dart';
 import '../states/payment_invoice_state.dart';
+import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
 import '../../../../core/errors/exceptions/network_exception.dart';
-import 'package:international_cuisine/core/errors/error_handler.dart';
 import 'package:international_cuisine/core/data/models/user_model.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
-import 'package:international_cuisine/core/errors/exceptions/base/app_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
 import 'package:international_cuisine/features/invoice/domain/useCases/payment_Invoice_useCase.dart';
@@ -66,7 +65,7 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
       emit(state.updateState(
         subState: ErrorState(
-          failure: NetworkException(),
+          failure: AppNetworkException(),
         ),
       ));
       return;
@@ -87,8 +86,12 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
               secondModel: shoppingList,
               subState: SuccessState()));
     }
-    on AppException catch (e) {
-      final exception = ErrorHandler.handleException(e);
+    catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
       emit(
           state.updateState(
               subState: ErrorState(

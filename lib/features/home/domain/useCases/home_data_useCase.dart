@@ -15,7 +15,7 @@ class HomeDataUseCase {
     try {
       final data = await _repository.getData();
       if (data.isEmpty) {
-        throw FirebaseAppException(message: 'There is no data');
+        throw AppFirebaseException(message: 'There is no data');
       }
       return data;
     }

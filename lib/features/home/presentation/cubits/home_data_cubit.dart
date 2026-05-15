@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/errors/error_handler.dart';
+import '../../../../core/errors/mappers/error_handler.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
-import 'package:international_cuisine/core/errors/exceptions/base/app_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/features/home/domain/useCases/home_data_useCase.dart';
 import 'package:international_cuisine/features/home/presentation/states/home_data_state.dart';
@@ -51,11 +50,15 @@ class HomeDataCubit extends Cubit<HomeDataState> {
               firstModel: homeData
           )
       );
-    } on AppException catch (e) {
-      final failure = ErrorHandler.handleException(e);
+    } catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
       emit(
           state.updateState(
-              subState: ErrorState(failure: failure)
+              subState: ErrorState(failure: exception)
           )
       );
     }

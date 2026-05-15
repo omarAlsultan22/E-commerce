@@ -1,10 +1,9 @@
 import 'package:international_cuisine/features/cuisines/domain/useCases/cuisine_data_useCase.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
-import 'package:international_cuisine/core/errors/exceptions/base/app_exception.dart';
-import 'package:international_cuisine/core/errors/error_handler.dart';
 import '../../../../core/errors/exceptions/network_exception.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
+import '../../../../core/errors/mappers/error_handler.dart';
 import '../../data/models/categories_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -59,10 +58,14 @@ class MexicanDataCubit extends BaseCountriesCubit {
           hasMore: newState.hasMoreData),
         subState: SuccessState(),
       ));
-    } on AppException catch (e) {
-      final failure = ErrorHandler.handleException(e);
+    } catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
       emit(state.updateState(
-        subState: ErrorState(failure: failure),
+        subState: ErrorState(failure: exception),
       ));
     }
   }
@@ -73,7 +76,7 @@ class MexicanDataCubit extends BaseCountriesCubit {
       emit(
           state.updateState(
             subState: ErrorState(
-              failure: NetworkException(
+              failure: AppNetworkException(
                   connectivityService: connectivityService
               ),
             ),
@@ -105,10 +108,14 @@ class MexicanDataCubit extends BaseCountriesCubit {
       final newModel = currentModel.copyWith(rating: rating);
       emit(state.updateRating(index: index, newModel: newModel));
     }
-    on AppException catch (e) {
-      final failure = ErrorHandler.handleException(e);
+    catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
       emit(state.updateState(
-        subState: ErrorState(failure: failure),
+        subState: ErrorState(failure: exception),
       ));
     }
   }
@@ -121,10 +128,14 @@ class MexicanDataCubit extends BaseCountriesCubit {
 
       emit(state.updateState(firstModel: state.updateSearchList(_searchData)));
     }
-    on AppException catch (e) {
-      final failure = ErrorHandler.handleException(e);
+    catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
       emit(state.updateState(
-        subState: ErrorState(failure: failure),
+        subState: ErrorState(failure: exception),
       ));
     }
   }

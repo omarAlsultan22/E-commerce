@@ -2,9 +2,8 @@ import 'package:international_cuisine/core/domain/services/connectivity_service/
 import 'package:international_cuisine/core/errors/exceptions/network_exception.dart';
 import 'package:international_cuisine/core/presentation/states/message_state.dart';
 import 'package:international_cuisine/core/data/models/message_result.dart';
-import '../../../../core/errors/exceptions/base/app_exception.dart';
+import '../../../../core/errors/mappers/error_handler.dart';
 import '../../domain/useCases/evaluation_useCase.dart';
-import '../../../../core/errors/error_handler.dart';
 import '../../../../core/constants/app_strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,7 +30,7 @@ class EvaluationCubit extends Cubit<AuthState> {
       emit(
         state.updateState(
           messageResult: MessageResult.error(
-              error: NetworkException(message: AppStrings.noInternetMessage)),
+              error: AppNetworkException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;
@@ -45,8 +44,12 @@ class EvaluationCubit extends Cubit<AuthState> {
               messageResult: MessageResult.success()
           )
       );
-    } on AppException catch (e) {
-      final exception = ErrorHandler.handleException(e);
+    } catch (e, stackTrace) {
+      final errorHandler = ErrorHandler(
+          error: e,
+          stackTrace: stackTrace
+      );
+      final exception = errorHandler.handleException();
       emit(AuthState(messageResult: MessageResult.error(
           error: exception)));
     }
