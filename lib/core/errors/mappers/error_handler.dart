@@ -1,6 +1,6 @@
 import 'exception_mapper.dart';
-import '../exceptions/unknown_app_exception.dart';
 import '../exceptions/base/app_exception.dart';
+import '../exceptions/unknown_app_exception.dart';
 
 
 class ErrorHandler {
