@@ -3,7 +3,7 @@ import '../../domain/useCases/sign_up_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/message_state.dart';
-import '../../../../core/errors/exceptions/network_exception.dart';
+import '../../../../core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 
@@ -36,7 +36,7 @@ class SignUpCubit extends Cubit<AuthState> {
       emit(
         state.updateState(
           messageResult: MessageResult.error(
-              error: AppNetworkException(message: AppStrings.noInternetMessage)),
+              error: NetworkAppException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;

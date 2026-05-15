@@ -4,8 +4,8 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/message_state.dart';
-import '../../../../core/errors/exceptions/network_exception.dart';
-import '../../../../core/errors/exceptions/security_exception.dart';
+import '../../../../core/errors/exceptions/network_app_exception.dart';
+import '../../../../core/errors/exceptions/security_app_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 
 
@@ -31,7 +31,7 @@ class ForgetPasswordCubit extends Cubit<AuthState> {
       emit(
         AuthState(
           messageResult: MessageResult.error(
-              error: AppNetworkException(message: AppStrings.noInternetMessage)),
+              error: NetworkAppException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;
@@ -42,7 +42,7 @@ class ForgetPasswordCubit extends Cubit<AuthState> {
         emit(
             AuthState(
               messageResult: MessageResult.error(
-                  error: AppSecurityException(
+                  error: SecurityAppException(
                       message: 'الرجاء إدخال بريدك الإلكتروني')),
             )
         );

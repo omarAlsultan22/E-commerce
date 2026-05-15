@@ -4,10 +4,10 @@ import 'package:international_cuisine/core/errors/exceptions/base/app_exception.
 import 'package:international_cuisine/core/presentation/widgets/internet_unavailability.dart';
 
 
-class AppNetworkException extends AppException {
+class NetworkAppException extends AppException {
   final ConnectivityService? connectivityService;
 
-  AppNetworkException({
+  NetworkAppException({
     super.message,
     this.connectivityService
   });
@@ -18,11 +18,5 @@ class AppNetworkException extends AppException {
         onRetry: onRetry,
         connectivityService: connectivityService
     );
-  }
-
-  @override
-  AppException getException() {
-    // TODO: implement getException
-    throw UnimplementedError();
   }
 }

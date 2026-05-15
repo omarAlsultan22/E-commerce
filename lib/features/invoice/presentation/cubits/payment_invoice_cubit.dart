@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../states/payment_invoice_state.dart';
 import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
-import '../../../../core/errors/exceptions/network_exception.dart';
+import '../../../../core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/data/models/user_model.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
@@ -65,7 +65,7 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
       emit(state.updateState(
         subState: ErrorState(
-          failure: AppNetworkException(),
+          failure: NetworkAppException(),
         ),
       ));
       return;

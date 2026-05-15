@@ -1,10 +1,10 @@
 import '../../base/app_exception.dart';
 
 
-abstract class CacheException extends AppException{
+abstract class CacheAppException extends AppException{
   final String? operation;
 
-  const CacheException({
+  const CacheAppException({
     super.code,
     super.error,
     super.message,

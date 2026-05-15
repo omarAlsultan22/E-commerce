@@ -1,5 +1,5 @@
 import 'package:international_cuisine/core/domain/services/connectivity_service/connectivity_service.dart';
-import 'package:international_cuisine/core/errors/exceptions/network_exception.dart';
+import 'package:international_cuisine/core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/presentation/states/message_state.dart';
 import 'package:international_cuisine/core/data/models/message_result.dart';
 import '../../../../core/errors/mappers/error_handler.dart';
@@ -30,7 +30,7 @@ class EvaluationCubit extends Cubit<AuthState> {
       emit(
         state.updateState(
           messageResult: MessageResult.error(
-              error: AppNetworkException(message: AppStrings.noInternetMessage)),
+              error: NetworkAppException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;

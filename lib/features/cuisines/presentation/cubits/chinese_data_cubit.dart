@@ -3,7 +3,7 @@ import 'package:international_cuisine/features/cuisines/data/models/categories_m
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
-import '../../../../core/errors/exceptions/network_exception.dart';
+import '../../../../core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/errors/mappers/error_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -76,7 +76,7 @@ class ChineseDataCubit extends BaseCountriesCubit {
       emit(
           state.updateState(
             subState: ErrorState(
-              failure: AppNetworkException(
+              failure: NetworkAppException(
                   connectivityService: connectivityService
               ),
             ),

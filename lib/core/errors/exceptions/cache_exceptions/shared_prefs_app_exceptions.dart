@@ -1,10 +1,10 @@
 import '../base/app_exception.dart';
-import 'base/cache_exceptions.dart';
+import 'base/cache_app_exceptions.dart';
 import '../base/app_exception_convertible.dart';
 
 
-class SharedPrefsException extends CacheException implements AppExceptionConvertible{
-  SharedPrefsException({
+class SharedPrefsAppException extends CacheAppException implements AppExceptionConvertible{
+  SharedPrefsAppException({
     super.code,
     super.error,
     super.message,
@@ -51,7 +51,7 @@ class SharedPrefsException extends CacheException implements AppExceptionConvert
 }
 
 
-class SharedPrefsInitException extends SharedPrefsException {
+class SharedPrefsInitException extends SharedPrefsAppException {
   final String? platformCode;
 
   SharedPrefsInitException({
@@ -62,7 +62,7 @@ class SharedPrefsInitException extends SharedPrefsException {
 }
 
 
-class SharedPrefsPlatformException extends SharedPrefsException {
+class SharedPrefsPlatformException extends SharedPrefsAppException {
   final String? platformCode;
 
   SharedPrefsPlatformException({
@@ -73,7 +73,7 @@ class SharedPrefsPlatformException extends SharedPrefsException {
 }
 
 
-class SharedPrefsOperationException extends SharedPrefsException {
+class SharedPrefsOperationException extends SharedPrefsAppException {
   final String? key;
 
   SharedPrefsOperationException({
@@ -85,7 +85,7 @@ class SharedPrefsOperationException extends SharedPrefsException {
 }
 
 
-class SharedPrefsCastException extends SharedPrefsException {
+class SharedPrefsCastException extends SharedPrefsAppException {
   final String? key;
   final String? expectedType;
 

@@ -4,7 +4,7 @@ import '../../domain/useCases/user_info_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
-import '../../../../core/errors/exceptions/network_exception.dart';
+import '../../../../core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/domain/services/connectivity_service/connectivity_service.dart';
@@ -52,7 +52,7 @@ class UserInfoCubit extends Cubit<UserInfoState> {
       emit(
           buildState(
             MessageResult.error(
-              error: AppNetworkException(message: AppStrings.noInternetMessage
+              error: NetworkAppException(message: AppStrings.noInternetMessage
               ),
             ),
           )
@@ -92,7 +92,7 @@ class UserInfoCubit extends Cubit<UserInfoState> {
       final _connectivityService = ConnectivityService();
       emit(state.updateState(
         subState: ErrorState(
-          failure: AppNetworkException(connectivityService: _connectivityService),
+          failure: NetworkAppException(connectivityService: _connectivityService),
         ),
       ));
       return;

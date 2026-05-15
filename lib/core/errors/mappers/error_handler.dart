@@ -1,5 +1,5 @@
 import 'exception_mapper.dart';
-import '../exceptions/unknown_exception.dart';
+import '../exceptions/unknown_app_exception.dart';
 import '../exceptions/base/app_exception.dart';
 
 
@@ -40,7 +40,7 @@ class ErrorHandler {
       }
     }
 
-    return AppUnknownException(message: error.toString());
+    return UnknownAppException(message: error.toString());
   }
 
   // ==================== Helper Functions for Checking ====================

@@ -1,11 +1,11 @@
-import 'network_exception.dart';
 import 'base/app_exception.dart';
+import 'network_app_exception.dart';
 import 'base/app_exception_convertible.dart';
 import '../../domain/services/connectivity_service/connectivity_service.dart';
 
 
-class AppFirebaseException extends AppException implements AppExceptionConvertible{
-  AppFirebaseException({
+class FirebaseAppException extends AppException implements AppExceptionConvertible{
+  FirebaseAppException({
     super.error,
     super.message
   });
@@ -14,22 +14,22 @@ class AppFirebaseException extends AppException implements AppExceptionConvertib
   static const String _msgNoInternet = 'لا يوجد اتصال بالإنترنت';
 
   Map<String, AppException> map = {
-    'unavailable': AppNetworkException(
+    'unavailable': NetworkAppException(
         message: _msgNoInternet,
         connectivityService: connectivityService),
-    'network-error': AppNetworkException(
+    'network-error': NetworkAppException(
         message: _msgNoInternet,
         connectivityService: connectivityService),
-    'network-request-failed': AppNetworkException(
+    'network-request-failed': NetworkAppException(
         message: _msgNoInternet,
         connectivityService: connectivityService),
-    'permission-denied': AppFirebaseException(
+    'permission-denied': FirebaseAppException(
         message: 'ليس لديك إذن للوصول'),
-    'not-found': AppFirebaseException(message: 'لم يتم العثور على البيانات'),
-    'already-exists': AppFirebaseException(message: 'البيانات موجودة بالفعل'),
-    'user-not-found': AppFirebaseException(
+    'not-found': FirebaseAppException(message: 'لم يتم العثور على البيانات'),
+    'already-exists': FirebaseAppException(message: 'البيانات موجودة بالفعل'),
+    'user-not-found': FirebaseAppException(
         message: 'لا يوجد مستخدم مسجل بهذا البريد الإلكتروني'),
-    'invalid-email': AppFirebaseException(message: 'عنوان البريد الإلكتروني غير صالح'),
+    'invalid-email': FirebaseAppException(message: 'عنوان البريد الإلكتروني غير صالح'),
   };
 
   @override
@@ -41,6 +41,6 @@ class AppFirebaseException extends AppException implements AppExceptionConvertib
         return value;
       }
     }
-    return AppFirebaseException(error: 'خطأ في Firebase');
+    return FirebaseAppException(error: 'خطأ في Firebase');
   }
 }

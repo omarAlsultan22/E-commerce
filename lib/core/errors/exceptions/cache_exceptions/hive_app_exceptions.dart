@@ -1,10 +1,10 @@
 import '../base/app_exception.dart';
-import 'base/cache_exceptions.dart';
+import 'base/cache_app_exceptions.dart';
 import '../base/app_exception_convertible.dart';
 
 
-class HiveException extends CacheException implements AppExceptionConvertible{
-  HiveException({
+class HiveAppException extends CacheAppException implements AppExceptionConvertible{
+  HiveAppException({
     super.code,
     super.error,
     super.message,
@@ -118,7 +118,7 @@ class HiveException extends CacheException implements AppExceptionConvertible{
 }
 
 
-class HiveCacheException extends HiveException {
+class HiveCacheException extends HiveAppException {
   HiveCacheException({
     super.code = 'HIVE_ERROR',
     super.operation,
@@ -127,7 +127,7 @@ class HiveCacheException extends HiveException {
 }
 
 /// خطأ في Box (مغلق، غير موجود، null)
-class HiveBoxException extends HiveException {
+class HiveBoxException extends HiveAppException {
   final String? boxName;
 
   HiveBoxException({
@@ -137,8 +137,8 @@ class HiveBoxException extends HiveException {
   });
 }
 
-/// خطأ في فتح Hive Box
-class HiveOpenBoxException extends HiveException {
+
+class HiveOpenBoxException extends HiveAppException {
   final String boxName;
   final String? path;
 
@@ -150,16 +150,16 @@ class HiveOpenBoxException extends HiveException {
   });
 }
 
-/// خطأ في إغلاق Hive Box
-class HiveCloseBoxException extends HiveException {
+
+class HiveCloseBoxException extends HiveAppException {
   HiveCloseBoxException({
     super.message,
     super.code = 'HIVE_CLOSE_BOX_ERROR',
   });
 }
 
-/// خطأ في عمليات CRUD على Hive
-class HiveOperationException extends HiveException {
+
+class HiveOperationException extends HiveAppException {
   final String? boxName;
   final dynamic key;
 
@@ -172,8 +172,8 @@ class HiveOperationException extends HiveException {
   });
 }
 
-/// خطأ في حفظ البيانات إلى Hive
-class HiveSaveException extends HiveException {
+
+class HiveSaveException extends HiveAppException {
   HiveSaveException({
     super.message,
     super.operation = 'save',
@@ -181,8 +181,8 @@ class HiveSaveException extends HiveException {
   });
 }
 
-/// خطأ في قراءة البيانات من Hive
-class HiveReadException extends HiveException {
+
+class HiveReadException extends HiveAppException {
   HiveReadException({
     super.message,
     super.operation = 'read',
@@ -190,8 +190,8 @@ class HiveReadException extends HiveException {
   });
 }
 
-/// خطأ في حذف البيانات من Hive
-class HiveDeleteException extends HiveException {
+
+class HiveDeleteException extends HiveAppException {
   HiveDeleteException({
     super.message,
     super.operation = 'delete',
@@ -199,8 +199,8 @@ class HiveDeleteException extends HiveException {
   });
 }
 
-/// خطأ في مسح كامل Box
-class HiveClearException extends HiveException {
+
+class HiveClearException extends HiveAppException {
   HiveClearException({
     super.message,
     super.operation = 'clear',
