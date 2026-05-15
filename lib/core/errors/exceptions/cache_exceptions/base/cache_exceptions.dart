@@ -1,7 +1,7 @@
 import '../../base/app_exception.dart';
 
 
-abstract class CacheException extends AppException {
+abstract class CacheException extends AppException{
   final String? operation;
 
   const CacheException({
@@ -11,4 +11,5 @@ abstract class CacheException extends AppException {
     this.operation,
     super.statusCode,
   });
+
 }

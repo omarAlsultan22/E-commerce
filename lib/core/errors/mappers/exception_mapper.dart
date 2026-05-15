@@ -18,58 +18,72 @@ class ExceptionMapper {
   ExceptionMapper({required this.error});
 
   static final connectivityService = ConnectivityService();
+  static const String _msgCastError = 'خطأ في نوع البيانات المخزنة';
+  static const String _msgInitError = 'لم تتم تهيئة التخزين المحلي بشكل صحيح';
+  static const String _msgReadError = 'فشل في قراءة البيانات من التخزين المحلي';
+  static const String _msgWriteError = 'فشل في حفظ البيانات إلى التخزين المحلي';
+
   static final Map<String, AppException> _stringPatterns = {
     '_casterror': SharedPrefsCastException(
-      message: 'خطأ في نوع البيانات المخزنة',
+      message: _msgCastError,
     ),
     'null check operator': SharedPrefsCastException(
-      message: 'خطأ في نوع البيانات المخزنة',
+      message: _msgCastError,
     ),
     'getinstance': SharedPrefsInitException(
-      message: 'لم تتم تهيئة التخزين المحلي بشكل صحيح',
+      message: _msgInitError,
     ),
     'not initialized': SharedPrefsInitException(
-      message: 'لم تتم تهيئة التخزين المحلي بشكل صحيح',
+      message: _msgInitError,
     ),
     'binding has not been initialized': SharedPrefsInitException(
-      message: 'لم تتم تهيئة التخزين المحلي بشكل صحيح',
+      message: _msgInitError,
     ),
     'read': SharedPrefsOperationException(
-      message: 'فشل في قراءة البيانات من التخزين المحلي',
+      message: _msgReadError,
       operation: 'read',
     ),
     'get': SharedPrefsOperationException(
-      message: 'فشل في قراءة البيانات من التخزين المحلي',
+      message: _msgReadError,
       operation: 'read',
     ),
     'write': SharedPrefsOperationException(
-      message: 'فشل في حفظ البيانات إلى التخزين المحلي',
+      message: _msgWriteError,
       operation: 'write',
     ),
     'set': SharedPrefsOperationException(
-      message: 'فشل في حفظ البيانات إلى التخزين المحلي',
+      message: _msgWriteError,
       operation: 'write',
     ),
     'save': SharedPrefsOperationException(
-      message: 'فشل في حفظ البيانات إلى التخزين المحلي',
+      message: _msgWriteError,
       operation: 'write',
     ),
   };
 
   static final Map<Type, AppException Function(dynamic)> _typePatterns = {
-    HiveError: (error) => HiveException(error: error.toString()),
-    PlatformException: (error) =>
-        SharedPrefsException(
-          message: (error as PlatformException).code,
-        ),
+    HiveError: (error) {
+      final hiveException = HiveException(error: error.toString());
+      return hiveException.getException();
+    },
+    PlatformException: (error) {
+      final prefsException = SharedPrefsException(
+        message: (error as PlatformException).code,
+        error: error,
+      );
+      return prefsException.getException();
+    },
     MissingPluginException: (error) =>
         SharedPrefsException(
           message: (error as PlatformException).code,
         ),
-    FirebaseException: (error) =>
-        AppFirebaseException(
-          message: (error as FirebaseException).message ?? 'خطأ في Firebase',
-        ),
+    FirebaseException: (error) {
+      final firebaseException = AppFirebaseException(
+        message: (error as FirebaseException).message ?? 'خطأ في Firebase',
+        error: error,
+      );
+      return firebaseException.getException();
+    },
     SocketException: (error) =>
         AppNetworkException(
           message: 'لا يوجد اتصال بالإنترنت',

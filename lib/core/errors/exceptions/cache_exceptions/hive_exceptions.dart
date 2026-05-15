@@ -1,14 +1,20 @@
 import '../base/app_exception.dart';
 import 'base/cache_exceptions.dart';
+import '../base/app_exception_convertible.dart';
 
 
-class HiveException extends CacheException {
+class HiveException extends CacheException implements AppExceptionConvertible{
   HiveException({
     super.code,
     super.error,
     super.message,
     super.operation
   });
+
+  static const String _msgDatabaseNotExist = 'قاعدة البيانات غير موجودة';
+  static const String _msgFileSystemError = 'حدث خطأ في ملف قاعدة البيانات';
+  static const String _msgNotInitialized = 'لم تتم تهيئة قاعدة البيانات بشكل صحيح';
+  static const String _msgEncryptionError = 'خطأ في تشفير/فك تشفير قاعدة البيانات';
 
   static String? extractBoxName(String errorString) {
     // Create the Regex separately and safely
@@ -27,22 +33,22 @@ class HiveException extends CacheException {
         ),
     'box not found': (msg) =>
         HiveBoxException(
-          message: 'قاعدة البيانات غير موجودة',
+          message: _msgDatabaseNotExist,
           code: 'HIVE_BOX_NOT_FOUND',
         ),
     'box doesn\'t exist': (msg) =>
         HiveBoxException(
-          message: 'قاعدة البيانات غير موجودة',
+          message: _msgDatabaseNotExist,
           code: 'HIVE_BOX_NOT_FOUND',
         ),
     'null': (msg) =>
         HiveBoxException(
-          message: 'لم تتم تهيئة قاعدة البيانات بشكل صحيح',
+          message: _msgNotInitialized,
           code: 'HIVE_BOX_NULL',
         ),
     'box': (msg) =>
         HiveBoxException(
-          message: 'لم تتم تهيئة قاعدة البيانات بشكل صحيح',
+          message: _msgNotInitialized,
           code: 'HIVE_BOX_NULL',
         ),
     'openbox': (msg) =>
@@ -57,12 +63,12 @@ class HiveException extends CacheException {
         ),
     'filesystemexception': (msg) =>
         HiveOperationException(
-          message: 'حدث خطأ في ملف قاعدة البيانات',
+          message: _msgFileSystemError,
           operation: 'file_system',
         ),
     'file closed': (msg) =>
         HiveOperationException(
-          message: 'حدث خطأ في ملف قاعدة البيانات',
+          message: _msgFileSystemError,
           operation: 'file_system',
         ),
     'compaction': (msg) =>
@@ -72,12 +78,12 @@ class HiveException extends CacheException {
         ),
     'encryption': (msg) =>
         HiveOperationException(
-          message: 'خطأ في تشفير/فك تشفير قاعدة البيانات',
+          message: _msgEncryptionError,
           operation: 'encryption',
         ),
     'decryption': (msg) =>
         HiveOperationException(
-          message: 'خطأ في تشفير/فك تشفير قاعدة البيانات',
+          message: _msgEncryptionError,
           operation: 'encryption',
         ),
     'put': (msg) =>

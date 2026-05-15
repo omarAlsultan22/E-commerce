@@ -1,25 +1,27 @@
 import 'network_exception.dart';
 import 'base/app_exception.dart';
+import 'base/app_exception_convertible.dart';
 import '../../domain/services/connectivity_service/connectivity_service.dart';
 
 
-class AppFirebaseException extends AppException {
+class AppFirebaseException extends AppException implements AppExceptionConvertible{
   AppFirebaseException({
     super.error,
     super.message
   });
 
   static final connectivityService = ConnectivityService();
+  static const String _msgNoInternet = 'لا يوجد اتصال بالإنترنت';
 
   Map<String, AppException> map = {
     'unavailable': AppNetworkException(
-        message: 'لا يوجد اتصال بالإنترنت',
+        message: _msgNoInternet,
         connectivityService: connectivityService),
     'network-error': AppNetworkException(
-        message: 'لا يوجد اتصال بالإنترنت',
+        message: _msgNoInternet,
         connectivityService: connectivityService),
     'network-request-failed': AppNetworkException(
-        message: 'لا يوجد اتصال بالإنترنت',
+        message: _msgNoInternet,
         connectivityService: connectivityService),
     'permission-denied': AppFirebaseException(
         message: 'ليس لديك إذن للوصول'),

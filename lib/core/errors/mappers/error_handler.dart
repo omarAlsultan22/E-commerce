@@ -24,19 +24,19 @@ class ErrorHandler {
     final exceptionFromType = _mapByType(error);
 
     if (exceptionFromType != null) {
-      return exceptionFromType.getException();
+      return exceptionFromType;
     }
 
     final exceptionFromString = _mapByStringPattern(error);
 
     if (exceptionFromString != null) {
-      return exceptionFromString.getException();
+      return exceptionFromString;
     }
 
     if (_exceptionMapper.isSharedPrefsError()) {
       final exception = _mapByType(error);
       if (exception != null) {
-        return exception.getException();
+        return exception;
       }
     }
 

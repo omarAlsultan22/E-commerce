@@ -1,8 +1,9 @@
 import '../base/app_exception.dart';
 import 'base/cache_exceptions.dart';
+import '../base/app_exception_convertible.dart';
 
 
-class SharedPrefsException extends CacheException {
+class SharedPrefsException extends CacheException implements AppExceptionConvertible{
   SharedPrefsException({
     super.code,
     super.error,
@@ -11,21 +12,24 @@ class SharedPrefsException extends CacheException {
     super.statusCode,
   });
 
+  static const String _msgConnectionIssue = 'مشكلة في الاتصال بنظام التخزين';
+  static const String _msgCorruptedFile = 'ملف التخزين المحلي تالف، ستتم إعادة تهيئته';
+
   static final Map<String, AppException> _exactMatches = {
     'streamcorrupted': SharedPrefsInitException(
-      message: 'ملف التخزين المحلي تالف، ستتم إعادة تهيئته',
+      message: _msgCorruptedFile,
       platformCode: 'STREAM_CORRUPTED',
     ),
     'invalid stream header': SharedPrefsInitException(
-      message: 'ملف التخزين المحلي تالف، ستتم إعادة تهيئته',
+      message: _msgCorruptedFile,
       platformCode: 'INVALID_STREAM_HEADER',
     ),
     'channel-error': SharedPrefsPlatformException(
-      message: 'مشكلة في الاتصال بنظام التخزين',
+      message: _msgConnectionIssue,
       platformCode: 'CHANNEL_ERROR',
     ),
     'unable to establish connection': SharedPrefsPlatformException(
-      message: 'مشكلة في الاتصال بنظام التخزين',
+      message: _msgConnectionIssue,
       platformCode: 'CONNECTION_FAILED',
     ),
   };
