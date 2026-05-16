@@ -9,7 +9,6 @@ class SharedPrefsAppException extends CacheAppException implements AppExceptionC
     super.error,
     super.message,
     super.operation,
-    super.statusCode,
   });
 
   static const String _msgConnectionIssue = 'مشكلة في الاتصال بنظام التخزين';
