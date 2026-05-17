@@ -2,5 +2,9 @@ import 'base/app_exception.dart';
 
 
 class SecurityAppException extends AppException {
-  SecurityAppException({required super.message});
+  SecurityAppException({
+    super.code,
+    super.statusCode,
+    required super.message
+  });
 }

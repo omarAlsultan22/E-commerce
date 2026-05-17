@@ -8,6 +8,7 @@ class NetworkAppException extends AppException {
   final ConnectivityService? connectivityService;
 
   NetworkAppException({
+    super.code,
     super.message,
     this.connectivityService
   });
