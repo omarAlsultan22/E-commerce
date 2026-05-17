@@ -35,16 +35,15 @@ class SharedPrefsAppException extends CacheAppException implements ExceptionHand
 
   @override
   bool canHandle() {
-    return _errorFactories.containsKey(error);
+    final errorStr = error.toString().toLowerCase();
+    return _errorFactories.containsKey(errorStr);
   }
 
   @override
   AppException? handle() {
     if (canHandle()) {
-      final exception = _errorFactories[error];
-      if (exception != null) {
-        return exception;
-      }
+      final errorStr = error.toString().toLowerCase();
+      return _errorFactories[errorStr];
     }
     return SharedPrefsPlatformException(
       message: error.message ?? 'خطأ في منصة التخزين المحلية',

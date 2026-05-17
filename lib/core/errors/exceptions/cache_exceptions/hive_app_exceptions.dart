@@ -25,7 +25,7 @@ class HiveAppException extends CacheAppException implements ExceptionHandler {
   }
 
   static final Map<String,
-      AppException Function(String errorMsg)> _errorFactories = {
+      AppException Function(String)> _errorFactories = {
     'box has already been closed': (msg) =>
         HiveBoxException(
           message: 'محاولة الوصول إلى قاعدة بيانات مغلقة',
@@ -105,13 +105,14 @@ class HiveAppException extends CacheAppException implements ExceptionHandler {
 
   @override
   bool canHandle() {
-    return _errorFactories.containsKey(error);
+    final errorStr = error.toString().toLowerCase();
+    return _errorFactories.containsKey(errorStr);
   }
 
   @override
   AppException handle() {
-    final errorStr = error.toString().toLowerCase();
     if (canHandle()) {
+      final errorStr = error.toString().toLowerCase();
       return _errorFactories[errorStr]!(errorStr);
     }
     return HiveOperationException(
