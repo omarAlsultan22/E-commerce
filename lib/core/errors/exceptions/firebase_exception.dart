@@ -1,27 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'base/app_exception.dart';
 import 'network_app_exception.dart';
-import 'base/app_exception_convertible.dart';
+import 'base/exception_handler.dart';
 import '../../domain/services/connectivity_service/connectivity_service.dart';
 
 
-class FirebaseAppException extends AppException implements AppExceptionConvertible {
+class FirebaseAppException extends AppException implements ExceptionHandler {
   FirebaseAppException({
     super.code,
     super.error,
     super.message
   });
 
-  static final connectivityService = ConnectivityService();
+  static final _connectivityService = ConnectivityService();
   static const String _msgNoInternet = 'لا يوجد اتصال بالإنترنت';
 
-  Map<String, AppException> map = {
+  static final Map<String, AppException> _errorFactories = {
     // Network
     'unavailable': NetworkAppException(
-        message: _msgNoInternet, connectivityService: connectivityService),
+        message: _msgNoInternet, connectivityService: _connectivityService),
     'network-error': NetworkAppException(
-        message: _msgNoInternet, connectivityService: connectivityService),
+        message: _msgNoInternet, connectivityService: _connectivityService),
     'network-request-failed': NetworkAppException(
-        message: _msgNoInternet, connectivityService: connectivityService),
+        message: _msgNoInternet, connectivityService: _connectivityService),
 
     // Firestore
     'permission-denied': FirestoreAppException(code: 'permission-denied',
@@ -65,12 +67,16 @@ class FirebaseAppException extends AppException implements AppExceptionConvertib
   };
 
   @override
-  AppException getException() {
-    final isKeyFound = map.containsKey(error.code);
-    if (isKeyFound) {
-      final value = map[error.code];
-      if (value != null) {
-        return value;
+  bool canHandle() {
+    return _errorFactories.containsKey((error as FirebaseException).code);
+  }
+
+  @override
+  AppException handle() {
+    if (canHandle()) {
+      final exception = _errorFactories[(error as FirebaseException).code];
+      if (exception != null) {
+        return exception;
       }
     }
     return FirebaseAppException(error: 'خطأ في Firebase');

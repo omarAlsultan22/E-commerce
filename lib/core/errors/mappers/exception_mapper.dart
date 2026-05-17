@@ -84,20 +84,20 @@ class ExceptionMapper {
   static final Map<Type, AppException Function(dynamic)> _typePatterns = {
     HiveError: (error) {
       final hiveException = HiveAppException(error: error.toString());
-      return hiveException.getException();
+      return hiveException.handle();
     },
     DioException: (error) {
       final firebaseException = DioAppException(
           message: (error as DioException).message ?? 'DIO_ERROR'
       );
-      return firebaseException.getException();
+      return firebaseException.handle();
     },
     FirebaseException: (error) {
       final firebaseException = FirebaseAppException(
         message: (error as FirebaseException).message ?? 'خطأ في Firebase',
         error: error,
       );
-      return firebaseException.getException();
+      return firebaseException.handle();
     },
     SocketException: (error) =>
         NetworkAppException(
@@ -118,7 +118,7 @@ class ExceptionMapper {
   Iterable<String> get keys =>
       {..._networkPatterns, ..._sharedPrefsPatterns}.keys;
 
-  bool isKey(dynamic error) => _typePatterns.containsKey(error);
+  bool get isKey => _typePatterns.containsKey(error);
 
   bool isSharedPrefsError() {
     final errorStr = error.toString().toLowerCase();
@@ -131,16 +131,11 @@ class ExceptionMapper {
         errorStr.contains('preferences') && errorStr.contains('instance');
   }
 
-  AppException? mapByType() {
-    final exception = _sharedPrefsPatterns[error];
-    if (exception != null) {
-      return exception;
-    }
-    return null;
+  AppException? mapByTypePattern() {
+    return _typePatterns[error]!(error);
   }
 
   AppException? mapByStringPattern() {
-    final exception = _typePatterns[error]!(error);
-    return exception;
+    return _sharedPrefsPatterns[error];
   }
 }

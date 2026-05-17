@@ -2,14 +2,14 @@ import 'package:dio/dio.dart';
 import 'client_exception.dart';
 import 'base/app_exception.dart';
 import 'network_app_exception.dart';
-import 'base/app_exception_convertible.dart';
+import 'base/exception_handler.dart';
 import 'package:international_cuisine/core/constants/app_strings.dart';
 import 'package:international_cuisine/core/errors/exceptions/server_app_exception.dart';
 import 'package:international_cuisine/core/errors/exceptions/unknown_app_exception.dart';
 import 'package:international_cuisine/core/errors/exceptions/security_app_exception.dart';
 
 
-class DioAppException extends AppException implements AppExceptionConvertible {
+class DioAppException extends AppException implements ExceptionHandler {
   DioAppException({
     super.error,
     super.message
@@ -184,8 +184,12 @@ class DioAppException extends AppException implements AppExceptionConvertible {
   };
 
   @override
-  AppException getException() {
-    final e = error as DioException;
-    return _dioTypeExceptionHandlers[e.type]!(error);
+  bool canHandle() {
+    return _dioTypeExceptionHandlers.containsKey((error as DioException).type);
+  }
+
+  @override
+  AppException handle() {
+    return _dioTypeExceptionHandlers[(error as DioException).type]!(error);
   }
 }

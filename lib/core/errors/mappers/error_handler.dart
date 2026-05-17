@@ -1,8 +1,8 @@
-import 'exception_mapper.dart';
-import 'package:flutter/services.dart';
-import '../exceptions/base/app_exception.dart';
-import '../exceptions/unknown_app_exception.dart';
 import '../exceptions/cache_exceptions/shared_prefs_app_exceptions.dart';
+import '../exceptions/unknown_app_exception.dart';
+import '../exceptions/base/app_exception.dart';
+import 'package:flutter/services.dart';
+import 'exception_mapper.dart';
 
 
 class ErrorHandler {
@@ -23,46 +23,48 @@ class ErrorHandler {
     // Log the error (for analytics)
     _logError(error, stackTrace);
 
-    final exceptionFromType = _mapByType(error);
-
-    if (exceptionFromType != null) {
-      return exceptionFromType;
-    }
-
-    final exceptionFromString = _mapByStringPattern(error);
-
-    if (exceptionFromString != null) {
-      return exceptionFromString;
-    }
-
-    if (_exceptionMapper.isSharedPrefsError()) {
-      final prefsException = SharedPrefsAppException(
-        error: error,
-        code: (error as PlatformException).code,
-      );
-      return prefsException.getException();
-    }
-
-    return UnknownAppException(message: error.toString());
+    return _mapByType() ??
+        _mapByStringPattern() ??
+        _mapBySharedPrefError() ??
+        UnknownAppException(message: error.toString());
   }
 
   // ==================== Helper Functions for Checking ====================
 
-  AppException? _mapByType(dynamic error) {
-    final isKeyFound = _exceptionMapper.isKey(error);
-    if (isKeyFound) {
-      final value = _exceptionMapper.mapByType();
-      return value;
+  bool _isSharedPrefsError() {
+    final errorStr = error.toString().toLowerCase();
+    return error is PlatformException &&
+        (errorStr.contains('shared_preferences') ||
+            errorStr.contains('sharedpreferences')) ||
+        error is MissingPluginException &&
+            errorStr.contains('shared_preferences') ||
+        errorStr.contains('sharedpreferences') ||
+        errorStr.contains('preferences') && errorStr.contains('instance');
+  }
+
+  AppException? _mapByType() {
+    if (_exceptionMapper.isKey) {
+      return _exceptionMapper.mapByTypePattern();
     }
     return null;
   }
 
-  AppException? _mapByStringPattern(dynamic error) {
+  AppException? _mapByStringPattern() {
     for (var key in _exceptionMapper.keys) {
       if (error.toString().contains(key)) {
-        final value = _exceptionMapper.mapByType();
-        return value;
+        return _exceptionMapper.mapByStringPattern();
       }
+    }
+    return null;
+  }
+
+  AppException? _mapBySharedPrefError() {
+    if (_isSharedPrefsError()) {
+      final prefsException = SharedPrefsAppException(
+        error: error,
+        code: (error as PlatformException).code,
+      );
+      return prefsException.handle();
     }
     return null;
   }
