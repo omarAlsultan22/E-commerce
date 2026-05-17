@@ -38,7 +38,7 @@ class ErrorHandler {
     if (_exceptionMapper.isSharedPrefsError()) {
       final prefsException = SharedPrefsAppException(
         error: error,
-        message: (error as PlatformException).code,
+        code: (error as PlatformException).code,
       );
       return prefsException.getException();
     }
