@@ -3,7 +3,7 @@ import 'base/cache_app_exceptions.dart';
 import '../base/app_exception_convertible.dart';
 
 
-class SharedPrefsAppException extends CacheAppException implements AppExceptionConvertible{
+class SharedPrefsAppException extends CacheAppException implements AppExceptionConvertible {
   SharedPrefsAppException({
     super.code,
     super.error,
@@ -44,7 +44,7 @@ class SharedPrefsAppException extends CacheAppException implements AppExceptionC
     }
     return SharedPrefsPlatformException(
       message: error.message ?? 'Local storage platform error',
-      platformCode: error.code,
+      platformCode: code,
     );
   }
 }
