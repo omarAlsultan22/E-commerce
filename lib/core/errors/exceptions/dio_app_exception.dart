@@ -16,25 +16,25 @@ class DioAppException extends AppException implements AppExceptionConvertible {
   });
 
   static const String _invalidDataCode = 'BAD_REQUEST';
-  static const String _invalidDataMessage = 'Invalid data';
+  static const String _invalidDataMessage = 'بيانات غير صالحة';
 
   static const String _notFoundCode = 'NOT_FOUND';
-  static const String _notFoundMessage = 'Data not found';
+  static const String _notFoundMessage = 'البيانات غير موجودة';
 
   static const String _conflictCode = 'CONFLICT';
-  static const String _conflictMessage = 'Data conflict';
+  static const String _conflictMessage = 'تضارب في البيانات';
 
   static const String _serverErrorCode = 'SERVER_ERROR';
-  static const String _serverErrorMessage = 'Server error, please try again later';
+  static const String _serverErrorMessage = 'خطأ في الخادم، يرجى المحاولة مرة أخرى لاحقاً';
 
   static const String _dioError = 'DIO_ERROR';
   static const _noInternetMessage = AppStrings.noInternetMessage;
-  static const String _networkTimeoutMessageSuffix = ' or timeout expired';
+  static const String _networkTimeoutMessageSuffix = ' أو انتهت مهلة الاتصال';
 
   static const String _forbiddenCode = 'FORBIDDEN';
   static const String _unauthorizedCode = 'UNAUTHORIZED';
-  static const String _unauthorizedMessage = 'Please login again';
-  static const String _forbiddenMessage = 'You do not have permission to access';
+  static const String _unauthorizedMessage = 'يرجى تسجيل الدخول مرة أخرى';
+  static const String _forbiddenMessage = 'ليس لديك صلاحية للوصول';
 
   static final Map<DioExceptionType, String> _dioErrorCodePatterns = {
     DioExceptionType.connectionTimeout: 'CONNECTION_TIMEOUT',
@@ -102,7 +102,7 @@ class DioAppException extends AppException implements AppExceptionConvertible {
 
     429: (statusCode) =>
         ClientAppException(
-          message: 'Request limit exceeded, please try again later',
+          message: 'تم تجاوز حد الطلبات، يرجى المحاولة مرة أخرى لاحقاً',
           code: 'TOO_MANY_REQUESTS',
           statusCode: statusCode,
         ),
@@ -158,7 +158,7 @@ class DioAppException extends AppException implements AppExceptionConvertible {
         ),
     DioExceptionType.badCertificate: (error) =>
         SecurityAppException(
-          message: 'Invalid security certificate',
+          message: 'شهادة أمان غير صالحة',
           code: 'BAD_CERTIFICATE',
         ),
     DioExceptionType.badResponse: (error) {
@@ -167,18 +167,18 @@ class DioAppException extends AppException implements AppExceptionConvertible {
       return handler != null
           ? handler(statusCode)
           : ServerAppException(
-        message: 'Server error: $statusCode',
+        message: 'خطأ في الخادم: $statusCode',
         statusCode: statusCode,
       );
     },
     DioExceptionType.cancel: (error) =>
         ClientAppException(
-          message: 'Request cancelled',
+          message: 'تم إلغاء الطلب',
           code: 'REQUEST_CANCELLED',
         ),
     DioExceptionType.unknown: (error) =>
         UnknownAppException(
-          message: error.message ?? 'An unexpected error occurred',
+          message: error.message ?? 'حدث خطأ غير متوقع',
           code: 'UNKNOWN_DIO_ERROR',
         )
   };
