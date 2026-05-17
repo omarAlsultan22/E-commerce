@@ -136,6 +136,6 @@ class ExceptionMapper {
   }
 
   AppException? mapByStringPattern() {
-    return _sharedPrefsPatterns[error];
+    return _sharedPrefsPatterns[error.toString().toLowerCase()];
   }
 }
