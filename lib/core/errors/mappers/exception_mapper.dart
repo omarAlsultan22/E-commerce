@@ -20,7 +20,7 @@ class ExceptionMapper {
 
   ExceptionMapper({required this.error});
 
-  static final connectivityService = ConnectivityService();
+  static final _connectivityService = ConnectivityService();
 
   static const String _readOperation = 'read';
   static const String _writeOperation = 'write';
@@ -102,18 +102,26 @@ class ExceptionMapper {
     SocketException: (error) =>
         NetworkAppException(
           message: 'لا يوجد اتصال بالإنترنت',
-          connectivityService: connectivityService,
+          connectivityService: _connectivityService,
         ),
     TimeoutException: (error) =>
         NetworkAppException(
           message: 'انتهت المهلة، يرجى المحاولة مرة أخرى في وقت لاحق',
-          connectivityService: connectivityService,
+          connectivityService: _connectivityService,
         ),
     FormatException: (error) =>
         ClientAppException(
           message: 'تنسيق البيانات غير صالح',
         ),
   };
+
+  static final RegExp _mergedPatternRegex = RegExp(
+    '(${[
+      ..._networkPatterns.keys,
+      ..._sharedPrefsPatterns.keys,
+    ].join('|')})',
+    caseSensitive: false,
+  );
 
   Iterable<String> get keys =>
       {..._networkPatterns, ..._sharedPrefsPatterns}.keys;
@@ -136,6 +144,13 @@ class ExceptionMapper {
   }
 
   AppException? mapByStringPattern() {
-    return _sharedPrefsPatterns[error.toString().toLowerCase()];
+    final errorMessage = error.toString().toLowerCase();
+    final match = _mergedPatternRegex.firstMatch(errorMessage);
+    if (match != null) {
+      final matchedKey = match.group(0)!;
+      return _networkPatterns[matchedKey] ??
+          _sharedPrefsPatterns[matchedKey];
+    }
+    return null;
   }
 }
