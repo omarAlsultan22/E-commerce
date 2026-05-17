@@ -66,17 +66,6 @@ class ExceptionMapper {
       final hiveException = HiveAppException(error: error.toString());
       return hiveException.getException();
     },
-    PlatformException: (error) {
-      final prefsException = SharedPrefsAppException(
-        message: (error as PlatformException).code,
-        error: error,
-      );
-      return prefsException.getException();
-    },
-    MissingPluginException: (error) =>
-        SharedPrefsAppException(
-          message: (error as PlatformException).code,
-        ),
     FirebaseException: (error) {
       final firebaseException = FirebaseAppException(
         message: (error as FirebaseException).message ?? 'خطأ في Firebase',
