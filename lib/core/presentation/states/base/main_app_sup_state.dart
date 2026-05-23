@@ -3,7 +3,7 @@ import 'main_app_sub_state.dart';
 import '../../../errors/exceptions/base/app_exception.dart';
 
 
-abstract class MainAppSupState<T, U> extends LoadedState<T, U>{
+abstract class MainAppSupState<T, U> extends LoadedState<T, U> {
   final MainAppSubState subState;
 
   MainAppSupState({
@@ -11,6 +11,8 @@ abstract class MainAppSupState<T, U> extends LoadedState<T, U>{
     super.secondModel,
     required this.subState
   });
+
+  LoadedState get dataModels;
 
   MainAppSupState updateState({
     T? firstModel,

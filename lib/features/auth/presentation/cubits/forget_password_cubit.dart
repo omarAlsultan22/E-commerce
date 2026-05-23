@@ -9,7 +9,7 @@ import '../../../../core/errors/exceptions/security_app_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 
 
-class ForgetPasswordCubit extends Cubit<AuthState> {
+class ForgetPasswordCubit extends Cubit<MessageState> {
   final AuthRepository _repository;
   final ConnectivityService _connectivityService;
 
@@ -19,7 +19,7 @@ class ForgetPasswordCubit extends Cubit<AuthState> {
   })
       : _repository = repository,
         _connectivityService = connectivityService,
-        super(const AuthState());
+        super(const MessageState());
 
   static ForgetPasswordCubit get(context) => BlocProvider.of(context);
 
@@ -29,18 +29,18 @@ class ForgetPasswordCubit extends Cubit<AuthState> {
     final isConnected = await _connectivityService.checkInternetConnection();
     if (!isConnected) {
       emit(
-        AuthState(
+        MessageState(
           messageResult: MessageResult.error(
               error: NetworkAppException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;
     }
-    emit(AuthState(messageResult: MessageResult.loading()));
+    emit(MessageState(messageResult: MessageResult.loading()));
     try {
       if (userEmail.isEmpty) {
         emit(
-            AuthState(
+            MessageState(
               messageResult: MessageResult.error(
                   error: SecurityAppException(
                       message: 'الرجاء إدخال بريدك الإلكتروني')),
@@ -50,7 +50,7 @@ class ForgetPasswordCubit extends Cubit<AuthState> {
       _repository.sendResetEmail(
         userEmail: userEmail,
       );
-      emit(AuthState(
+      emit(MessageState(
           messageResult: MessageResult.success(
               message: 'تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني')));
     } catch (e, stackTrace) {
@@ -59,7 +59,7 @@ class ForgetPasswordCubit extends Cubit<AuthState> {
           stackTrace: stackTrace
       );
       final exception = errorHandler.handleException();
-      emit(AuthState(messageResult: MessageResult.error(error: exception)));
+      emit(MessageState(messageResult: MessageResult.error(error: exception)));
     }
   }
 }

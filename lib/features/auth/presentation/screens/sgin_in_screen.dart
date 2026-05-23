@@ -23,7 +23,7 @@ class SignInScreen extends StatelessWidget {
     final _connectivityService = ConnectivityService();
     final _cubit = SignInCubit(
         useCase: _useCase, connectivityService: _connectivityService);
-    return BlocBuilder<SignInCubit, AuthState>(
+    return BlocBuilder<SignInCubit, MessageState>(
         builder: (context, state) {
           return SignInLayout(
               cacheHelper: _cacheHelper,

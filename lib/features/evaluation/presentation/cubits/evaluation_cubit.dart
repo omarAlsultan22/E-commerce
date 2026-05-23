@@ -8,7 +8,7 @@ import '../../../../core/constants/app_strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
-class EvaluationCubit extends Cubit<AuthState> {
+class EvaluationCubit extends Cubit<MessageState> {
   final EvaluationUseCase _useCase;
   final ConnectivityService _connectivityService;
 
@@ -18,7 +18,7 @@ class EvaluationCubit extends Cubit<AuthState> {
   })
       : _useCase = useCase,
         _connectivityService = connectivityService,
-        super(const AuthState());
+        super(const MessageState());
 
   static EvaluationCubit get(context) => BlocProvider.of(context);
 
@@ -28,19 +28,19 @@ class EvaluationCubit extends Cubit<AuthState> {
     final _isConnected = await _connectivityService.checkInternetConnection();
     if (!_isConnected) {
       emit(
-        state.updateState(
+        MessageState(
           messageResult: MessageResult.error(
               error: NetworkAppException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;
     }
-    emit(AuthState(
+    emit(MessageState(
         messageResult: MessageResult.loading()));
     try {
       await _useCase.sendEvaluationExecute(evaluationText: evaluationText);
       emit(
-          AuthState(
+          MessageState(
               messageResult: MessageResult.success()
           )
       );
@@ -50,7 +50,7 @@ class EvaluationCubit extends Cubit<AuthState> {
           stackTrace: stackTrace
       );
       final exception = errorHandler.handleException();
-      emit(AuthState(messageResult: MessageResult.error(
+      emit(MessageState(messageResult: MessageResult.error(
           error: exception)));
     }
   }

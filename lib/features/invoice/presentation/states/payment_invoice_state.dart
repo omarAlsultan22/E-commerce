@@ -14,6 +14,7 @@ class PaymentInvoiceState extends MainAppSupState<UserModel, List<OrderModel>>{
     required super.subState,
   });
 
+  @override
   LoadedState get dataModels =>
       MultiModelSuccessState<UserModel, List<OrderModel>>(
           firstModel: firstModel,

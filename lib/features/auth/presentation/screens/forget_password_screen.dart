@@ -18,7 +18,7 @@ class ForgetPasswordScreen extends StatelessWidget {
     final connectivityService = ConnectivityService();
     final cubit = ForgetPasswordCubit(
         repository: authRepository, connectivityService: connectivityService);
-    return BlocBuilder<ForgetPasswordCubit, AuthState>(
+    return BlocBuilder<ForgetPasswordCubit, MessageState>(
         builder: (context, state) {
           return ForgetPasswordLayout(
               messageResult: state.messageResult!,

@@ -24,11 +24,6 @@ class CategoriesState extends MainAppSupState<CategoriesModel, Never> {
 
   DataModel currentDataModel(int index) => firstModel!.currentDataModel(index);
 
-  LoadedState get dataModels =>
-      SingleModelSuccessState<CategoriesModel>(
-        firstModel: firstModel,
-      );
-
   CategoriesState updateRating({
     required int index,
     required DataModel newModel
@@ -42,6 +37,12 @@ class CategoriesState extends MainAppSupState<CategoriesModel, Never> {
 
   CategoriesModel updateSearchList(List<DataModel> searchData) =>
       firstModel!.copyWith(searchData: searchData);
+
+  @override
+  LoadedState get dataModels =>
+      SingleModelSuccessState<CategoriesModel>(
+        firstModel: firstModel,
+      );
 
   @override
   CategoriesState updateState({

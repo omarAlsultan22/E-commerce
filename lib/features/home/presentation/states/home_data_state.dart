@@ -13,6 +13,7 @@ class HomeDataState extends MainAppSupState<List<HomeDataModel>, Never>{
     required super.subState,
   });
 
+  @override
   LoadedState get dataModels =>
       SingleModelSuccessState<List<HomeDataModel>>(
           firstModel: firstModel,

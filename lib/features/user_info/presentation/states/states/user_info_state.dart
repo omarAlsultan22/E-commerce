@@ -16,6 +16,7 @@ class UserInfoState extends MainAppSupState<UserModel, MessageResult>{
 
   UserModel? get userModel => firstModel;
 
+  @override
   LoadedState get dataModels =>
       MultiModelSuccessState<UserModel, MessageResult>(
           firstModel: firstModel,

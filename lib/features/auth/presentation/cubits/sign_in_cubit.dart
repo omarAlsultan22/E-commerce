@@ -8,7 +8,7 @@ import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 
 
-class SignInCubit extends Cubit<AuthState> {
+class SignInCubit extends Cubit<MessageState> {
   final SignInUseCase _useCase;
   final ConnectivityService _connectivityService;
 
@@ -18,7 +18,7 @@ class SignInCubit extends Cubit<AuthState> {
   })
       : _useCase = useCase,
         _connectivityService = connectivityService,
-        super(const AuthState());
+        super(const MessageState());
 
   static SignInCubit get(context) => BlocProvider.of(context);
 
@@ -29,14 +29,14 @@ class SignInCubit extends Cubit<AuthState> {
     final _isConnected = await _connectivityService.checkInternetConnection();
     if (!_isConnected) {
       emit(
-        state.updateState(
+        MessageState(
           messageResult: MessageResult.error(
               error: NetworkAppException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;
     }
-    emit(AuthState(messageResult: MessageResult.loading()));
+    emit(MessageState(messageResult: MessageResult.loading()));
     try {
       if (userEmail.isEmpty || userPassword.isEmpty) {
         throw('Fields cannot be empty.');
@@ -45,7 +45,7 @@ class SignInCubit extends Cubit<AuthState> {
           userEmail: userEmail,
           userPassword: userPassword
       );
-      emit(AuthState(
+      emit(MessageState(
           messageResult: MessageResult.success()));
     } catch (e, stackTrace) {
       final errorHandler = ErrorHandler(
@@ -54,7 +54,7 @@ class SignInCubit extends Cubit<AuthState> {
       );
       final exception = errorHandler.handleException();
       emit(
-          AuthState(
+          MessageState(
               messageResult: MessageResult.error(
                   error: exception
               )

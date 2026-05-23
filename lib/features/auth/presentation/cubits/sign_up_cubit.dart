@@ -8,7 +8,7 @@ import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 
 
-class SignUpCubit extends Cubit<AuthState> {
+class SignUpCubit extends Cubit<MessageState> {
   final SignUpUseCase _useCase;
   final ConnectivityService _connectivityService;
 
@@ -19,7 +19,7 @@ class SignUpCubit extends Cubit<AuthState> {
   })
       : _useCase = useCase,
         _connectivityService = connectivityService,
-        super(const AuthState());
+        super(const MessageState());
 
   static SignUpCubit get(context) => BlocProvider.of(context);
 
@@ -34,14 +34,14 @@ class SignUpCubit extends Cubit<AuthState> {
     final _isConnected = await _connectivityService.checkInternetConnection();
     if (!_isConnected) {
       emit(
-        state.updateState(
+        MessageState(
           messageResult: MessageResult.error(
               error: NetworkAppException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;
     }
-    emit(AuthState(messageResult: MessageResult.loading()));
+    emit(MessageState(messageResult: MessageResult.loading()));
     try {
       await _useCase.signUpExecute(
         firstName: firstName,
@@ -51,7 +51,7 @@ class SignUpCubit extends Cubit<AuthState> {
         userPhone: userPhone,
         userLocation: userLocation,
       );
-      emit(AuthState(
+      emit(MessageState(
           messageResult: MessageResult.success()));
     } catch (e, stackTrace) {
       final errorHandler = ErrorHandler(
@@ -60,7 +60,7 @@ class SignUpCubit extends Cubit<AuthState> {
       );
       final exception = errorHandler.handleException();
       emit(
-          AuthState(
+          MessageState(
               messageResult: MessageResult.error(
                   error: exception
               )

@@ -30,7 +30,7 @@ class SignUpScreen extends StatelessWidget {
     final _connectivityService = ConnectivityService();
     final _cubit = SignUpCubit(
         useCase: _useCase, connectivityService: _connectivityService);
-    return BlocBuilder<SignUpCubit, AuthState>(
+    return BlocBuilder<SignUpCubit, MessageState>(
         builder: (context, state) {
           return SignUpLayout(
               messageResult: state.messageResult!,

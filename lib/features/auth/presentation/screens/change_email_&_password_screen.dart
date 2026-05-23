@@ -23,7 +23,7 @@ class ChangeEmailAndPasswordScreen extends StatelessWidget {
     final _connectivityService = ConnectivityService();
     final _cubit = ChangeEmailAndPasswordCubit(
         useCase: _useCase, connectivityService: _connectivityService);
-    return BlocBuilder<ChangeEmailAndPasswordCubit, AuthState>(
+    return BlocBuilder<ChangeEmailAndPasswordCubit, MessageState>(
         builder: (context, state) {
           return ChangeEmailAndPasswordLayout(
               cacheHelper: _cacheHelper,

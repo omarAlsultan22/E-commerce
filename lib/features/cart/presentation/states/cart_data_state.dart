@@ -54,6 +54,7 @@ class CartDataState extends MainAppSupState<List<OrderModel>, Never>{
     getShoppingList.clear();
   }
 
+  @override
   LoadedState get dataModels =>
       SingleModelSuccessState<List<OrderModel>>(
           firstModel: firstModel,

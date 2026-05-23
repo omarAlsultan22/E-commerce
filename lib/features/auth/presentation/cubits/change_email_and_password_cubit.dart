@@ -8,7 +8,7 @@ import 'package:international_cuisine/core/errors/exceptions/network_app_excepti
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 
 
-class ChangeEmailAndPasswordCubit extends Cubit<AuthState> {
+class ChangeEmailAndPasswordCubit extends Cubit<MessageState> {
   final ChangeEmailAndPasswordUseCase _useCase;
   final ConnectivityService _connectivityService;
 
@@ -18,7 +18,7 @@ class ChangeEmailAndPasswordCubit extends Cubit<AuthState> {
   })
       : _useCase = useCase,
         _connectivityService = connectivityService,
-        super(const AuthState());
+        super(const MessageState());
 
   static ChangeEmailAndPasswordCubit get(context) => BlocProvider.of(context);
 
@@ -30,14 +30,14 @@ class ChangeEmailAndPasswordCubit extends Cubit<AuthState> {
     final _isConnected = await _connectivityService.checkInternetConnection();
     if (!_isConnected) {
       emit(
-        state.updateState(
+        MessageState(
           messageResult: MessageResult.error(
               error: NetworkAppException(message: AppStrings.noInternetMessage)),
         ),
       );
       return;
     }
-    emit(AuthState(messageResult: MessageResult.loading()));
+    emit(MessageState(messageResult: MessageResult.loading()));
     try {
       _useCase.updateProfileExecute(
           newEmail: newEmail,
@@ -45,14 +45,14 @@ class ChangeEmailAndPasswordCubit extends Cubit<AuthState> {
           currentPassword: currentPassword
       );
       emit(
-          AuthState(messageResult: MessageResult.success()));
+          MessageState(messageResult: MessageResult.success()));
     } catch (e, stackTrace) {
       final errorHandler = ErrorHandler(
           error: e,
           stackTrace: stackTrace
       );
       final exception = errorHandler.handleException();
-      emit(AuthState(messageResult: MessageResult.error(
+      emit(MessageState(messageResult: MessageResult.error(
           error: exception)));
     }
   }
