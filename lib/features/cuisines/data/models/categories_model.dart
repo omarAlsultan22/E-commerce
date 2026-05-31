@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CategoriesModel {
   final bool hasMore;
-  final List<DataModel>? categoryData;
   final List<DataModel>? searchData;
+  final List<DataModel>? categoryData;
   final DocumentSnapshot? lastDocument;
 
   CategoriesModel({
