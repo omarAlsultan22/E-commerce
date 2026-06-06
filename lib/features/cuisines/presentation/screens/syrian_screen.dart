@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../cubits/syrian_data_cubit.dart';
 import '../states/categories_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,11 +34,12 @@ class _SyrianScreenState extends State<SyrianScreen> {
               const InitialStateWidget(
                   CuisinesConstants.data, CuisinesConstants.menu),
               onLoading: () => const LoadingStateWidget(),
-              onLoaded: (dataModels) =>
+              onLoaded: (loadedState) {
+                if (loadedState is SingleModelSuccessState) {
                   SearchableListBuilder(
                     isLocked: false,
                     title: 'المطبخ السوري',
-                    categoriesModel: dataModels.firstModel,
+                    categoriesModel: loadedState.firstModel,
                     getMoreData: () => _cubit.loadMoreData(),
                     clearData: () => _cubit.clearDataSearch(),
                     getSearchData: (searchText) =>
@@ -47,7 +49,11 @@ class _SyrianScreenState extends State<SyrianScreen> {
                             index: index,
                             rating: rating
                         ),
-                  ),
+                  );
+                }
+                return const InitialStateWidget(
+                    CuisinesConstants.data, CuisinesConstants.menu);
+              },
               onError: (error) =>
                   error.buildErrorWidget(onRetry: _cubit.getInitialData)
           );
@@ -55,4 +61,3 @@ class _SyrianScreenState extends State<SyrianScreen> {
     );
   }
 }
-

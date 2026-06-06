@@ -1,17 +1,24 @@
+import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
 import 'package:international_cuisine/features/cuisines/data/models/data_model.dart';
-import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
+import 'package:international_cuisine/core/presentation/states/app_sup_states.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 import '../../../../core/presentation/states/base/main_app_sub_state.dart';
-import '../../../../core/presentation/states/base/main_app_sup_state.dart';
 import '../../../../core/presentation/states/base/main_loaded_state.dart';
 import '../../../../core/errors/exceptions/base/app_exception.dart';
 
 
-class CartDataState extends MainAppSupState<List<OrderModel>, Never>{
+class CartDataState extends SingleModelAppState<List<OrderModel>> {
   CartDataState({
     super.firstModel,
     required super.subState,
   });
+
+  factory CartDataState.initial(){
+    return CartDataState(
+        firstModel: [],
+        subState: InitialState()
+    );
+  }
 
   List<OrderModel> get getShoppingList => firstModel ?? [];
 
@@ -46,30 +53,24 @@ class CartDataState extends MainAppSupState<List<OrderModel>, Never>{
     return getShoppingList;
   }
 
-  void removeItem(int index){
+  void removeItem(int index) {
     getShoppingList.removeAt(index);
   }
 
-  void clearCart(){
+  void clearCart() {
     getShoppingList.clear();
   }
 
   @override
-  LoadedState get dataModels =>
-      SingleModelSuccessState<List<OrderModel>>(
-          firstModel: firstModel,
-      );
-
-  @override
-  CartDataState updateState({
+  CartDataState copyWith({
     List<OrderModel>? firstModel,
     Never? secondModel,
     bool? isConnected,
     MainAppSubState? subState
   }) {
     return CartDataState(
-        subState: subState ?? this.subState,
-        firstModel: firstModel ?? this.firstModel,
+      subState: subState ?? this.subState,
+      firstModel: firstModel ?? this.firstModel,
     );
   }
 

@@ -19,7 +19,7 @@ class SignUpCubit extends Cubit<MessageState> {
   })
       : _useCase = useCase,
         _connectivityService = connectivityService,
-        super(const MessageState());
+        super(MessageState.initial());
 
   static SignUpCubit get(context) => BlocProvider.of(context);
 

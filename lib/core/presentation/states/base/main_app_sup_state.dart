@@ -3,22 +3,14 @@ import 'main_app_sub_state.dart';
 import '../../../errors/exceptions/base/app_exception.dart';
 
 
-abstract class MainAppSupState<T, U> extends LoadedState<T, U> {
+abstract class MainAppSupState{
   final MainAppSubState subState;
 
   MainAppSupState({
-    super.firstModel,
-    super.secondModel,
     required this.subState
   });
 
   LoadedState get dataModels;
-
-  MainAppSupState updateState({
-    T? firstModel,
-    U? secondModel,
-    MainAppSubState? subState
-  });
 
   R when<R>({
     required R Function() onInitial,

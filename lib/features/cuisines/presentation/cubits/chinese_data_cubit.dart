@@ -41,7 +41,7 @@ class ChineseDataCubit extends BaseCountriesCubit {
     if (!state.hasMore) return;
 
     if (!isLoadingMore && state.categoryDataIsEmpty) {
-      emit(state.updateState(subState: LoadingState()));
+      emit(state.copyWith(subState: LoadingState()));
     }
 
     try {
@@ -50,7 +50,12 @@ class ChineseDataCubit extends BaseCountriesCubit {
           isLoadingMore ? state.lastDocument : null
       );
 
-      emit(state.updateState(firstModel: CategoriesModel(
+      if(state.categoryDataIsEmpty && newState.isEmpty) {
+        state.copyWith(subState: InitialState());
+        return;
+      }
+
+      emit(state.copyWith(firstModel: CategoriesModel(
           categoryData: isLoadingMore
               ? [...state.categoryData, ...newState.dataList]
               : newState.dataList,
@@ -64,7 +69,7 @@ class ChineseDataCubit extends BaseCountriesCubit {
           stackTrace: stackTrace
       );
       final exception = errorHandler.handleException();
-      emit(state.updateState(
+      emit(state.copyWith(
         subState: ErrorState(failure: exception),
       ));
     }
@@ -74,7 +79,7 @@ class ChineseDataCubit extends BaseCountriesCubit {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
       final connectivityService = ConnectivityService();
       emit(
-          state.updateState(
+          state.copyWith(
             subState: ErrorState(
               failure: NetworkAppException(
                   connectivityService: connectivityService
@@ -114,7 +119,7 @@ class ChineseDataCubit extends BaseCountriesCubit {
           stackTrace: stackTrace
       );
       final exception = errorHandler.handleException();
-      emit(state.updateState(
+      emit(state.copyWith(
         subState: ErrorState(failure: exception),
       ));
     }
@@ -126,7 +131,7 @@ class ChineseDataCubit extends BaseCountriesCubit {
       final _searchData = await _dataUseCases.getDataSearchExecute(
           query: searchText, collectionPath: _chinese);
 
-      emit(state.updateState(firstModel: state.updateSearchList(_searchData)));
+      emit(state.copyWith(firstModel: state.updateSearchList(_searchData)));
     }
     catch (e, stackTrace) {
       final errorHandler = ErrorHandler(
@@ -134,7 +139,7 @@ class ChineseDataCubit extends BaseCountriesCubit {
           stackTrace: stackTrace
       );
       final exception = errorHandler.handleException();
-      emit(state.updateState(
+      emit(state.copyWith(
         subState: ErrorState(failure: exception),
       ));
     }
@@ -142,7 +147,7 @@ class ChineseDataCubit extends BaseCountriesCubit {
 
   @override
   void clearDataSearch() {
-    emit(state.updateState(firstModel: state.updateSearchList([])));
+    emit(state.copyWith(firstModel: state.updateSearchList([])));
   }
 
   @override

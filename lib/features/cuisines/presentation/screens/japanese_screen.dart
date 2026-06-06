@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../states/categories_states.dart';
 import '../cubits/japanese_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,12 +34,13 @@ class _JapaneseScreenState extends State<JapaneseScreen> {
             const InitialStateWidget(
                 CuisinesConstants.data, CuisinesConstants.menu),
             onLoading: () => const LoadingStateWidget(),
-            onLoaded: (dataModels) =>
+            onLoaded: (loadedState) {
+              if (loadedState is SingleModelSuccessState) {
                 SearchableListBuilder(
                   isLocked: false,
                   title: 'المطبخ الياباني',
                   getMoreData: () => _cubit.loadMoreData(),
-                  categoriesModel: dataModels.firstModel,
+                  categoriesModel: loadedState.firstModel,
                   clearData: () => _cubit.clearDataSearch(),
                   getSearchData: (searchText) =>
                       _cubit.getDataSearch(searchText),
@@ -47,7 +49,11 @@ class _JapaneseScreenState extends State<JapaneseScreen> {
                           index: index,
                           rating: rating
                       ),
-                ),
+                );
+              }
+              return const InitialStateWidget(
+                  CuisinesConstants.data, CuisinesConstants.menu);
+            },
             onError: (error) =>
                 error.buildErrorWidget(onRetry: _cubit.getInitialData)
         );

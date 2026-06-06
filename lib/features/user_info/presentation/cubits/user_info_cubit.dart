@@ -20,8 +20,7 @@ class UserInfoCubit extends Cubit<UserInfoState> {
   })
       : _userInfoUseCase = userInfoUseCase,
         _connectivityProvider = connectivityProvider,
-        super(UserInfoState(
-          subState: InitialState()));
+        super(UserInfoState.initial());
 
   static UserInfoCubit get(context) => BlocProvider.of(context);
 
@@ -42,7 +41,7 @@ class UserInfoCubit extends Cubit<UserInfoState> {
     required String userLocation
   }) async {
     UserInfoState buildState(MessageResult messageResult) {
-      return state.updateState(
+      return state.copyWith(
           firstModel: state.userModel,
           secondModel: messageResult,
           subState: SuccessState()
@@ -90,7 +89,7 @@ class UserInfoCubit extends Cubit<UserInfoState> {
   Future<void> getInfo() async {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
       final _connectivityService = ConnectivityService();
-      emit(state.updateState(
+      emit(state.copyWith(
         subState: ErrorState(
           failure: NetworkAppException(connectivityService: _connectivityService),
         ),
@@ -98,13 +97,19 @@ class UserInfoCubit extends Cubit<UserInfoState> {
       return;
     }
     emit(
-        state.updateState(
+        state.copyWith(
             subState: LoadingState()));
     try {
-      final userModel = await _userInfoUseCase.getInfoExecute();
+      final userInfo = await _userInfoUseCase.getInfoExecute();
+
+      if(userInfo == null) {
+        state.copyWith(subState: InitialState());
+        return;
+      }
+
       emit(
-          state.updateState(
-              firstModel: userModel,
+          state.copyWith(
+              firstModel: userInfo,
               subState: SuccessState()));
     }
     catch (e, stackTrace) {
@@ -114,7 +119,7 @@ class UserInfoCubit extends Cubit<UserInfoState> {
       );
       final exception = errorHandler.handleException();
       emit(
-          state.updateState(
+          state.copyWith(
               subState: ErrorState(
                   failure: exception
               )

@@ -7,4 +7,8 @@ class MessageState {
   const MessageState({
     this.messageResult
   });
+
+  factory MessageState.initial(){
+    return const MessageState(messageResult: null);
+  }
 }

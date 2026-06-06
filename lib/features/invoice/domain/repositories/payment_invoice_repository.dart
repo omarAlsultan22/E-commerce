@@ -4,9 +4,8 @@ import 'package:international_cuisine/core/data/repositories_impl/base_user_repo
 
 
 abstract class PaymentInvoiceRepository implements BaseUserInfoRepository {
-
   Future<void> sendOrdersToDatabase({
-    required UserModel userInfo,
+    required UserModel? userInfo,
     required List<OrderModel> shoppingList,
   });
 }

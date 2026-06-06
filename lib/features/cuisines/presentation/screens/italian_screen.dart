@@ -3,6 +3,7 @@ import '../states/categories_states.dart';
 import '../cubits/italian_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/lists/searchable_list_builder.dart';
+import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
 import 'package:international_cuisine/core/presentation/widgets/states/initial_state_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/states/loading_state_widget.dart';
@@ -33,11 +34,12 @@ class _ItalianScreenState extends State<ItalianScreen> {
             const InitialStateWidget(
                 CuisinesConstants.data, CuisinesConstants.menu),
             onLoading: () => const LoadingStateWidget(),
-            onLoaded: (dataModels) =>
+            onLoaded: (loadedState) {
+              if (loadedState is SingleModelSuccessState) {
                 SearchableListBuilder(
                   isLocked: false,
                   title: 'المطبخ الايطالي',
-                  categoriesModel: dataModels.firstModel,
+                  categoriesModel: loadedState.firstModel,
                   getMoreData: () => _cubit.loadMoreData(),
                   clearData: () => _cubit.clearDataSearch(),
                   getSearchData: (searchText) =>
@@ -47,7 +49,11 @@ class _ItalianScreenState extends State<ItalianScreen> {
                           index: index,
                           rating: rating
                       ),
-                ),
+                );
+              }
+              return const InitialStateWidget(
+                  CuisinesConstants.data, CuisinesConstants.menu);
+            },
             onError: (error) =>
                 error.buildErrorWidget(onRetry: _cubit.getInitialData)
         );

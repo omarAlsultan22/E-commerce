@@ -21,7 +21,7 @@ class PaymentInvoiceUseCase {
   }
 
   Future<void> sendDataExecute({
-    required UserModel userInfo,
+    required UserModel? userInfo,
     required List<OrderModel> shoppingList,
   }) async {
     try {

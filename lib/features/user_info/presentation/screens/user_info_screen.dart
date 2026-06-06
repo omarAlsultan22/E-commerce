@@ -2,6 +2,7 @@ import 'package:international_cuisine/core/presentation/widgets/states/loading_s
 import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/data/data_sources/remote/firestore.dart';
+import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
 import '../../data/repositories_impl/firestore_user_info_repository.dart';
 import 'package:international_cuisine/core/constants/app_keys.dart';
@@ -39,7 +40,8 @@ class UserInfoScreen extends StatelessWidget {
                       AppKeys.userInfo, Icons.info),
                   onLoading: () =>
                   const LoadingStateWidget(),
-                  onLoaded: (loadedState) =>
+                  onLoaded: (loadedState) {
+                    if (loadedState is DoubleModelSuccessState) {
                       UserInfoLayout(
                         userModel: loadedState.firstModel,
                         messageResult: loadedState.secondModel,
@@ -50,7 +52,11 @@ class UserInfoScreen extends StatelessWidget {
                               userPhone: userModel.userPhone,
                               userLocation: userModel.userLocation,
                             ),
-                      ),
+                      );
+                    }
+                    return const InitialStateWidget(
+                        AppKeys.userInfo, Icons.info);
+                  },
                   onError: (error) =>
                       error.buildErrorWidget(onRetry: () => cubit.getInfo())
               );

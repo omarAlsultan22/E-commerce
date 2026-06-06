@@ -8,10 +8,7 @@ import 'package:international_cuisine/features/cuisines/data/models/categories_m
 abstract class BaseCountriesCubit extends Cubit<CategoriesState> {
   BaseCountriesCubit()
       : super(
-      CategoriesState(
-        subState: InitialState(),
-        firstModel: CategoriesModel(),
-      )
+      CategoriesState.initial()
   );
 
   void startMonitoring();

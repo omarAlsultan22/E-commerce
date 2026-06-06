@@ -19,7 +19,7 @@ class ForgetPasswordCubit extends Cubit<MessageState> {
   })
       : _repository = repository,
         _connectivityService = connectivityService,
-        super(const MessageState());
+        super(MessageState.initial());
 
   static ForgetPasswordCubit get(context) => BlocProvider.of(context);
 

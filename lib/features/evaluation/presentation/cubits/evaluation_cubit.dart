@@ -18,7 +18,7 @@ class EvaluationCubit extends Cubit<MessageState> {
   })
       : _useCase = useCase,
         _connectivityService = connectivityService,
-        super(const MessageState());
+        super(MessageState.initial());
 
   static EvaluationCubit get(context) => BlocProvider.of(context);
 
@@ -30,7 +30,8 @@ class EvaluationCubit extends Cubit<MessageState> {
       emit(
         MessageState(
           messageResult: MessageResult.error(
-              error: NetworkAppException(message: AppStrings.noInternetMessage)),
+              error: NetworkAppException(
+                  message: AppStrings.noInternetMessage)),
         ),
       );
       return;

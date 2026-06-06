@@ -1,4 +1,5 @@
 import 'package:international_cuisine/features/home/presentation/states/home_data_state.dart';
+import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../widgets/lists/list_home_builder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubits/home_data_cubit.dart';
@@ -17,8 +18,12 @@ class HomeScreen extends StatelessWidget {
         return state.when(
             onInitial: () => SizedBox(),
             onLoading: () => const IntroScreen(),
-            onLoaded: (dataModels) =>
-                ListHomeBuilder(homeData: dataModels.firstModel),
+            onLoaded: (loadedState) {
+              if (loadedState is SingleModelSuccessState) {
+                ListHomeBuilder(homeData: loadedState.firstModel);
+              }
+              return const IntroScreen();
+            },
             onError: (error) =>
                 error.buildErrorWidget(onRetry: _cubit.getData)
         );

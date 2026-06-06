@@ -12,4 +12,6 @@ class PaginatedResult {
     required this.lastDocument,
     required this.hasMoreData,
   });
+
+  bool get isEmpty => dataList.isEmpty;
 }

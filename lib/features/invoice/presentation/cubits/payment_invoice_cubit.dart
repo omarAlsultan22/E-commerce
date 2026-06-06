@@ -24,7 +24,7 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
       : _cubit = cubit,
         _useCase = useCase,
         _connectivityProvider = connectivityProvider,
-        super(PaymentInvoiceState(subState: InitialState()));
+        super(PaymentInvoiceState.initial());
 
   static PaymentInvoiceCubit get(context) => Provider.of(context);
 
@@ -38,7 +38,7 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
     }
   }
 
-  Future<UserModel> _getUserInfo() async {
+  Future<UserModel?> _getUserInfo() async {
     try {
       return _useCase.getInfoExecute();
     } catch (e) {
@@ -51,7 +51,7 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
   }
 
   Future<void> _sendOrdersToDatabase({
-    required UserModel userInfo,
+    required UserModel? userInfo,
     required List<OrderModel> shoppingList,
   }) async {
     try {
@@ -63,7 +63,7 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
 
   Future<void> displayInvoice() async {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
-      emit(state.updateState(
+      emit(state.copyWith(
         subState: ErrorState(
           failure: NetworkAppException(),
         ),
@@ -71,17 +71,23 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
       return;
     }
     emit(
-        state.updateState(
+        state.copyWith(
             subState: LoadingState()));
     try {
       final userInfo = await _getUserInfo();
       final shoppingList = await _getShoppingList();
+
+      if (userInfo == null || shoppingList.isEmpty) {
+        state.copyWith(subState: InitialState());
+        return;
+      }
+
       _sendOrdersToDatabase(
           userInfo: userInfo,
           shoppingList: shoppingList
       );
       emit(
-          state.updateState(
+          state.copyWith(
               firstModel: userInfo,
               secondModel: shoppingList,
               subState: SuccessState()));
@@ -93,7 +99,7 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
       );
       final exception = errorHandler.handleException();
       emit(
-          state.updateState(
+          state.copyWith(
               subState: ErrorState(
                   failure: exception
               )

@@ -6,6 +6,7 @@ import '../../../../core/data/data_sources/local/hive.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
+import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import 'package:international_cuisine/features/cart/presentation/widgets/layouts/cart_data_layout.dart';
 
 
@@ -18,6 +19,26 @@ class CartDataScreen extends StatefulWidget {
 
 class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObserver {
 
+  Widget _initialState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.shopping_cart_outlined, size: 60.0,
+              color: AppColors.grey),
+          AppSpaces.verticalSpacing_16,
+          const Text(
+            'عربة التسوق فارغة',
+            style: TextStyle(
+                fontSize: 20,
+                color: AppColors.grey
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final _hiveStore = HiveStore();
@@ -25,30 +46,17 @@ class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObse
         builder: (context, state) {
           final cubit = CartDataCubit.get(context);
           return state.when(
-              onInitial: () =>
-              const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.shopping_cart_outlined, size: 60.0,
-                        color: AppColors.grey),
-                    AppSpaces.verticalSpacing_16,
-                    const Text(
-                      'عربة التسوق فارغة',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: AppColors.grey
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              onInitial: () => _initialState(),
               onLoading: () => const LoadingStateWidget(),
-              onLoaded: (dataModels) =>
+              onLoaded: (loadedState) {
+                if (loadedState is SingleModelSuccessState) {
                   CartDataLayout(
                       hiveStore: _hiveStore,
-                      shoppingList: dataModels.firstModel
-                  ),
+                      shoppingList: loadedState.firstModel
+                  );
+                }
+                return _initialState();
+              },
               onError: (error) =>
                   error.buildErrorWidget(onRetry: cubit.getCartData)
           );

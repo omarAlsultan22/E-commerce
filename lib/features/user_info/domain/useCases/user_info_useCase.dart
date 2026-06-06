@@ -10,7 +10,7 @@ class UserInfoUseCase {
   })
       :_repository = userInfoRepository;
 
-  Future<UserModel> getInfoExecute() async {
+  Future<UserModel?> getInfoExecute() async {
     try {
       return await _repository.getInfo();
     }

@@ -36,7 +36,7 @@ class FirestorePaymentInvoiceRepository implements PaymentInvoiceRepository {
 
       return UserInfoConverter
           .fromDocumentSnapshot(doc, location!)
-          .userModel;;
+          .userModel;
     } catch (e) {
       rethrow;
     }
@@ -57,7 +57,7 @@ class FirestorePaymentInvoiceRepository implements PaymentInvoiceRepository {
       SendOrderModel data = SendOrderModel(
           userName: ('${userInfo.firstName} ${userInfo.lastName}'),
           userPhone: userInfo.userPhone,
-          userLocation: userInfo.userLocation!,
+          userLocation: userInfo.userLocation,
           shoppingList: shoppingList
       );
 

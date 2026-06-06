@@ -16,9 +16,7 @@ class CartDataCubit extends Cubit<CartDataState> {
       :
         _useCase = useCase,
         super(
-          CartDataState(
-              firstModel: [],
-              subState: InitialState()));
+          CartDataState.initial());
 
   static CartDataCubit get(context) => BlocProvider.of(context);
 
@@ -36,14 +34,14 @@ class CartDataCubit extends Cubit<CartDataState> {
     );
     final shoppingList = state.addOrder(
         dataModel: dataModel, orderModel: orderModel);
-    emit(state.updateState(firstModel: shoppingList));
+    emit(state.copyWith(firstModel: shoppingList));
   }
 
   void removeItem(int index) {
     try {
       state.removeItem(index);
       _useCase.removeItemExecute(index: index);
-      emit(state.updateState());
+      emit(state.copyWith());
     }
     catch (e, stackTrace) {
       final errorHandler = ErrorHandler(
@@ -51,13 +49,13 @@ class CartDataCubit extends Cubit<CartDataState> {
           stackTrace: stackTrace
       );
       final exception = errorHandler.handleException();
-      emit(state.updateState(subState: ErrorState(failure: exception)));
+      emit(state.copyWith(subState: ErrorState(failure: exception)));
     }
   }
 
   void updateItemQuantity(int index, int newQuantity) {
     final shoppingList = state.updateItemQuantity(index, newQuantity);
-    emit(state.updateState(firstModel: shoppingList));
+    emit(state.copyWith(firstModel: shoppingList));
   }
 
   int getTotalPrice() {
@@ -74,18 +72,18 @@ class CartDataCubit extends Cubit<CartDataState> {
           stackTrace: stackTrace
       );
       final exception = errorHandler.handleException();
-      emit(state.updateState(subState: ErrorState(failure: exception)));
+      emit(state.copyWith(subState: ErrorState(failure: exception)));
     }
   }
 
   Future<void> getCartData() async {
-    emit(state.updateState(subState: LoadingState()));
+    emit(state.copyWith(subState: LoadingState()));
     try {
       final shoppingList = await _useCase.getCartDataExecute();
       if (shoppingList.isEmpty) {
-        emit(state.updateState(subState: InitialState()));
+        emit(state.copyWith(subState: InitialState()));
       }
-      emit(state.updateState(
+      emit(state.copyWith(
           firstModel: shoppingList, subState: SuccessState()));
     }
     catch (e, stackTrace) {
@@ -94,7 +92,7 @@ class CartDataCubit extends Cubit<CartDataState> {
           stackTrace: stackTrace
       );
       final exception = errorHandler.handleException();
-      emit(state.updateState(subState: ErrorState(failure: exception)));
+      emit(state.copyWith(subState: ErrorState(failure: exception)));
     }
   }
 }

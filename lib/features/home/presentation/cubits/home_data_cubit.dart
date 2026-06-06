@@ -17,10 +17,7 @@ class HomeDataCubit extends Cubit<HomeDataState> {
       : _homeDataUseCase = homeDataUseCase,
         _connectivityProvider = connectivityProvider,
         super(
-          HomeDataState(
-              firstModel: [],
-              subState: InitialState()
-          )
+          HomeDataState.initial()
       );
 
   static HomeDataCubit get(context) => BlocProvider.of<HomeDataCubit>(context);
@@ -38,14 +35,19 @@ class HomeDataCubit extends Cubit<HomeDataState> {
 
   Future<void> getData() async {
     emit(
-        state.updateState(
+        state.copyWith(
             subState: LoadingState()
         )
     );
     try {
       final homeData = await _homeDataUseCase.getDataExecute();
+
+      if (homeData.isEmpty) {
+        return;
+      }
+
       emit(
-          state.updateState(
+          state.copyWith(
               subState: SuccessState(),
               firstModel: homeData
           )
@@ -57,7 +59,7 @@ class HomeDataCubit extends Cubit<HomeDataState> {
       );
       final exception = errorHandler.handleException();
       emit(
-          state.updateState(
+          state.copyWith(
               subState: ErrorState(failure: exception)
           )
       );

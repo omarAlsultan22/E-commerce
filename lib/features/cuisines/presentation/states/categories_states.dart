@@ -1,18 +1,25 @@
 import 'package:international_cuisine/features/cuisines/data/models/categories_model.dart';
+import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
+import 'package:international_cuisine/core/presentation/states/app_sup_states.dart';
 import '../../../../core/presentation/states/base/main_app_sub_state.dart';
-import '../../../../core/presentation/states/base/main_app_sup_state.dart';
 import '../../../../core/presentation/states/base/main_loaded_state.dart';
 import '../../../../core/errors/exceptions/base/app_exception.dart';
-import '../../../../core/presentation/states/loaded_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../data/models/data_model.dart';
 
 
-class CategoriesState extends MainAppSupState<CategoriesModel, Never> {
+class CategoriesState extends SingleModelAppState<CategoriesModel> {
   CategoriesState({
     super.firstModel,
     required super.subState,
   });
+
+  factory CategoriesState.initial(){
+    return CategoriesState(
+        firstModel: CategoriesModel(),
+        subState: InitialState()
+    );
+  }
 
   bool get hasMore => firstModel!.hasMore;
 
@@ -31,7 +38,7 @@ class CategoriesState extends MainAppSupState<CategoriesModel, Never> {
     final updatedList = List<DataModel>.from(categoryData);
     updatedList[index] = newModel;
 
-    return updateState(
+    return copyWith(
         firstModel: firstModel!.copyWith(categoryData: updatedList));
   }
 
@@ -39,15 +46,8 @@ class CategoriesState extends MainAppSupState<CategoriesModel, Never> {
       firstModel!.copyWith(searchData: searchData);
 
   @override
-  LoadedState get dataModels =>
-      SingleModelSuccessState<CategoriesModel>(
-        firstModel: firstModel,
-      );
-
-  @override
-  CategoriesState updateState({
+  CategoriesState copyWith({
     CategoriesModel? firstModel,
-    Never? secondModel,
     MainAppSubState? subState
   }) {
     return CategoriesState(

@@ -18,7 +18,7 @@ class SignInCubit extends Cubit<MessageState> {
   })
       : _useCase = useCase,
         _connectivityService = connectivityService,
-        super(const MessageState());
+        super(MessageState.initial());
 
   static SignInCubit get(context) => BlocProvider.of(context);
 

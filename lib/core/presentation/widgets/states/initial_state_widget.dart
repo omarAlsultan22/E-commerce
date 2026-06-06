@@ -20,7 +20,7 @@ class InitialStateWidget extends StatelessWidget {
               color: Colors.grey[300],
             ),
             Text(
-              'There is no any $_textType',
+              'لا يوجد أي $_textType',
               style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,

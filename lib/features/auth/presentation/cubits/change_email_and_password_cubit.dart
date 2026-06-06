@@ -18,7 +18,7 @@ class ChangeEmailAndPasswordCubit extends Cubit<MessageState> {
   })
       : _useCase = useCase,
         _connectivityService = connectivityService,
-        super(const MessageState());
+        super(MessageState.initial());
 
   static ChangeEmailAndPasswordCubit get(context) => BlocProvider.of(context);
 
