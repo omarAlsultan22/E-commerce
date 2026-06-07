@@ -20,17 +20,6 @@ class DoubleModelSuccessState<T, U> extends LoadedState {
   });
 }
 
-class TripleModelSuccessState<T, U, S> extends LoadedState {
-  T? firstModel;
-  U? secondModel;
-  S? thirdModel;
-
-  TripleModelSuccessState({
-    required this.firstModel,
-    required this.secondModel,
-    required this.thirdModel
-  });
-}
 
 
 

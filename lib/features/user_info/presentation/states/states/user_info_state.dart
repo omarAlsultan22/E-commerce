@@ -17,7 +17,7 @@ class UserInfoState extends DoubleModelAppState<UserModel, MessageResult> {
   factory UserInfoState.initial(){
     return UserInfoState(
         firstModel: null,
-        secondModel: null,
+        secondModel: MessageResult.initial(),
         subState: InitialState()
     );
   }

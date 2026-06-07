@@ -1,6 +1,6 @@
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
 
-import '../../states/categories_states.dart';
+import '../../states/categories_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:international_cuisine/features/cuisines/data/models/categories_model.dart';
 

@@ -9,6 +9,6 @@ class MessageState {
   });
 
   factory MessageState.initial(){
-    return const MessageState(messageResult: null);
+    return MessageState(messageResult: MessageResult.initial());
   }
 }

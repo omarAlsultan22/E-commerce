@@ -16,6 +16,9 @@ class MessageResult {
     this.color
   });
 
+  factory MessageResult.initial(){
+    return MessageResult();
+  }
 
   factory MessageResult.loading(){
     return MessageResult(
@@ -25,7 +28,6 @@ class MessageResult {
 
   factory MessageResult.success({String? message}){
     return MessageResult(
-        isLoading: false,
         color: AppColors.successGreen,
         message: message ?? 'تم التحديث بنجاح'
     );
@@ -35,7 +37,6 @@ class MessageResult {
     required AppException error,
   }){
     return MessageResult(
-        isLoading: false,
         color: AppColors.errorRed,
         message: 'فشل التحديث: ${error.message}'
     );
