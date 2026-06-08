@@ -3,8 +3,8 @@ import 'package:international_cuisine/features/cuisines/data/models/categories_m
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
+import 'package:international_cuisine/core/data/models/message_result.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
-import '../../../../core/errors/mappers/error_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'base/base_data_cubit.dart';
@@ -64,14 +64,14 @@ class ChineseDataCubit extends BaseCountriesCubit {
         subState: SuccessState(),
       ));
     } catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                  subState: ErrorState(
+                      failure: failure
+                  )
+              )
       );
-      final exception = errorHandler.handleException();
-      emit(state.copyWith(
-        subState: ErrorState(failure: exception),
-      ));
     }
   }
 
@@ -97,7 +97,6 @@ class ChineseDataCubit extends BaseCountriesCubit {
     await fetchData(isLoadingMore: true);
   }
 
-
   @override
   Future<void> updateRating({
     required int index,
@@ -114,14 +113,11 @@ class ChineseDataCubit extends BaseCountriesCubit {
       emit(state.updateRating(index: index, newModel: newModel));
     }
     catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
-      );
-      final exception = errorHandler.handleException();
-      emit(state.copyWith(
-        subState: ErrorState(failure: exception),
-      ));
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                secondModel: MessageResult.error(error: failure),
+              ));
     }
   }
 
@@ -134,14 +130,14 @@ class ChineseDataCubit extends BaseCountriesCubit {
       emit(state.copyWith(firstModel: state.updateSearchList(_searchData)));
     }
     catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                  subState: ErrorState(
+                      failure: failure
+                  )
+              )
       );
-      final exception = errorHandler.handleException();
-      emit(state.copyWith(
-        subState: ErrorState(failure: exception),
-      ));
     }
   }
 

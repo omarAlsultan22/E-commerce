@@ -36,11 +36,12 @@ class _ChineseScreenState extends State<ChineseScreen> {
             ),
             onLoading: () => const LoadingStateWidget(),
             onLoaded: (loadedState) {
-              if (loadedState is SingleModelSuccessState) {
+              if (loadedState is DoubleModelSuccessState) {
                 SearchableListBuilder(
                   isLocked: false,
                   title: 'المطبخ الصيني',
                   categoriesModel: loadedState.firstModel,
+                  messageResult: loadedState.secondModel,
                   getMoreData: () => _cubit.loadMoreData(),
                   clearData: () => _cubit.clearDataSearch(),
                   getSearchData: (searchText) =>

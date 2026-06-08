@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/data/models/message_result.dart';
-import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/message_state.dart';
 import '../../domain/useCases/change_email_and_password_useCase.dart';
 import 'package:international_cuisine/core/constants/app_strings.dart';
+import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import 'package:international_cuisine/core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 
 
-class ChangeEmailAndPasswordCubit extends Cubit<MessageState> {
+class ChangeEmailAndPasswordCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageState> {
   final ChangeEmailAndPasswordUseCase _useCase;
   final ConnectivityService _connectivityService;
 
@@ -32,7 +32,8 @@ class ChangeEmailAndPasswordCubit extends Cubit<MessageState> {
       emit(
         MessageState(
           messageResult: MessageResult.error(
-              error: NetworkAppException(message: AppStrings.noInternetMessage)),
+              error: NetworkAppException(
+                  message: AppStrings.noInternetMessage)),
         ),
       );
       return;
@@ -47,13 +48,11 @@ class ChangeEmailAndPasswordCubit extends Cubit<MessageState> {
       emit(
           MessageState(messageResult: MessageResult.success()));
     } catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              MessageState(messageResult: MessageResult.error(error: failure)
+              )
       );
-      final exception = errorHandler.handleException();
-      emit(MessageState(messageResult: MessageResult.error(
-          error: exception)));
     }
   }
 }

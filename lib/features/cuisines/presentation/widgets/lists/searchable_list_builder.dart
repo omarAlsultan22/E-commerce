@@ -5,9 +5,11 @@ import 'package:international_cuisine/core/presentation/widgets/navigation/navig
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import '../../../../user_info/presentation/screens/user_info_screen.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
+import '../../../../../core/presentation/widgets/build_snack_bar.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
+import '../../../../../core/data/models/message_result.dart';
 import '../../../data/models/categories_model.dart';
 import '../../../data/models/data_model.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ class SearchableListBuilder extends StatefulWidget {
   final String title;
   final VoidCallback clearData;
   final VoidCallback getMoreData;
+  final MessageResult messageResult;
   final CategoriesModel categoriesModel;
   final void Function(String) getSearchData;
   final void Function(int, int) updateRate;
@@ -30,6 +33,7 @@ class SearchableListBuilder extends StatefulWidget {
     required this.updateRate,
     required this.getMoreData,
     required this.getSearchData,
+    required this.messageResult,
     required this.categoriesModel,
     Key? key,
   }) : super(key: key);
@@ -48,6 +52,15 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
     super.initState();
     _searchController.addListener(_performSearch);
     _scrollController.addListener(_onScrollData);
+  }
+
+  @override
+  void didUpdateWidget(covariant SearchableListBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.messageResult.message != null) {
+      _showMessageResult(widget.messageResult);
+    }
+    setState((){});
   }
 
   void _onScrollData() {
@@ -84,6 +97,12 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
         _filteredData = widget.categoriesModel.categoryData!;
       });
     }
+  }
+
+  void _showMessageResult(MessageResult messageResult) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        BuildSnackBar.build(messageResult.message!, messageResult.color!)
+    );
   }
 
   @override

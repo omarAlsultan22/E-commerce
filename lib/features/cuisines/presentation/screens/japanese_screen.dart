@@ -35,12 +35,13 @@ class _JapaneseScreenState extends State<JapaneseScreen> {
                 CuisinesConstants.data, CuisinesConstants.menu),
             onLoading: () => const LoadingStateWidget(),
             onLoaded: (loadedState) {
-              if (loadedState is SingleModelSuccessState) {
+              if (loadedState is DoubleModelSuccessState) {
                 SearchableListBuilder(
                   isLocked: false,
                   title: 'المطبخ الياباني',
-                  getMoreData: () => _cubit.loadMoreData(),
                   categoriesModel: loadedState.firstModel,
+                  messageResult: loadedState.secondModel,
+                  getMoreData: () => _cubit.loadMoreData(),
                   clearData: () => _cubit.clearDataSearch(),
                   getSearchData: (searchText) =>
                       _cubit.getDataSearch(searchText),

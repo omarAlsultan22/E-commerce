@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../cubits/french_data_cubit.dart';
 import '../states/categories_state.dart';
+import '../cubits/french_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/lists/searchable_list_builder.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
@@ -35,11 +35,12 @@ class _FrenchScreenState extends State<FrenchScreen> {
                 CuisinesConstants.data, CuisinesConstants.menu),
             onLoading: () => const LoadingStateWidget(),
             onLoaded: (loadedState) {
-              if (loadedState is SingleModelSuccessState) {
+              if (loadedState is DoubleModelSuccessState) {
                 SearchableListBuilder(
                   isLocked: false,
                   title: 'المطبخ الفرنسي',
                   categoriesModel: loadedState.firstModel,
+                  messageResult: loadedState.secondModel,
                   getMoreData: () => _cubit.loadMoreData(),
                   clearData: () => _cubit.clearDataSearch(),
                   getSearchData: (searchText) =>

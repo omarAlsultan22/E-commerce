@@ -2,13 +2,13 @@ import 'package:international_cuisine/core/domain/services/connectivity_service/
 import 'package:international_cuisine/core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/presentation/states/message_state.dart';
 import 'package:international_cuisine/core/data/models/message_result.dart';
-import '../../../../core/errors/mappers/error_handler.dart';
+import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import '../../domain/useCases/evaluation_useCase.dart';
 import '../../../../core/constants/app_strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
-class EvaluationCubit extends Cubit<MessageState> {
+class EvaluationCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageState> {
   final EvaluationUseCase _useCase;
   final ConnectivityService _connectivityService;
 
@@ -46,13 +46,12 @@ class EvaluationCubit extends Cubit<MessageState> {
           )
       );
     } catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              MessageState(messageResult: MessageResult.error(
+                  error: failure)
+              )
       );
-      final exception = errorHandler.handleException();
-      emit(MessageState(messageResult: MessageResult.error(
-          error: exception)));
     }
   }
 }

@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:provider/provider.dart';
 import '../states/payment_invoice_state.dart';
-import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
+import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/data/models/user_model.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
@@ -11,7 +11,7 @@ import 'package:international_cuisine/features/cart/presentation/cubits/cart_dat
 import 'package:international_cuisine/features/invoice/domain/useCases/payment_Invoice_useCase.dart';
 
 
-class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
+class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMixin<PaymentInvoiceState>{
   final CartDataCubit _cubit;
   final PaymentInvoiceUseCase _useCase;
   final ConnectivityProvider _connectivityProvider;
@@ -93,17 +93,13 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> {
               subState: SuccessState()));
     }
     catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
-      );
-      final exception = errorHandler.handleException();
-      emit(
-          state.copyWith(
-              subState: ErrorState(
-                  failure: exception
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                  subState: ErrorState(
+                      failure: failure
+                  )
               )
-          )
       );
     }
   }

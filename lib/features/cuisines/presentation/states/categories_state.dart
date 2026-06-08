@@ -1,6 +1,7 @@
 import 'package:international_cuisine/features/cuisines/data/models/categories_model.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
 import 'package:international_cuisine/core/presentation/states/app_sup_states.dart';
+import 'package:international_cuisine/core/data/models/message_result.dart';
 import '../../../../core/presentation/states/base/main_app_sub_state.dart';
 import '../../../../core/presentation/states/base/main_loaded_state.dart';
 import '../../../../core/errors/exceptions/base/app_exception.dart';
@@ -8,15 +9,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../data/models/data_model.dart';
 
 
-class CategoriesState extends SingleModelAppState<CategoriesModel> {
+class CategoriesState extends DoubleModelAppState<CategoriesModel, MessageResult> {
   CategoriesState({
     super.firstModel,
+    super.secondModel,
     required super.subState,
   });
 
   factory CategoriesState.initial(){
     return CategoriesState(
         firstModel: CategoriesModel(),
+        secondModel: MessageResult.initial(),
         subState: InitialState()
     );
   }
@@ -48,6 +51,7 @@ class CategoriesState extends SingleModelAppState<CategoriesModel> {
   @override
   CategoriesState copyWith({
     CategoriesModel? firstModel,
+    MessageResult? secondModel,
     MainAppSubState? subState
   }) {
     return CategoriesState(

@@ -3,7 +3,7 @@ import '../../../../core/domain/services/connectivity_service/connectivity_provi
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
-import '../../../../core/errors/mappers/error_handler.dart';
+import '../../../../core/data/models/message_result.dart';
 import '../../data/models/categories_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,14 +64,14 @@ class JapaneseDataCubit extends BaseCountriesCubit {
         subState: SuccessState(),
       ));
     } catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                  subState: ErrorState(
+                      failure: failure
+                  )
+              )
       );
-      final exception = errorHandler.handleException();
-      emit(state.copyWith(
-        subState: ErrorState(failure: exception),
-      ));
     }
   }
 
@@ -114,14 +114,11 @@ class JapaneseDataCubit extends BaseCountriesCubit {
       emit(state.updateRating(index: index, newModel: newModel));
     }
     catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
-      );
-      final exception = errorHandler.handleException();
-      emit(state.copyWith(
-        subState: ErrorState(failure: exception),
-      ));
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                secondModel: MessageResult.error(error: failure),
+              ));
     }
   }
 
@@ -134,14 +131,14 @@ class JapaneseDataCubit extends BaseCountriesCubit {
       emit(state.copyWith(firstModel: state.updateSearchList(_searchData)));
     }
     catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                  subState: ErrorState(
+                      failure: failure
+                  )
+              )
       );
-      final exception = errorHandler.handleException();
-      emit(state.copyWith(
-        subState: ErrorState(failure: exception),
-      ));
     }
   }
 

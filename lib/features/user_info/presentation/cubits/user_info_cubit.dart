@@ -2,15 +2,15 @@ import '../states/states/user_info_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/useCases/user_info_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
-import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
+import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/domain/services/connectivity_service/connectivity_service.dart';
 
 
-class UserInfoCubit extends Cubit<UserInfoState> {
+class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfoState>{
   final UserInfoUseCase _userInfoUseCase;
   final ConnectivityProvider _connectivityProvider;
 
@@ -66,20 +66,16 @@ class UserInfoCubit extends Cubit<UserInfoState> {
         firstName: firstName,
         lastName: lastName,
         userPhone: userPhone,
-        userLocation: userLocation,
+        userLocation: userLocation
       );
       emit(buildState(MessageResult.success()));
     }
     catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
-      );
-      final exception = errorHandler.handleException();
-      emit(
+      handleError(e, stackTrace,
+          onError: (failure) =>
           buildState(
               MessageResult.error(
-                error: exception,
+                error: failure,
               )
           )
       );
@@ -113,17 +109,13 @@ class UserInfoCubit extends Cubit<UserInfoState> {
               subState: SuccessState()));
     }
     catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
-      );
-      final exception = errorHandler.handleException();
-      emit(
-          state.copyWith(
-              subState: ErrorState(
-                  failure: exception
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                  subState: ErrorState(
+                      failure: failure
+                  )
               )
-          )
       );
     }
   }

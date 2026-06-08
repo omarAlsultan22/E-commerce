@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/useCases/sign_in_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
-import '../../../../core/errors/mappers/error_handler.dart';
 import '../../../../core/presentation/states/message_state.dart';
+import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
 
 
-class SignInCubit extends Cubit<MessageState> {
+class SignInCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageState>{
   final SignInUseCase _useCase;
   final ConnectivityService _connectivityService;
 
@@ -48,17 +48,10 @@ class SignInCubit extends Cubit<MessageState> {
       emit(MessageState(
           messageResult: MessageResult.success()));
     } catch (e, stackTrace) {
-      final errorHandler = ErrorHandler(
-          error: e,
-          stackTrace: stackTrace
-      );
-      final exception = errorHandler.handleException();
-      emit(
-          MessageState(
-              messageResult: MessageResult.error(
-                  error: exception
+      handleError(e, stackTrace,
+          onError: (failure) =>
+              MessageState(messageResult: MessageResult.error(error: failure)
               )
-          )
       );
     }
   }

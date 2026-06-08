@@ -35,11 +35,12 @@ class _ItalianScreenState extends State<ItalianScreen> {
                 CuisinesConstants.data, CuisinesConstants.menu),
             onLoading: () => const LoadingStateWidget(),
             onLoaded: (loadedState) {
-              if (loadedState is SingleModelSuccessState) {
+              if (loadedState is DoubleModelSuccessState) {
                 SearchableListBuilder(
                   isLocked: false,
                   title: 'المطبخ الايطالي',
                   categoriesModel: loadedState.firstModel,
+                  messageResult: loadedState.secondModel,
                   getMoreData: () => _cubit.loadMoreData(),
                   clearData: () => _cubit.clearDataSearch(),
                   getSearchData: (searchText) =>
