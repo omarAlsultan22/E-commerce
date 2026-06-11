@@ -1,22 +1,22 @@
 import '../repositories/auth_repository.dart';
+import '../repositories/sign_up_repository.dart';
 import '../../../../core/data/models/user_model.dart';
 import '../../../../core/data/data_sources/local/shared_preferences.dart';
-import 'package:international_cuisine/features/user_info/domain/repositories/user_info_repository.dart';
 
 
 class SignUpUseCase {
   final CacheHelper _cacheHelper;
   final AuthRepository _authRepository;
-  final UserInfoRepository _settingsRepository;
+  final SignUpRepository _signUpRepository;
 
   SignUpUseCase({
     required CacheHelper cacheHelper,
     required AuthRepository authRepository,
-    required UserInfoRepository settingsRepository
+    required SignUpRepository signUpRepository
   })
       : _cacheHelper = cacheHelper,
         _authRepository = authRepository,
-        _settingsRepository = settingsRepository;
+        _signUpRepository = signUpRepository;
 
   Future<void> signUpExecute({
     required String firstName,
@@ -39,7 +39,7 @@ class SignUpUseCase {
         userLocation: userLocation,
       );
 
-      await _settingsRepository.createUserInfo(
+      await _signUpRepository.createUserInfo(
           userModel: userModel, userCredential: userCredential);
 
       await _cacheHelper.setStringValue(

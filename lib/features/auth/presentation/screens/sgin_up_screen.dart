@@ -1,7 +1,7 @@
 import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
-import '../../../user_info/data/repositories_impl/firestore_user_info_repository.dart';
 import 'package:international_cuisine/core/data/data_sources/remote/firestore.dart';
 import '../../../../core/data/data_sources/local/shared_preferences.dart';
+import '../../data/repositories_impl/firebase_sign_up_repository.dart';
 import '../../../../core/data/data_sources/remote/firebase_auth.dart';
 import '../../data/repositories_impl/firebase_auth_repository.dart';
 import '../../../../core/presentation/states/message_state.dart';
@@ -21,11 +21,11 @@ class SignUpScreen extends StatelessWidget {
     final _authService = FirebaseAuthService();
     final _repository = FirestoreService();
     final _authRepository = FirebaseAuthRepository(authService: _authService);
-    final _settingsRepository = FirestoreUserInfoRepository(
-        repository: _repository, cacheHelper: _cacheHelper);
+    final _signUpRepository = FirebaseSignUpRepository(
+        repository: _repository);
     final _useCase = SignUpUseCase(
         authRepository: _authRepository,
-        settingsRepository: _settingsRepository,
+        signUpRepository: _signUpRepository,
         cacheHelper: _cacheHelper);
     final _connectivityService = ConnectivityService();
     final _cubit = SignUpCubit(
