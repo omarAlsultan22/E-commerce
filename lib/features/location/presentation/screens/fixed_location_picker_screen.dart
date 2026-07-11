@@ -1,5 +1,8 @@
+import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/presentation/widgets/build_snack_bar.dart';
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
 import 'package:international_cuisine/features/payment/presentation/screens/payment_way_selection_screen.dart';
-import 'package:international_cuisine/core/presentation/widgets/navigation/navigator.dart';
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_with_delay.dart';
 import '../../../../../core/data/data_sources/local/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../../core/constants/app_keys.dart';
@@ -75,24 +78,23 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
   Future<void> _saveLocation() async {
     final currentState = _locationManager.currentState;
 
-    if (currentState.position == null || currentState.address == null) return;
+    if (currentState.position == null || currentState.address.isEmpty) return;
 
     try {
       await widget.cacheHelper.setStringValue(
         key: AppKeys.location,
-        value: currentState.address!,
+        value: currentState.address,
       );
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("تم حفظ العنوان بنجاح"),
-          duration: Duration(seconds: 2),
-        ),
+      BuildSnackBar.show(
+        context: context,
+        message: "تم حفظ العنوان بنجاح",
+        backgroundColor: AppColors.successGreen,
       );
 
-      navigator(
+      BuildNavigatorPush.build(
         context: context,
         link: const PaymentWaySelectionScreen(),
       );

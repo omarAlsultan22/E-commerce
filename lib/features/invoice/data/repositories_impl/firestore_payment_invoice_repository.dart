@@ -27,7 +27,7 @@ class FirestorePaymentInvoiceRepository implements PaymentInvoiceRepository {
       final userId = await _cacheHelper.getStringValue(key: uId);
       final location = await _cacheHelper.getStringValue(key: AppKeys.location);
       final doc = await _repository
-          .getDocument(collectionPath: AppKeys.userInfo, docId: userId);
+          .getDocument(collectionPath: AppKeys.userInfo, docId: 'Lcjp7FoCPAo0U3yqqRmm');
 
 
       if (!doc.exists) {

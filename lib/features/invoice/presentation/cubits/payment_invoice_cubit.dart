@@ -1,34 +1,36 @@
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:provider/provider.dart';
 import '../states/payment_invoice_state.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
-import '../../../../core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/data/models/user_model.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
-import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
+import 'package:international_cuisine/features/cart/presentation/states/cart_data_state.dart';
 import 'package:international_cuisine/features/invoice/domain/useCases/payment_Invoice_useCase.dart';
 
 
-class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMixin<PaymentInvoiceState>{
-  final CartDataCubit _cubit;
+class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMixin<PaymentInvoiceState> {
+  final CartDataState _cartDataState;
   final PaymentInvoiceUseCase _useCase;
   final ConnectivityProvider _connectivityProvider;
 
   PaymentInvoiceCubit({
-    required CartDataCubit cubit,
+    required CartDataState cartDataState,
     required PaymentInvoiceUseCase useCase,
     required ConnectivityProvider connectivityProvider,
   })
-      : _cubit = cubit,
-        _useCase = useCase,
+      : _useCase = useCase,
+        _cartDataState = cartDataState,
         _connectivityProvider = connectivityProvider,
-        super(PaymentInvoiceState.initial());
+        super(PaymentInvoiceState.initial()) {
+    _startMonitoring();
+  }
 
   static PaymentInvoiceCubit get(context) => Provider.of(context);
 
-  void startMonitoring() {
+  void _startMonitoring() {
     _connectivityProvider.addListener(_handleConnectionChange);
   }
 
@@ -47,7 +49,7 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMi
   }
 
   Future<List<OrderModel>> _getShoppingList() async {
-    return await _cubit.getData;
+    return await _cartDataState.shoppingList;
   }
 
   Future<void> _sendOrdersToDatabase({
@@ -63,11 +65,16 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMi
 
   Future<void> displayInvoice() async {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
-      emit(state.copyWith(
-        subState: ErrorState(
-          failure: NetworkAppException(),
-        ),
-      ));
+      handleError(
+          error: SocketException,
+          stackTrace: StackTrace.current,
+          onError: (failure) =>
+              state.copyWith(
+                subState: ErrorState(
+                  failure: failure,
+                ),
+              )
+      );
       return;
     }
     emit(
@@ -93,7 +100,9 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMi
               subState: SuccessState()));
     }
     catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
               state.copyWith(
                   subState: ErrorState(

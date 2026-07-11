@@ -1,7 +1,7 @@
 import 'package:international_cuisine/features/evaluation/presentation/screens/evaluation_screen.dart';
 import 'package:international_cuisine/features/cart/presentation/screens/cart_data_screen.dart';
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
 import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
-import 'package:international_cuisine/core/presentation/widgets/navigation/navigator.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import '../../../../user_info/presentation/screens/user_info_screen.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
@@ -12,6 +12,7 @@ import 'package:international_cuisine/core/constants/app_sizes.dart';
 import '../../../../../core/data/models/message_result.dart';
 import '../../../data/models/categories_model.dart';
 import '../../../data/models/data_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../item_builder.dart';
 
@@ -60,13 +61,14 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
     if (widget.messageResult.message != null) {
       _showMessageResult(widget.messageResult);
     }
-    setState((){});
+    setState(() {});
   }
 
   void _onScrollData() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 50.0 &&
-        widget.categoriesModel.hasMore && !widget.isLocked && _searchController.text.isEmpty) {
+        widget.categoriesModel.hasMore && !widget.isLocked &&
+        _searchController.text.isEmpty) {
       widget.isLocked = true;
       widget.getMoreData();
     }
@@ -100,14 +102,17 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
   }
 
   void _showMessageResult(MessageResult messageResult) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        BuildSnackBar.build(messageResult.message!, messageResult.color!)
+    BuildSnackBar.show(
+        context: context,
+        message: messageResult.message!,
+        backgroundColor: messageResult.color!
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.categoriesModel.categoryDataIsEmpty && _searchController.text.isEmpty) {
+    if (!widget.categoriesModel.categoryDataIsEmpty &&
+        _searchController.text.isEmpty) {
       _filteredData = widget.categoriesModel.categoryData!;
     }
     return Directionality(
@@ -121,7 +126,8 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0, vertical: 5.0),
               child: TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -157,8 +163,9 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                             );
                           } else {
                             return Center(
-                              child: widget.categoriesModel.hasMore && _searchController.text
-                                  .isEmpty
+                              child: widget.categoriesModel.hasMore &&
+                                  _searchController.text
+                                      .isEmpty
                                   ? const CircularProgressIndicator(
                                   color: AppColors.white)
                                   : const SizedBox(),
@@ -171,7 +178,8 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                       child: _searchController.text.isEmpty ?
                       CircularProgressIndicator(color: AppColors.white) :
                       Text('لا توجد نتائج متاحة',
-                          style: TextStyle(color: AppColors.white, fontSize: AppSizes.fontSize18)),
+                          style: TextStyle(color: AppColors.white,
+                              fontSize: AppSizes.fontSize18)),
                     ),
               ),
             ),
@@ -200,23 +208,24 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
       scrolledUnderElevation: AppValues.none,
       backgroundColor: AppColors.darkGrey,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+        icon: Icon(CupertinoIcons.arrowshape_turn_up_left_fill,
+            color: AppColors.white),
         onPressed: () => Navigator.pop(context),
       ),
       actions: [
         PopupMenuButton<String>(
-          icon: Icon(Icons.menu),
+          icon: Icon(Icons.menu, color: AppColors.white),
           onSelected: (String value) {},
           itemBuilder: (BuildContext context) {
             return [
               PopupMenuItem<String>(
-                  child: const Text('التقييم'),
+                  child: Center(child: const Text('التقييم')),
                   onTap: () => EvaluationScreen()
               ),
               PopupMenuItem<String>(
-                child: const Text('الاعدادات'),
+                child: Center(child: const Text('الاعدادات')),
                 onTap: () =>
-                    navigator(
+                    BuildNavigatorPush.build(
                         context: context, link: const UserInfoScreen()),
               ),
             ];

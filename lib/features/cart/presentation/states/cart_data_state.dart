@@ -20,45 +20,45 @@ class CartDataState extends SingleModelAppState<List<OrderModel>> {
     );
   }
 
-  List<OrderModel> get getShoppingList => firstModel ?? [];
+  List<OrderModel> get shoppingList => firstModel ?? [];
 
   int getTotalPrice() {
     int totalPrice = 0;
-    getShoppingList.forEach((e) => totalPrice += e.price * e.item);
+    shoppingList.forEach((e) => totalPrice += e.price * e.item);
     return totalPrice;
   }
 
   List<OrderModel> updateItemQuantity(int index, int newQuantity) {
-    if (index >= 0 && index < getShoppingList.length) {
-      final orderModel = getShoppingList[index];
+    if (index >= 0 && index < shoppingList.length) {
+      final orderModel = shoppingList[index];
       orderModel.item = newQuantity;
-      getShoppingList[index] = orderModel;
+      shoppingList[index] = orderModel;
     }
-    return getShoppingList;
+    return shoppingList;
   }
 
   List<OrderModel> addOrder({
     required DataModel dataModel,
     required OrderModel orderModel
   }) {
-    final existingItemIndex = getShoppingList.indexWhere((item) =>
+    final existingItemIndex = shoppingList.indexWhere((item) =>
     item.order == orderModel.order);
 
     if (existingItemIndex != -1) {
-      getShoppingList[existingItemIndex].item =
-          getShoppingList[existingItemIndex].item + dataModel.getSelectedItem;
+      shoppingList[existingItemIndex].item =
+          shoppingList[existingItemIndex].item + dataModel.getSelectedItem;
     } else {
-      getShoppingList.add(orderModel);
+      shoppingList.add(orderModel);
     }
-    return getShoppingList;
+    return shoppingList;
   }
 
   void removeItem(int index) {
-    getShoppingList.removeAt(index);
+    shoppingList.removeAt(index);
   }
 
   void clearCart() {
-    getShoppingList.clear();
+    shoppingList.clear();
   }
 
   @override

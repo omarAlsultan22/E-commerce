@@ -38,7 +38,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     //home useCase
     final _homeRepository = FirestoreService();
     final _userInfoRepository = FirestoreHomeDataRepository(
@@ -48,7 +47,8 @@ class MyApp extends StatelessWidget {
 
     //cuisine useCase
     final cuisineRepository = FirestoreService();
-    final _repository = FirestoreCuisineDataRepository(firestore: cuisineRepository);
+    final _repository = FirestoreCuisineDataRepository(
+        firestore: cuisineRepository);
     final _dataUseCases = CuisineDataUseCase(repository: _repository);
     final _connectivityProvider = ConnectivityProvider();
 
@@ -56,17 +56,19 @@ class MyApp extends StatelessWidget {
     final _hiveStore = HiveStore();
     final _hiveRepository = HiveShoppingListRepository(hiveStore: _hiveStore);
     final _cacheHelper = CacheHelper();
-    final _cartUseCase = CartDataUseCase(repository: _hiveRepository, cacheHelper: _cacheHelper);
+    final _cartUseCase = CartDataUseCase(
+        repository: _hiveRepository, cacheHelper: _cacheHelper);
 
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ConnectivityProvider()),
           //connections
           BlocProvider<HomeDataCubit>(
-            create: (context) =>
-            HomeDataCubit(homeDataUseCase: _homeDataUseCase,
-                connectivityProvider: _connectivityProvider)
-              ..getData(),
+              create: (context) =>
+                  HomeDataCubit(
+                      homeDataUseCase: _homeDataUseCase,
+                      connectivityProvider: _connectivityProvider
+                  )
           ),
           BlocProvider(create: (context) =>
               ChineseDataCubit(dataUseCases: _dataUseCases,

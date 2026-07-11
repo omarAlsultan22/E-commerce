@@ -57,6 +57,7 @@ class CategoriesState extends DoubleModelAppState<CategoriesModel, MessageResult
     return CategoriesState(
       subState: subState ?? this.subState,
       firstModel: firstModel ?? this.firstModel,
+      secondModel: secondModel ?? this.secondModel
     );
   }
 

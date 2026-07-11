@@ -10,6 +10,7 @@ class InitialStateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -20,7 +21,7 @@ class InitialStateWidget extends StatelessWidget {
               color: Colors.grey[300],
             ),
             Text(
-              'لا يوجد أي $_textType',
+              'لم يتم العثور على $_textType',
               style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,

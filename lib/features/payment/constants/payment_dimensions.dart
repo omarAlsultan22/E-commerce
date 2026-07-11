@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-class AppDimensions {
+class PaymentDimensions {
   // Vertical Spacing
   static const SizedBox verticalSpacing8 = SizedBox(height: 8.0);
   static const SizedBox verticalSpacing10 = SizedBox(height: 10.0);

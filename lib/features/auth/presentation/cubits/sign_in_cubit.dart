@@ -48,7 +48,9 @@ class SignInCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageStat
       emit(MessageState(
           messageResult: MessageResult.success()));
     } catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
               MessageState(messageResult: MessageResult.error(error: failure)
               )

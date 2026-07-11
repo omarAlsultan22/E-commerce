@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../constants/app_strings.dart';
-import '../../constants/app_dimensions.dart';
+import '../../constants/payment_strings.dart';
+import '../../constants/payment_dimensions.dart';
 import '../../utils/payment_formatters.dart';
 import '../../constants/payment_constants.dart';
 
@@ -28,7 +28,7 @@ class CardFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        AppDimensions.verticalSpacing20,
+        PaymentDimensions.verticalSpacing20,
         TextFormField(
           controller: cardNumberController,
           keyboardType: TextInputType.number,
@@ -38,21 +38,21 @@ class CardFormWidget extends StatelessWidget {
             CardNumberFormatter(),
           ],
           decoration: const InputDecoration(
-            labelText: AppStrings.cardNumber,
+            labelText: PaymentStrings.cardNumber,
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.credit_card),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppStrings.pleaseEnterCardNumber;
+              return PaymentStrings.pleaseEnterCardNumber;
             }
             if (value.replaceAll(' ', '').length != PaymentConstants.cardNumberMaxLength) {
-              return AppStrings.cardNumberMustBe16Digits;
+              return PaymentStrings.cardNumberMustBe16Digits;
             }
             return null;
           },
         ),
-        AppDimensions.verticalSpacing15,
+        PaymentDimensions.verticalSpacing15,
         Row(
           children: [
             Expanded(
@@ -66,23 +66,23 @@ class CardFormWidget extends StatelessWidget {
                   CardExpiryFormatter(),
                 ],
                 decoration: const InputDecoration(
-                  labelText: AppStrings.expiryDate,
+                  labelText: PaymentStrings.expiryDate,
                   border: OutlineInputBorder(),
                   hintText: 'MM/YY',
                   prefixIcon: Icon(Icons.calendar_today),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return AppStrings.pleaseEnterExpiryDate;
+                    return PaymentStrings.pleaseEnterExpiryDate;
                   }
                   if (!RegExp(r'^\d{2}/\d{2}$').hasMatch(value)) {
-                    return AppStrings.invalidExpiryFormat;
+                    return PaymentStrings.invalidExpiryFormat;
                   }
                   return null;
                 },
               ),
             ),
-            AppDimensions.horizontalSpacing15,
+            PaymentDimensions.horizontalSpacing15,
             Expanded(
               child: TextFormField(
                 controller: cvvController,
@@ -93,16 +93,16 @@ class CardFormWidget extends StatelessWidget {
                   LengthLimitingTextInputFormatter(PaymentConstants.cvvMaxLength),
                 ],
                 decoration: const InputDecoration(
-                  labelText: AppStrings.cvv,
+                  labelText: PaymentStrings.cvv,
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.lock),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return AppStrings.pleaseEnterCvv;
+                    return PaymentStrings.pleaseEnterCvv;
                   }
                   if (value.length != PaymentConstants.cvvMaxLength) {
-                    return AppStrings.cvvMustBe3Digits;
+                    return PaymentStrings.cvvMustBe3Digits;
                   }
                   return null;
                 },
@@ -110,24 +110,24 @@ class CardFormWidget extends StatelessWidget {
             ),
           ],
         ),
-        AppDimensions.verticalSpacing15,
+        PaymentDimensions.verticalSpacing15,
         TextFormField(
           controller: cardHolderController,
           decoration: const InputDecoration(
-            labelText: AppStrings.cardHolderName,
+            labelText: PaymentStrings.cardHolderName,
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.person),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppStrings.pleaseEnterCardHolder;
+              return PaymentStrings.pleaseEnterCardHolder;
             }
             return null;
           },
         ),
-        AppDimensions.verticalSpacing10,
+        PaymentDimensions.verticalSpacing10,
         CheckboxListTile(
-          title: const Text(AppStrings.saveCard),
+          title: const Text(PaymentStrings.saveCard),
           value: saveCard,
           onChanged: (value) => onSaveCardChanged(value ?? false),
           contentPadding: EdgeInsets.zero,

@@ -1,8 +1,10 @@
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push_replacement.dart';
 import 'package:international_cuisine/features/invoice/data/repositories_impl/firestore_payment_invoice_repository.dart';
 import 'package:international_cuisine/features/invoice/presentation/widgets/layouts/payment_invoice_layout.dart';
 import 'package:international_cuisine/features/invoice/domain/useCases/payment_Invoice_useCase.dart';
 import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
 import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
+import 'package:international_cuisine/features/home/presentation/screens/home_screen.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
@@ -25,9 +27,11 @@ class PaymentInvoiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _cartCubit = context.read<CartDataCubit>();
-    final _repository = FirestoreService();
     final _cacheHelper = CacheHelper();
+    final _repository = FirestoreService();
+    final _cartState = CartDataCubit
+        .get(context)
+        .state;
     final _userInfoRepository = FirestorePaymentInvoiceRepository(
         repository: _repository, cacheHelper: _cacheHelper);
     final _useCase = PaymentInvoiceUseCase(
@@ -48,37 +52,50 @@ class PaymentInvoiceScreen extends StatelessWidget {
     }
 
     Widget _initialState() {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-                Icons.shopping_bag_outlined, size: 80.0,
-                color: const Color(0xFFBDBDBD)),
-            AppSpaces.verticalSpacing_16,
-            Text(
-              'لا توجد طلبات للتوصيل',
-              style: TextStyle(
-                  fontSize: AppSizes.fontSize18,
-                  color: AppColors.grey),
+      return Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            appBar: AppBar(
+                leading: IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    onPressed: () =>
+                        BuildNavigatorPushReplacement.build(
+                            context: context, link: HomeScreen()
+                        )
+                )
             ),
-            AppSpaces.verticalSpacing_8,
-            const Text(
-              'يمكنك تصفح المطاعم وإضافة طلبات جديدة',
-              style: TextStyle(
-                  fontSize: 14.0,
-                  color: Color(0xFF757575)),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                      Icons.shopping_bag_outlined, size: 80.0,
+                      color: const Color(0xFFBDBDBD)),
+                  AppSpaces.verticalSpacing_16,
+                  Text(
+                    'لا توجد طلبات للتوصيل',
+                    style: TextStyle(
+                        fontSize: AppSizes.fontSize18,
+                        color: AppColors.grey),
+                  ),
+                  AppSpaces.verticalSpacing_8,
+                  const Text(
+                    'يمكنك تصفح المطاعم وإضافة طلبات جديدة',
+                    style: TextStyle(
+                        fontSize: 14.0,
+                        color: Color(0xFF757575)),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          )
       );
     }
 
     return BlocProvider(create: (context) =>
-    PaymentInvoiceCubit(cubit: _cartCubit,
-        useCase: _useCase,
-        connectivityProvider: _connectivityProvider)
-      ..displayInvoice(),
+        PaymentInvoiceCubit(cartDataState: _cartState,
+            useCase: _useCase,
+            connectivityProvider: _connectivityProvider),
         child: BlocConsumer<PaymentInvoiceCubit, PaymentInvoiceState>(
             listener: (context, state) {
               _stateListener(state);

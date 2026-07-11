@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../constants/app_strings.dart';
-import '../../constants/app_dimensions.dart';
+import '../../constants/payment_strings.dart';
+import '../../constants/payment_dimensions.dart';
 
 
 class MobileFormWidget extends StatelessWidget {
@@ -17,41 +17,41 @@ class MobileFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        AppDimensions.verticalSpacing20,
+        PaymentDimensions.verticalSpacing20,
         TextFormField(
           controller: phoneController,
           keyboardType: TextInputType.phone,
           decoration: const InputDecoration(
-            labelText: AppStrings.phoneNumber,
+            labelText: PaymentStrings.phoneNumber,
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.phone),
             hintText: '01012345678',
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppStrings.pleaseEnterPhoneNumber;
+              return PaymentStrings.pleaseEnterPhoneNumber;
             }
             if (!RegExp(r'^01[0-2,5]{1}[0-9]{8}$').hasMatch(value)) {
-              return AppStrings.invalidPhoneNumber;
+              return PaymentStrings.invalidPhoneNumber;
             }
             return null;
           },
         ),
-        AppDimensions.verticalSpacing15,
+        PaymentDimensions.verticalSpacing15,
         TextFormField(
           controller: emailController,
           keyboardType: TextInputType.emailAddress,
           decoration: const InputDecoration(
-            labelText: AppStrings.email,
+            labelText: PaymentStrings.email,
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.email),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppStrings.pleaseEnterEmail;
+              return PaymentStrings.pleaseEnterEmail;
             }
             if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-              return AppStrings.invalidEmail;
+              return PaymentStrings.invalidEmail;
             }
             return null;
           },

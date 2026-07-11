@@ -46,10 +46,14 @@ class EvaluationCubit extends Cubit<MessageState> with ErrorHandlerMixin<Message
           )
       );
     } catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
-              MessageState(messageResult: MessageResult.error(
-                  error: failure)
+              MessageState(
+                  messageResult: MessageResult.error(
+                      error: failure
+                  )
               )
       );
     }

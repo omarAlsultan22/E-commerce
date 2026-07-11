@@ -13,9 +13,9 @@ class ListHomeBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView.builder(
-        itemBuilder: (context, index) => HomeLayout(homeData: homeData),
+    return Expanded(
+      child: ListView.builder(
+            itemBuilder: (context, index) => HomeLayout(homeData: homeData)
       ),
     );
   }

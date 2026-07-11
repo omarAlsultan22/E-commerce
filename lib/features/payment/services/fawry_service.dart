@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../constants/app_strings.dart';
+import '../constants/payment_strings.dart';
 import 'package:http/http.dart' as http;
 import '../constants/api_constants.dart';
 import '../constants/api_json_keys.dart';
@@ -34,7 +34,7 @@ class FawryService {
       final result = json.decode(response.body);
       return result[ApiJsonKeys.referenceNumber];
     } else {
-      throw Exception(AppStrings.createFawryInvoiceError);
+      throw Exception(PaymentStrings.createFawryInvoiceError);
     }
   }
 }

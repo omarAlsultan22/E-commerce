@@ -54,7 +54,9 @@ class ForgetPasswordCubit extends Cubit<MessageState> with ErrorHandlerMixin<Mes
           messageResult: MessageResult.success(
               message: 'تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني')));
     } catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
               MessageState(messageResult: MessageResult.error(error: failure)
               )

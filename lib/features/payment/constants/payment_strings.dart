@@ -1,4 +1,4 @@
-class AppStrings {
+class PaymentStrings {
   // Payment Methods
   static const String creditCard = 'بطاقة ائتمانية';
   static const String fawry = 'فوري';

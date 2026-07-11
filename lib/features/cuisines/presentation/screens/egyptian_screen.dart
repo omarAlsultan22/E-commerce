@@ -36,7 +36,7 @@ class _EgyptianScreenState extends State<EgyptianScreen> {
             onLoading: () => const LoadingStateWidget(),
             onLoaded: (loadedState) {
               if (loadedState is DoubleModelSuccessState) {
-                SearchableListBuilder(
+                return SearchableListBuilder(
                   isLocked: false,
                   title: 'المطبخ المصري',
                   categoriesModel: loadedState.firstModel,

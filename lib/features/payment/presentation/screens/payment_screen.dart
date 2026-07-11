@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import '../../constants/app_strings.dart';
 import '../widgets/card_form_widget.dart';
 import '../../services/fawry_service.dart';
 import '../../services/paymob_service.dart';
 import '../widgets/mobile_form_widget.dart';
 import '../../constants/api_json_keys.dart';
-import '../../constants/app_dimensions.dart';
+import '../../constants/payment_strings.dart';
 import '../../constants/paymob_constants.dart';
 import '../../constants/payment_constants.dart';
 import '../widgets/payment_method_selector.dart';
+import '../../constants/payment_dimensions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../constants/payment_text_styles.dart';
 import '../../services/payment_storage_service.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
+import 'package:international_cuisine/core/constants/app_strings.dart';
+import 'package:international_cuisine/core/presentation/widgets/build_snack_bar.dart';
 import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_with_delay.dart';
 import 'package:international_cuisine/features/invoice/presentation/screens/payment_invoice_screen.dart';
 
 
@@ -60,7 +63,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return CartDataCubit
         .get(context)
         .state
-        .getShoppingList
+        .shoppingList
         .fold(0, (sum, item) => sum + (item.price * item.item));
   }
 
@@ -147,7 +150,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
       _navigateToSuccessScreen();
     } catch (e) {
-      _showPaymentResult(false, '${AppStrings.paymentError}: ${e.toString()}');
+      _showPaymentResult(
+          false, '${PaymentStrings.paymentError}: ${e.toString()}');
     } finally {
       setState(() => _isLoading = false);
     }
@@ -229,11 +233,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void _navigateToSuccessScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PaymentInvoiceScreen(isPaid: true),
-      ),
+    BuildSnackBar.show(
+        context: context,
+        message: AppStrings.payed,
+        backgroundColor: AppColors.successGreen
+    );
+
+    BuildNavigatorWithDelay.build(
+        context: context,
+        link: PaymentInvoiceScreen(isPaid: true)
     );
   }
 
@@ -243,7 +251,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       builder: (context) =>
           AlertDialog(
             title: Text(
-                success ? AppStrings.paymentSuccess : AppStrings.paymentFailed),
+                success ? PaymentStrings.paymentSuccess : PaymentStrings
+                    .paymentFailed),
             content: Text(message),
             actions: [
               TextButton(
@@ -253,7 +262,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     Navigator.pop(context);
                   }
                 },
-                child: const Text(AppStrings.ok),
+                child: const Text(PaymentStrings.ok),
               ),
             ],
           ),
@@ -264,31 +273,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.paymentScreenTitle),
+        title: const Text(PaymentStrings.paymentScreenTitle),
         centerTitle: true,
       ),
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: SingleChildScrollView(
-          padding: AppDimensions.defaultPadding,
+          padding: PaymentDimensions.defaultPadding,
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                AppDimensions.verticalSpacing20,
+                PaymentDimensions.verticalSpacing20,
                 const Text(
-                  AppStrings.totalAmount,
+                  PaymentStrings.totalAmount,
                   style: PaymentTextStyles.titleBold,
                   textAlign: TextAlign.center,
                 ),
-                AppDimensions.verticalSpacing10,
+                PaymentDimensions.verticalSpacing10,
                 Text(
                   '${_totalAmount.toStringAsFixed(2)} جنيهاً',
                   style: PaymentTextStyles.amountStyle,
                   textAlign: TextAlign.center,
                 ),
-                AppDimensions.verticalSpacing30,
+                PaymentDimensions.verticalSpacing30,
 
                 PaymentMethodSelector(
                   selectedPaymentMethod: _selectedPaymentMethod,
@@ -315,12 +324,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     emailController: _emailController,
                   ),
 
-                AppDimensions.verticalSpacing30,
+                PaymentDimensions.verticalSpacing30,
 
                 ElevatedButton(
                   onPressed: _isLoading ? null : _processPayment,
                   style: ElevatedButton.styleFrom(
-                    padding: AppDimensions.buttonPadding,
+                    padding: PaymentDimensions.buttonPadding,
                     backgroundColor: Colors.blue,
                   ),
                   child: _isLoading
@@ -328,16 +337,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       : Text(
                     _selectedPaymentMethod ==
                         PaymentConstants.paymentMethodFawry
-                        ? AppStrings.createFawryInvoice
-                        : AppStrings.completePayment,
+                        ? PaymentStrings.createFawryInvoice
+                        : PaymentStrings.completePayment,
                     style: PaymentTextStyles.buttonText,
                   ),
                 ),
 
-                AppDimensions.verticalSpacing20,
+                PaymentDimensions.verticalSpacing20,
 
                 const Text(
-                  AppStrings.securityMessage,
+                  PaymentStrings.securityMessage,
                   style: PaymentTextStyles.securityText,
                   textAlign: TextAlign.center,
                 ),

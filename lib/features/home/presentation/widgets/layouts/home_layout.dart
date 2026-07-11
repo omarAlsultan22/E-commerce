@@ -6,6 +6,7 @@ import 'package:international_cuisine/core/constants/app_keys.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
+import '../../../../../core/presentation/utils/helpers/image_helpers.dart';
 import 'package:international_cuisine/features/home/data/models/home_model.dart';
 
 // Screens
@@ -37,7 +38,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
   static const _fullAngle = 360.0;
 
   //spaces
-  static const _spacing155 = 155.0;
+  static const _spacing = 155.0;
   static const _borderRadius = BorderRadius.all(Radius.circular(16));
 
   late Timer _rotationTimer;
@@ -273,8 +274,8 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
         onTap: () => _navigateToCuisineScreen(screen),
         borderRadius: _borderRadius,
         child: Container(
-          width: _spacing155,
-          height: _spacing155,
+          width: _spacing,
+          height: _spacing,
           decoration: BoxDecoration(
             borderRadius: _borderRadius,
             boxShadow: [
@@ -307,6 +308,15 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
       child: Image.network(
         imageUrl,
         fit: BoxFit.cover,
+        cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
+            context,
+            targetHeight: _spacing,
+            qualityFactor: 1.5
+        ),
+        cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
+            context,
+            targetWidth: _spacing
+        ),
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
 

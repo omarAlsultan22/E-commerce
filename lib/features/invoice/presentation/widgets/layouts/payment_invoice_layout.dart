@@ -1,3 +1,5 @@
+import 'package:international_cuisine/core/constants/app_strings.dart';
+
 import '../../../../../core/presentation/utils/helpers/image_helpers.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
@@ -35,7 +37,7 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: _buildAppBar(
-            title: widget.isPaid ? 'تم الدفع بنجاح!' : 'لم يتم الدفع!'
+            title: widget.isPaid ? AppStrings.payed : 'لم يتم الدفع!'
         ),
         backgroundColor: const Color(0xFFF5F5F5),
         body: _buildBody(widget.shoppingList),
@@ -171,7 +173,6 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
     );
   }
 
-
   Widget _buildBottomBar({
     required BuildContext context,
     required List<OrderModel> shoppingList,
@@ -204,7 +205,6 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
       ),
     );
   }
-
 
   Widget _buildDeliveryInfo(UserModel userModel) {
     return Column(
@@ -244,7 +244,6 @@ class _PaymentInvoiceLayoutState extends State<PaymentInvoiceLayout> {
       ),
     );
   }
-
 
   Widget _buildTotalPrice(List<OrderModel> shoppingList) {
     final totalAmount = shoppingList.fold(

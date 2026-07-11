@@ -13,11 +13,12 @@ import 'package:international_cuisine/core/constants/app_colors.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_text_styles.dart';
-import '../../../../../core/presentation/widgets/navigation/navigator.dart';
 import '../../../../../core/data/data_sources/local/shared_preferences.dart';
 import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import 'package:international_cuisine/features/auth/constants/auth_hint_texts_constants.dart';
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_with_delay.dart';
 
 
 class SignInLayout extends StatefulWidget {
@@ -205,12 +206,9 @@ class _SignInLayoutState extends State<SignInLayout> {
     return Center(
       child: TextButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (
-                  context) => const ForgetPasswordScreen(),
-            ),
+          BuildNavigatorPush.build(
+            context: context,
+            link: const ForgetPasswordScreen(),
           );
         },
         child: const Text(
@@ -227,15 +225,13 @@ class _SignInLayoutState extends State<SignInLayout> {
   Future<void> _checkExistingUser() async {
     final userId = await widget.cacheHelper.getStringValue(key: AppKeys.uId);
     if (userId != null && mounted) {
-      navigator(link: const HomeScreen(), context: context);
+      BuildNavigatorPush.build(context: context, link: const HomeScreen()
+      );
     }
   }
 
   void _navigateToSignUp() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SignUpScreen()),
-    );
+    BuildNavigatorPush.build(context: context, link: const SignUpScreen());
   }
 
   Future<void> _submitForm() async {
@@ -253,10 +249,12 @@ class _SignInLayoutState extends State<SignInLayout> {
   }
 
   void _showMessageResult(MessageResult messageResult) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        BuildSnackBar.build(messageResult.message!, messageResult.color!)
+    BuildSnackBar.show(
+        context: context,
+        message: messageResult.message!,
+        backgroundColor: messageResult.color!
     );
-    navigator(context: context);
+    BuildNavigatorWithDelay.build(context: context, link: const HomeScreen());
   }
 
   ButtonStyle _loginButtonStyle() {

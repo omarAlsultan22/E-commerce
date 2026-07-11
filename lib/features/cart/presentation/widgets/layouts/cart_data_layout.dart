@@ -33,7 +33,7 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.paused) {
+    if (state == AppLifecycleState.detached) {
       CartDataCubit.get(context).saveCartToHive();
       await widget.hiveStore.closeBox();
     }
@@ -230,6 +230,11 @@ class CartItemCard extends StatelessWidget {
                   targetWidth: _spacing120
               ),
               fit: BoxFit.cover,
+              errorWidget: (_, __, ___) =>
+                  Container(
+                    color: AppColors.lightGrey200,
+                    child: const Icon(Icons.fastfood, size: _spacing120),
+                  ),
             ),
           ),
           Expanded(

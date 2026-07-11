@@ -13,7 +13,7 @@ abstract class SingleModelAppState<T> extends MainAppSupState {
   });
 
   @override
-  LoadedState get dataModels => SingleModelSuccessState(firstModel: firstModel);
+  LoadedState get dataModels => SingleModelSuccessState<T>(firstModel: firstModel);
 
   SingleModelAppState copyWith({
     T? firstModel,
@@ -34,7 +34,7 @@ abstract class DoubleModelAppState<T, U> extends MainAppSupState {
 
   @override
   LoadedState get dataModels =>
-      DoubleModelSuccessState(
+      DoubleModelSuccessState<T, U>(
           firstModel: firstModel,
           secondModel: secondModel
       );

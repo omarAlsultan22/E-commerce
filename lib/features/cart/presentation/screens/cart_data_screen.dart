@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../cubits/cart_data_cubit.dart';
 import '../states/cart_data_state.dart';
+import '../../data/models/order_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/data/data_sources/local/hive.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
@@ -20,21 +21,24 @@ class CartDataScreen extends StatefulWidget {
 class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObserver {
 
   Widget _initialState() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.shopping_cart_outlined, size: 60.0,
-              color: AppColors.grey),
-          AppSpaces.verticalSpacing_16,
-          const Text(
-            'عربة التسوق فارغة',
-            style: TextStyle(
-                fontSize: 20,
-                color: AppColors.grey
+    return Scaffold(
+      appBar: AppBar(),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.shopping_cart_outlined, size: 60.0,
+                color: AppColors.grey),
+            AppSpaces.verticalSpacing_16,
+            const Text(
+              'عربة التسوق فارغة',
+              style: TextStyle(
+                  fontSize: 20,
+                  color: AppColors.grey
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -50,9 +54,9 @@ class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObse
               onLoading: () => const LoadingStateWidget(),
               onLoaded: (loadedState) {
                 if (loadedState is SingleModelSuccessState) {
-                  CartDataLayout(
+                  return CartDataLayout(
                       hiveStore: _hiveStore,
-                      shoppingList: loadedState.firstModel
+                      shoppingList: loadedState.firstModel as List<OrderModel>
                   );
                 }
                 return _initialState();

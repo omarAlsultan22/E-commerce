@@ -5,7 +5,6 @@ import 'package:international_cuisine/core/data/data_sources/remote/firestore.da
 import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
 import '../../data/repositories_impl/firestore_user_info_repository.dart';
-import 'package:international_cuisine/core/constants/app_keys.dart';
 import '../../domain/useCases/user_info_useCase.dart';
 import '../widgets/layouts/user_info_layout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +15,8 @@ import 'package:flutter/material.dart';
 
 class UserInfoScreen extends StatelessWidget {
   const UserInfoScreen({super.key});
+
+  static const _userInfo = 'معلومات المستخدم';
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class UserInfoScreen extends StatelessWidget {
               return state.when(
                   onInitial: () =>
                   const InitialStateWidget(
-                      AppKeys.userInfo, Icons.info),
+                      _userInfo, Icons.info),
                   onLoading: () =>
                   const LoadingStateWidget(),
                   onLoaded: (loadedState) {
@@ -55,7 +56,7 @@ class UserInfoScreen extends StatelessWidget {
                       );
                     }
                     return const InitialStateWidget(
-                        AppKeys.userInfo, Icons.info);
+                        _userInfo, Icons.info);
                   },
                   onError: (error) =>
                       error.buildErrorWidget(onRetry: () => cubit.getInfo())

@@ -44,8 +44,10 @@ class _ForgotPasswordScreenState extends State<ForgetPasswordLayout> {
   }
 
   void _showMessageResult(MessageResult messageResult) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        BuildSnackBar.build(messageResult.message!, messageResult.color!)
+    BuildSnackBar.show(
+        context: context,
+        message: messageResult.message!,
+        backgroundColor: messageResult.color!
     );
     Navigator.pop(context);
   }

@@ -1,7 +1,8 @@
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
+import 'package:international_cuisine/features/auth/presentation/screens/sgin_in_screen.dart';
 import '../../../../../core/data/data_sources/local/shared_preferences.dart';
-import '../../../../../core/presentation/widgets/navigation/navigator.dart';
+import '../../../../../core/presentation/widgets/navigation/navigator_with_delay.dart';
 import 'package:international_cuisine/core/constants/app_text_styles.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
@@ -300,15 +301,18 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   }
 
   void _showMessageResult(MessageResult messageResult) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        BuildSnackBar.build(messageResult.message!, messageResult.color!)
+    BuildSnackBar.show(
+        context: context,
+        message: messageResult.message!,
+        backgroundColor: messageResult.color!
     );
-    navigator(context: context);
+    BuildNavigatorWithDelay.build(context: context, link: SignInScreen());
   }
 
   void _showPasswordMismatchError() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      BuildSnackBar.build('كلمة المرور الجديدة غير متطابقة', AppColors.errorRed),
-    );
+    BuildSnackBar.show(
+        context: context,
+        message: 'كلمة المرور الجديدة غير متطابقة',
+        backgroundColor: AppColors.errorRed);
   }
 }

@@ -81,6 +81,7 @@ class _ItemImageSectionState extends State<ItemImageSection> {
   }
 
   Widget _buildImage() {
+    final screenSize = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: widget.onSizeChanged,
       child: ClipRRect(
@@ -96,7 +97,7 @@ class _ItemImageSectionState extends State<ItemImageSection> {
           ),
           cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
             context,
-            targetWidth: double.infinity,
+            targetWidth: screenSize.width,
           ),
           fit: BoxFit.cover,
           loadingBuilder: (context, child, loadingProgress) {

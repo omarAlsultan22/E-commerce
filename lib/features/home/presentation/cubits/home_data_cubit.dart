@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
@@ -18,22 +19,36 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
         _connectivityProvider = connectivityProvider,
         super(
           HomeDataState.initial()
-      );
+      ) {
+    _startMonitoring();
+  }
 
   static HomeDataCubit get(context) => BlocProvider.of<HomeDataCubit>(context);
 
-  void startMonitoring() {
+  void _startMonitoring() {
     _connectivityProvider.addListener(_handleConnectionChange);
   }
 
   void _handleConnectionChange() {
-    final isConnected = _connectivityProvider.isConnected;
-    if (isConnected && state.dataISEmpty) {
+    if (_connectivityProvider.isConnected && state.dataISEmpty) {
       getData();
     }
   }
 
   Future<void> getData() async {
+    if (!_connectivityProvider.isConnected && state.firstModel == null) {
+      handleError(
+          error: SocketException,
+          stackTrace: StackTrace.current,
+          onError: (failure) =>
+              state.copyWith(
+                subState: ErrorState(
+                    failure: failure
+                ),
+              )
+      );
+      return;
+    }
     emit(
         state.copyWith(
             subState: LoadingState()
@@ -41,8 +56,8 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
     );
     try {
       final homeData = await _homeDataUseCase.getDataExecute();
-
       if (homeData.isEmpty) {
+        emit(state.copyWith(subState: InitialState()));
         return;
       }
 
@@ -53,7 +68,9 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
           )
       );
     } catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
               state.copyWith(
                   subState: ErrorState(

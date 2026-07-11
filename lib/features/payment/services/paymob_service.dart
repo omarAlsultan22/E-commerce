@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../constants/app_strings.dart';
+import '../constants/payment_strings.dart';
 import 'package:http/http.dart' as http;
 import '../constants/api_constants.dart';
 import '../constants/api_json_keys.dart';
@@ -16,7 +16,7 @@ class PaymobService {
     );
 
     if (response.statusCode != 201) {
-      throw Exception(AppStrings.paymentTokenError);
+      throw Exception(PaymentStrings.paymentTokenError);
     }
 
     return json.decode(response.body)[ApiJsonKeys.token];
@@ -42,7 +42,7 @@ class PaymobService {
     );
 
     if (response.statusCode != 201) {
-      throw Exception(AppStrings.createOrderError);
+      throw Exception(PaymentStrings.createOrderError);
     }
 
     return json.decode(response.body)[ApiJsonKeys.id];
@@ -70,7 +70,7 @@ class PaymobService {
     );
 
     if (response.statusCode != 201) {
-      throw Exception(AppStrings.createPaymentKeyError);
+      throw Exception(PaymentStrings.createPaymentKeyError);
     }
 
     return json.decode(response.body)[ApiJsonKeys.token];
@@ -93,7 +93,7 @@ class PaymobService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception(AppStrings.vodafonePaymentError);
+      throw Exception(PaymentStrings.vodafonePaymentError);
     }
   }
 }

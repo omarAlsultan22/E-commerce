@@ -1,7 +1,10 @@
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
+
 import 'item_image_section.dart';
 import 'item_action_buttons.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/data_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../cart/presentation/cubits/cart_data_cubit.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
@@ -98,29 +101,35 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
 
   void _addToCartAndShowSnackBar() {
     if (widget._dataModel.getSelectedItem <= 0) {
-      BuildSnackBar.build(
-          'الكمية يجب أن تكون أكبر من الصفر', AppColors.errorRed);
+      BuildSnackBar.show(
+          context: context,
+          message: 'الكمية يجب أن تكون أكبر من الصفر',
+          backgroundColor: AppColors.errorRed
+      );
       return;
     }
 
-    CartDataCubit.get(context).addOrder(
+    context.read<CartDataCubit>().addOrder(
       dataModel: widget._dataModel,
       orderSize: _mealSizes[_currentSizeIndex],
     ).whenComplete(() {
-      BuildSnackBar.build(
-          'تمت الإضافة إلى السلة بنجاح', AppColors.successGreen);
+      BuildSnackBar.show(
+          context: context,
+          message: 'تمت الإضافة إلى السلة بنجاح',
+          backgroundColor: AppColors.successGreen);
     });
   }
 
   void _addToCartAndNavigate() {
-    CartDataCubit.get(context).addOrder(
+    context.read<CartDataCubit>().addOrder(
       dataModel: widget._dataModel,
       orderSize: _mealSizes[_currentSizeIndex],
-    );
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => CartDataScreen()),
-    );
+    ).then((_) {
+      BuildNavigatorPush.build(
+          context: context,
+          link: CartDataScreen()
+      );
+    });
   }
 
   @override

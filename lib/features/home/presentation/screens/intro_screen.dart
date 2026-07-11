@@ -11,6 +11,7 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -21,12 +22,12 @@ class IntroScreen extends StatelessWidget {
           AppAssets.secondaryLogo,
           cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
               context,
-              targetHeight: double.infinity,
+              targetHeight: screenSize.height,
               qualityFactor: AppValues.qualityFactor
           ),
           cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
               context,
-              targetWidth: double.infinity
+              targetWidth: screenSize.width
           ),
         ),
         Padding(

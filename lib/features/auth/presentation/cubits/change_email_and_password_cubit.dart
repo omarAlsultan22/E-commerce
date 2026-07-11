@@ -48,7 +48,9 @@ class ChangeEmailAndPasswordCubit extends Cubit<MessageState> with ErrorHandlerM
       emit(
           MessageState(messageResult: MessageResult.success()));
     } catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
               MessageState(messageResult: MessageResult.error(error: failure)
               )

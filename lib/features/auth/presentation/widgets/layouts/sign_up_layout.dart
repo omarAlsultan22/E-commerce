@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../screens/sgin_in_screen.dart';
 import '../../utils/validate/validate_email.dart';
 import '../../utils/validate/validate_password.dart';
 import '../../../../../core/constants/app_text_styles.dart';
@@ -9,9 +10,9 @@ import 'package:international_cuisine/core/constants/app_colors.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_label_texts.dart';
-import '../../../../../core/presentation/widgets/navigation/navigator.dart';
 import '../../../../../core/presentation/utils/validate/validator_input.dart';
 import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
+import '../../../../../core/presentation/widgets/navigation/navigator_with_delay.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import 'package:international_cuisine/features/auth/constants/auth_hint_texts_constants.dart';
 import 'package:international_cuisine/features/auth/constants/auth_label_texts_constants.dart';
@@ -96,10 +97,12 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   }
 
   void _showMessageResult(MessageResult messageResult) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        BuildSnackBar.build(messageResult.message!, messageResult.color!)
+    BuildSnackBar.show(
+        context: context,
+        message: messageResult.message!,
+        backgroundColor: messageResult.color!
     );
-    navigator(context: context);
+    BuildNavigatorWithDelay.build(context: context, link: SignInScreen());
   }
 
   void _togglePasswordVisibility() {

@@ -81,7 +81,7 @@ class ExceptionMapper {
     ),
   };
 
-  static final Map<Type, AppException Function(dynamic)> _typePatterns = {
+  static final Map<Object, AppException Function(dynamic)> _typePatterns = {
     HiveError: (error) {
       final hiveException = HiveAppException(error: error.toString());
       return hiveException.handle();
@@ -101,7 +101,7 @@ class ExceptionMapper {
     },
     SocketException: (error) =>
         NetworkAppException(
-          message: 'لا يوجد اتصال بالإنترنت',
+          message: _noInternetMessage,
           connectivityService: _connectivityService,
         ),
     TimeoutException: (error) =>

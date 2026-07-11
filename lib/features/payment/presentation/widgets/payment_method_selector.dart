@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../constants/app_strings.dart';
+import '../../constants/payment_strings.dart';
 import '../../constants/payment_text_styles.dart';
-import '../../constants/app_dimensions.dart';
+import '../../constants/payment_dimensions.dart';
 import '../../constants/payment_constants.dart';
 
 
@@ -19,33 +19,33 @@ class PaymentMethodSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(AppStrings.totalAmount, style: PaymentTextStyles.titleBold),
-        AppDimensions.verticalSpacing10,
+        const Text(PaymentStrings.totalAmount, style: PaymentTextStyles.titleBold),
+        PaymentDimensions.verticalSpacing10,
         Row(
           children: [
             Expanded(
               child: ChoiceChip(
-                label: const Text(AppStrings.creditCard),
+                label: const Text(PaymentStrings.creditCard),
                 selected: selectedPaymentMethod ==
                     PaymentConstants.paymentMethodCard,
                 onSelected: (_) =>
                     onMethodSelected(PaymentConstants.paymentMethodCard),
               ),
             ),
-            AppDimensions.horizontalSpacing8,
+            PaymentDimensions.horizontalSpacing8,
             Expanded(
               child: ChoiceChip(
-                label: const Text(AppStrings.fawry),
+                label: const Text(PaymentStrings.fawry),
                 selected: selectedPaymentMethod ==
                     PaymentConstants.paymentMethodFawry,
                 onSelected: (_) =>
                     onMethodSelected(PaymentConstants.paymentMethodFawry),
               ),
             ),
-            AppDimensions.horizontalSpacing8,
+            PaymentDimensions.horizontalSpacing8,
             Expanded(
               child: ChoiceChip(
-                label: const Text(AppStrings.vodafoneCash),
+                label: const Text(PaymentStrings.vodafoneCash),
                 selected: selectedPaymentMethod ==
                     PaymentConstants.paymentMethodVodafone,
                 onSelected: (_) =>

@@ -1,13 +1,12 @@
 import 'package:international_cuisine/features/cuisines/domain/useCases/cuisine_data_useCase.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
-import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
-import '../../../../core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../data/models/categories_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'base/base_data_cubit.dart';
+import 'dart:io';
 
 
 class SyrianDataCubit extends BaseCountriesCubit {
@@ -64,7 +63,9 @@ class SyrianDataCubit extends BaseCountriesCubit {
         subState: SuccessState(),
       ));
     } catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
               state.copyWith(
                   subState: ErrorState(
@@ -77,13 +78,13 @@ class SyrianDataCubit extends BaseCountriesCubit {
 
   Future<void> getInitialData() async {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
-      final connectivityService = ConnectivityService();
-      emit(
+      handleError(
+          error: SocketException,
+          stackTrace: StackTrace.current,
+          onError: (failure) =>
           state.copyWith(
             subState: ErrorState(
-              failure: NetworkAppException(
-                  connectivityService: connectivityService
-              ),
+              failure: failure
             ),
           )
       );
@@ -114,7 +115,9 @@ class SyrianDataCubit extends BaseCountriesCubit {
       emit(state.updateRating(index: index, newModel: newModel));
     }
     catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
               state.copyWith(
                 secondModel: MessageResult.error(error: failure),
@@ -131,7 +134,9 @@ class SyrianDataCubit extends BaseCountriesCubit {
       emit(state.copyWith(firstModel: state.updateSearchList(_searchData)));
     }
     catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
               state.copyWith(
                   subState: ErrorState(

@@ -8,22 +8,24 @@ class LoadingStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _screenSize = MediaQuery.of(context).size;
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
         Image.asset(
           AppAssets.originalLogo,
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
           height: double.infinity,
           width: double.infinity,
           cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
               context,
-              targetHeight: double.infinity,
+              targetHeight: _screenSize.height,
               qualityFactor: 1.5
           ),
           cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
               context,
-              targetWidth: double.infinity
+              targetWidth: _screenSize.width
           ),
         ),
         Padding(

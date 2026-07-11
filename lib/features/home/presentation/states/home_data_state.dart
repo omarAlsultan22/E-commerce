@@ -14,7 +14,7 @@ class HomeDataState extends SingleModelAppState<List<HomeDataModel>>{
 
   factory HomeDataState.initial(){
     return HomeDataState(
-        firstModel: null,
+        firstModel: const[],
         subState: InitialState()
     );
   }
@@ -44,7 +44,7 @@ class HomeDataState extends SingleModelAppState<List<HomeDataModel>>{
         onInitial: onInitial,
         onLoading: onLoading,
         onLoaded: () =>
-            onLoaded.call(dataModels),
-        onError: (failure) => onError.call(failure));
+            onLoaded(dataModels),
+        onError: (failure) => onError(failure));
   }
 }

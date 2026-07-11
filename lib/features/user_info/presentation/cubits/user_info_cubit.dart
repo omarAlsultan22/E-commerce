@@ -1,3 +1,4 @@
+import 'dart:io';
 import '../states/states/user_info_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/useCases/user_info_useCase.dart';
@@ -7,7 +8,6 @@ import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
-import 'package:international_cuisine/core/domain/services/connectivity_service/connectivity_service.dart';
 
 
 class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfoState>{
@@ -71,7 +71,9 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
       emit(buildState(MessageResult.success()));
     }
     catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
           buildState(
               MessageResult.error(
@@ -84,12 +86,16 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
 
   Future<void> getInfo() async {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
-      final _connectivityService = ConnectivityService();
-      emit(state.copyWith(
-        subState: ErrorState(
-          failure: NetworkAppException(connectivityService: _connectivityService),
-        ),
-      ));
+      handleError(
+          error: SocketException,
+          stackTrace: StackTrace.current,
+          onError: (failure) =>
+              state.copyWith(
+                subState: ErrorState(
+                  failure: failure,
+                ),
+              )
+      );
       return;
     }
     emit(
@@ -109,7 +115,9 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
               subState: SuccessState()));
     }
     catch (e, stackTrace) {
-      handleError(e, stackTrace,
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
           onError: (failure) =>
               state.copyWith(
                   subState: ErrorState(

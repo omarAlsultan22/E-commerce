@@ -1,8 +1,9 @@
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_with_delay.dart';
+import 'package:international_cuisine/features/auth/presentation/screens/sgin_in_screen.dart';
 import 'package:international_cuisine/core/presentation/utils/validate/validator_input.dart';
 import 'package:international_cuisine/core/presentation/widgets/icon_button_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import '../../../../auth/presentation/screens/change_email_&_password_screen.dart';
-import '../../../../../core/presentation/widgets/navigation/navigator.dart';
 import 'package:international_cuisine/core/constants/app_label_texts.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
@@ -103,10 +104,12 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   }
 
   void _showMessageResult(MessageResult messageResult) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        BuildSnackBar.build(messageResult.message!, messageResult.color!)
+    BuildSnackBar.show(
+        context: context,
+        message: messageResult.message!,
+        backgroundColor: messageResult.color!
     );
-    navigator(context: context);
+    BuildNavigatorWithDelay.build(context: context, link: SignInScreen());
   }
 
   AppBar _buildAppBar() {
@@ -188,7 +191,8 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
       label: AppLabelTexts.firstName,
       hint: AppLabelTexts.firstName,
       icon: Icons.person,
-      validator: (value) => ValidateInput.validator(value, AppLabelTexts.firstName),
+      validator: (value) =>
+          ValidateInput.validator(value, AppLabelTexts.firstName),
     );
   }
 
@@ -198,7 +202,8 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
       label: AppLabelTexts.lastName,
       hint: AppLabelTexts.lastName,
       icon: Icons.person,
-      validator: (value) => ValidateInput.validator(value, AppLabelTexts.lastName),
+      validator: (value) =>
+          ValidateInput.validator(value, AppLabelTexts.lastName),
     );
   }
 
@@ -209,7 +214,8 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
       hint: AppLabelTexts.phoneNumber,
       icon: Icons.phone,
       keyboardType: TextInputType.phone,
-      validator: (value) => ValidateInput.validator(value, AppLabelTexts.phoneNumber),
+      validator: (value) =>
+          ValidateInput.validator(value, AppLabelTexts.phoneNumber),
     );
   }
 
@@ -219,7 +225,8 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
       label: AppLabelTexts.location,
       hint: AppLabelTexts.location,
       icon: Icons.location_on,
-      validator: (value) => ValidateInput.validator(value, AppLabelTexts.location),
+      validator: (value) =>
+          ValidateInput.validator(value, AppLabelTexts.location),
     );
   }
 
