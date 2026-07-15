@@ -24,21 +24,10 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMi
       : _useCase = useCase,
         _cartDataState = cartDataState,
         _connectivityProvider = connectivityProvider,
-        super(PaymentInvoiceState.initial()) {
-    _startMonitoring();
-  }
+        super(PaymentInvoiceState.initial()
+      );
 
   static PaymentInvoiceCubit get(context) => Provider.of(context);
-
-  void _startMonitoring() {
-    _connectivityProvider.addListener(_handleConnectionChange);
-  }
-
-  void _handleConnectionChange() {
-    if (_connectivityProvider.isConnected && state.firstModel == null) {
-      displayInvoice();
-    }
-  }
 
   Future<UserModel?> _getUserInfo() async {
     try {
@@ -84,6 +73,8 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMi
       final userInfo = await _getUserInfo();
       final shoppingList = await _getShoppingList();
 
+      print('${userInfo}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>......');
+      print('${shoppingList.length}>>>>>>>>>>>>>>>>>>>>>>>>>>>.');
       if (userInfo == null || shoppingList.isEmpty) {
         state.copyWith(subState: InitialState());
         return;
@@ -111,11 +102,5 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMi
               )
       );
     }
-  }
-
-  @override
-  Future<void> close() {
-    _connectivityProvider.removeListener(_handleConnectionChange);
-    return super.close();
   }
 }

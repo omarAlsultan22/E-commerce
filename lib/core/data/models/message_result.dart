@@ -4,9 +4,9 @@ import '../../errors/exceptions/base/app_exception.dart';
 
 
 class MessageResult {
-  final String? error;
-  final bool isLoading;
+  final AppException? error;
   final String? message;
+  final bool isLoading;
   final Color? color;
 
   MessageResult({
@@ -34,11 +34,14 @@ class MessageResult {
   }
 
   factory MessageResult.error({
+    String? message,
     required AppException error,
   }){
+    final ms = message ?? 'فشل التحديث: ';
     return MessageResult(
+        error: error,
         color: AppColors.errorRed,
-        message: 'فشل التحديث: ${error.message}'
+        message: '$ms${error.message}'
     );
   }
 }

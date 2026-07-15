@@ -25,16 +25,6 @@ class SyrianDataCubit extends BaseCountriesCubit {
 
   static const _syrian = 'syrian';
 
-  void startMonitoring() {
-    _connectivityProvider.addListener(handleConnectionChange);
-  }
-
-  void handleConnectionChange() {
-    if (_connectivityProvider.isConnected && state.firstModel == null) {
-      getInitialData();
-    }
-  }
-
   @override
   Future<void> fetchData({required bool isLoadingMore}) async {
     if (!state.hasMore) return;
@@ -150,11 +140,5 @@ class SyrianDataCubit extends BaseCountriesCubit {
   @override
   void clearDataSearch() {
     emit(state.copyWith(firstModel: state.updateSearchList([])));
-  }
-
-  @override
-  Future<void> close() {
-    _connectivityProvider.removeListener(handleConnectionChange);
-    return super.close();
   }
 }

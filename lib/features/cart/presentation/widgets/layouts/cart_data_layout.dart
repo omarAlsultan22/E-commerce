@@ -1,5 +1,6 @@
 import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 import 'package:international_cuisine/core/presentation/utils/helpers/image_helpers.dart';
+import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import '../../../../location/presentation/screens/fixed_location_picker_screen.dart';
 import 'package:international_cuisine/core/constants/app_text_styles.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
@@ -9,17 +10,14 @@ import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../../core/data/data_sources/local/hive.dart';
 import '../../../data/models/order_model.dart';
 import '../../cubits/cart_data_cubit.dart';
 import 'package:flutter/material.dart';
 
 
 class CartDataLayout extends StatefulWidget {
-  final HiveStore hiveStore;
   final List<OrderModel> shoppingList;
   const CartDataLayout({
-    required this.hiveStore,
     required this.shoppingList,
     super.key
   });
@@ -27,29 +25,18 @@ class CartDataLayout extends StatefulWidget {
   State<CartDataLayout> createState() => _CartDataLayoutState();
 }
 
-class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObserver {
+class _CartDataLayoutState extends State<CartDataLayout>{
   late CartDataCubit _cubit;
   final _cacheHelper = CacheHelper();
 
   @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.detached) {
-      CartDataCubit.get(context).saveCartToHive();
-      await widget.hiveStore.closeBox();
-    }
-    super.didChangeAppLifecycleState(state);
-  }
-
-  @override
   void initState() {
     _cubit = CartDataCubit.get(context);
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -65,10 +52,7 @@ class _CartDataLayoutState extends State<CartDataLayout> with WidgetsBindingObse
         appBar: AppBar(
           elevation: AppValues.none,
           backgroundColor: AppColors.white,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.black),
-            onPressed: () => Navigator.pop(context),
-          ),
+          leading: BackButtonWidget(onPressed: ()=> Navigator.pop(context)),
           title: const Text(
             'عربة التسوق',
             style: TextStyle(
@@ -274,7 +258,7 @@ class CartItemCard extends StatelessWidget {
                         onPressed: () => onQuantityChanged(order.item - 1),
                       ),
                       Text(
-                        order.item.toString(),
+                        order.itemToString,
                         style: const TextStyle(fontSize: _fontSize),
                       ),
                       IconButton(

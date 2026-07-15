@@ -35,12 +35,12 @@ class _FrenchScreenState extends State<FrenchScreen> {
                 CuisinesConstants.data, CuisinesConstants.menu),
             onLoading: () => const LoadingStateWidget(),
             onLoaded: (loadedState) {
-              if (loadedState is DoubleModelSuccessState) {
-                SearchableListBuilder(
+              final data = loadedState as DoubleModelSuccessState;
+                return SearchableListBuilder(
                   isLocked: false,
                   title: 'المطبخ الفرنسي',
-                  categoriesModel: loadedState.firstModel,
-                  messageResult: loadedState.secondModel,
+                  categoriesModel: data.firstModel,
+                  messageResult: data.secondModel,
                   getMoreData: () => _cubit.loadMoreData(),
                   clearData: () => _cubit.clearDataSearch(),
                   getSearchData: (searchText) =>
@@ -51,10 +51,7 @@ class _FrenchScreenState extends State<FrenchScreen> {
                           rating: rating
                       ),
                 );
-              }
-              return const InitialStateWidget(
-                  CuisinesConstants.data, CuisinesConstants.menu);
-            },
+              },
             onError: (error) =>
                 error.buildErrorWidget(onRetry: _cubit.getInitialData)
         );

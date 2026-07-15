@@ -36,25 +36,21 @@ class _ChineseScreenState extends State<ChineseScreen> {
             ),
             onLoading: () => const LoadingStateWidget(),
             onLoaded: (loadedState) {
-              if (loadedState is DoubleModelSuccessState) {
-                SearchableListBuilder(
-                  isLocked: false,
-                  title: 'المطبخ الصيني',
-                  categoriesModel: loadedState.firstModel,
-                  messageResult: loadedState.secondModel,
-                  getMoreData: () => _cubit.loadMoreData(),
-                  clearData: () => _cubit.clearDataSearch(),
-                  getSearchData: (searchText) =>
-                      _cubit.getDataSearch(searchText),
-                  updateRate: (index, rating) =>
-                      _cubit.updateRating(
-                          index: index,
-                          rating: rating
-                      ),
-                );
-              }
-              return const InitialStateWidget(
-                  CuisinesConstants.data, CuisinesConstants.menu
+              final data = loadedState as DoubleModelSuccessState;
+              return SearchableListBuilder(
+                isLocked: false,
+                title: 'المطبخ الصيني',
+                categoriesModel: data.firstModel,
+                messageResult: data.secondModel,
+                getMoreData: () => _cubit.loadMoreData(),
+                clearData: () => _cubit.clearDataSearch(),
+                getSearchData: (searchText) =>
+                    _cubit.getDataSearch(searchText),
+                updateRate: (index, rating) =>
+                    _cubit.updateRating(
+                        index: index,
+                        rating: rating
+                    ),
               );
             },
             onError: (error) =>

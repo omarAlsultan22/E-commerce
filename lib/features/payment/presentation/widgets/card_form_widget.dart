@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../constants/payment_strings.dart';
-import '../../constants/payment_dimensions.dart';
 import '../../utils/payment_formatters.dart';
+import '../../constants/payment_strings.dart';
 import '../../constants/payment_constants.dart';
+import '../../constants/payment_dimensions.dart';
 
 
 class CardFormWidget extends StatelessWidget {
@@ -12,7 +12,7 @@ class CardFormWidget extends StatelessWidget {
   final TextEditingController cvvController;
   final TextEditingController cardHolderController;
   final bool saveCard;
-  final Function(bool) onSaveCardChanged;
+  final ValueChanged<bool> onSaveCardChanged;
 
   const CardFormWidget({
     super.key,

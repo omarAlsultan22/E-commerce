@@ -24,11 +24,13 @@ class OrderModel implements JsonModel{
     this.item = 1,
   });
 
+  String get itemToString => item.toString();
+
   factory OrderModel.fromJson(Map<String, dynamic> json){
     return OrderModel(
       order: json['order'] ?? '',
-      image: json['order'] ?? '',
-      price: json['order'] ?? '',
+      image: json['image'] ?? '',
+      price: json['price'] ?? '',
       item: json['item'] ?? 1,
     );
   }

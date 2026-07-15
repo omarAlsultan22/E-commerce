@@ -6,6 +6,7 @@ import 'package:international_cuisine/features/cart/presentation/cubits/cart_dat
 import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 import 'package:international_cuisine/features/home/presentation/screens/home_screen.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
+import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
@@ -56,8 +57,8 @@ class PaymentInvoiceScreen extends StatelessWidget {
           textDirection: TextDirection.rtl,
           child: Scaffold(
             appBar: AppBar(
-                leading: IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
+                leading: BackButtonWidget(
+                    color: AppColors.mediumGrey600,
                     onPressed: () =>
                         BuildNavigatorPushReplacement.build(
                             context: context, link: HomeScreen()
@@ -70,7 +71,7 @@ class PaymentInvoiceScreen extends StatelessWidget {
                 children: [
                   const Icon(
                       Icons.shopping_bag_outlined, size: 80.0,
-                      color: const Color(0xFFBDBDBD)),
+                      color: AppColors.lightGrey400),
                   AppSpaces.verticalSpacing_16,
                   Text(
                     'لا توجد طلبات للتوصيل',
@@ -83,7 +84,7 @@ class PaymentInvoiceScreen extends StatelessWidget {
                     'يمكنك تصفح المطاعم وإضافة طلبات جديدة',
                     style: TextStyle(
                         fontSize: 14.0,
-                        color: Color(0xFF757575)),
+                        color: AppColors.mediumGrey600),
                   ),
                 ],
               ),
@@ -101,19 +102,17 @@ class PaymentInvoiceScreen extends StatelessWidget {
               _stateListener(state);
             },
             builder: (context, state) {
-              final _cubit = context.read<PaymentInvoiceCubit>();
+              final _cubit = PaymentInvoiceCubit.get(context);
               return state.when(
                   onInitial: () => _initialState(),
                   onLoading: () => LoadingStateWidget(),
                   onLoaded: (loadedState) {
-                    if (loadedState is DoubleModelSuccessState) {
-                      PaymentInvoiceLayout(
-                        isPaid: isPaid,
-                        userInfoModel: loadedState.firstModel,
-                        shoppingList: loadedState.secondModel,
-                      );
-                    }
-                    return _initialState();
+                    final data = loadedState as DoubleModelSuccessState;
+                    return PaymentInvoiceLayout(
+                      isPaid: isPaid,
+                      userInfoModel: data.firstModel,
+                      shoppingList: data.secondModel,
+                    );
                   },
                   onError: (error) =>
                       error.buildErrorWidget(

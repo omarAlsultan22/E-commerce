@@ -67,6 +67,9 @@ class _SignInLayoutState extends State<SignInLayout> {
     if (widget.messageResult.message != null) {
       _showMessageResult(widget.messageResult);
     }
+    if (widget.messageResult.error == null) {
+      BuildNavigatorWithDelay.build(context: context, link: const HomeScreen());
+    }
     setState(() {});
   }
 
@@ -173,7 +176,7 @@ class _SignInLayoutState extends State<SignInLayout> {
 
   Widget _buildLoginButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: widget.messageResult.isLoading ? _submitForm : null,
+      onPressed: widget.messageResult.isLoading ? null : _submitForm,
       style: _loginButtonStyle(),
       child: _buildLoginButtonContent(),
     );
@@ -254,7 +257,6 @@ class _SignInLayoutState extends State<SignInLayout> {
         message: messageResult.message!,
         backgroundColor: messageResult.color!
     );
-    BuildNavigatorWithDelay.build(context: context, link: const HomeScreen());
   }
 
   ButtonStyle _loginButtonStyle() {

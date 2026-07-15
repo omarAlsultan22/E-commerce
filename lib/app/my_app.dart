@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../core/domain/services/connectivity_service/connectivity_provider.dart';
+import 'package:international_cuisine/core/data/data_sources/remote/firebase_auth.dart';
 import 'package:international_cuisine/features/home/presentation/screens/home_screen.dart';
 
 //cubits
 import '../features/home/presentation/cubits/home_data_cubit.dart';
 import '../features/cart/presentation/cubits/cart_data_cubit.dart';
-import '../features/cuisines/domain/useCases/cuisine_data_useCase.dart';
 import '../features/cuisines/presentation/cubits/french_data_cubit.dart';
 import '../features/cuisines/presentation/cubits/syrian_data_cubit.dart';
 import '../features/cuisines/presentation/cubits/italian_data_cubit.dart';
@@ -23,10 +23,13 @@ import 'package:international_cuisine/core/data/data_sources/local/hive.dart';
 import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 
 //useCases
+import '../features/cuisines/domain/useCases/cuisine_data_useCase.dart';
+import 'package:international_cuisine/features/auth/domain/useCases/sign_out_useCase.dart';
 import 'package:international_cuisine/features/home/domain/useCases/home_data_useCase.dart';
 import 'package:international_cuisine/features/cart/domain/useCases/cart_data_useCase.dart';
 
 //repositories
+import 'package:international_cuisine/features/auth/data/repositories_impl/firebase_auth_repository.dart';
 import 'package:international_cuisine/features/cart/data/repositories_impl/hive_shopping_List_repository.dart';
 import 'package:international_cuisine/features/home/data/repositories_impl/firestore_home_data_repository.dart';
 import 'package:international_cuisine/features/cuisines/data/repositories_impl/firestore_cuisine_data_repository.dart';
@@ -38,12 +41,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _cacheHelper = CacheHelper();
+
     //home useCase
     final _homeRepository = FirestoreService();
     final _userInfoRepository = FirestoreHomeDataRepository(
         repository: _homeRepository);
     final _homeDataUseCase = HomeDataUseCase(
         userInfoRepository: _userInfoRepository);
+    final _authService = FirebaseAuthService();
+    final _authRepository = FirebaseAuthRepository(authService: _authService);
+    final _signOutUseCase = SignOutUseCase(
+        cacheHelper: _cacheHelper, authRepository: _authRepository);
 
     //cuisine useCase
     final cuisineRepository = FirestoreService();
@@ -55,7 +64,6 @@ class MyApp extends StatelessWidget {
     //cart useCase
     final _hiveStore = HiveStore();
     final _hiveRepository = HiveShoppingListRepository(hiveStore: _hiveStore);
-    final _cacheHelper = CacheHelper();
     final _cartUseCase = CartDataUseCase(
         repository: _hiveRepository, cacheHelper: _cacheHelper);
 
@@ -65,10 +73,17 @@ class MyApp extends StatelessWidget {
           //connections
           BlocProvider<HomeDataCubit>(
               create: (context) =>
-                  HomeDataCubit(
-                      homeDataUseCase: _homeDataUseCase,
-                      connectivityProvider: _connectivityProvider
-                  )
+              HomeDataCubit(
+                  signOutUseCase: _signOutUseCase,
+                  homeDataUseCase: _homeDataUseCase,
+                  connectivityProvider: _connectivityProvider
+              )
+                ..getData()
+          ),
+          BlocProvider<CartDataCubit>(
+              create: (context) =>
+              CartDataCubit(useCase: _cartUseCase)
+                ..getCartData()
           ),
           BlocProvider(create: (context) =>
               ChineseDataCubit(dataUseCases: _dataUseCases,
@@ -94,15 +109,11 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) =>
               TurkishDataCubit(dataUseCases: _dataUseCases,
                   connectivityProvider: _connectivityProvider)),
-          BlocProvider<CartDataCubit>(
-              create: (context) =>
-              CartDataCubit(useCase: _cartUseCase)
-                ..getCartData()
-          ),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: const HomeScreen())
+            home: const HomeScreen()
+        )
     );
   }
 }

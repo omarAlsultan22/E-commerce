@@ -1,7 +1,9 @@
 import 'package:international_cuisine/features/evaluation/presentation/screens/evaluation_screen.dart';
 import 'package:international_cuisine/features/cart/presentation/screens/cart_data_screen.dart';
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
+import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
 import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
+import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import '../../../../user_info/presentation/screens/user_info_screen.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
@@ -11,8 +13,8 @@ import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
 import '../../../../../core/data/models/message_result.dart';
 import '../../../data/models/categories_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/models/data_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../item_builder.dart';
 
@@ -47,10 +49,12 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   List<DataModel> _filteredData = [];
+  late final CartDataCubit _cubit;
 
   @override
   void initState() {
     super.initState();
+    _cubit = context.read<CartDataCubit>();
     _searchController.addListener(_performSearch);
     _scrollController.addListener(_onScrollData);
   }
@@ -138,7 +142,7 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: AppColors.mediumGrey,
+                  fillColor: AppColors.mediumGrey800,
                   contentPadding: const EdgeInsets.symmetric(vertical: 5.0),
                 ),
                 style: TextStyle(color: AppColors.white),
@@ -159,7 +163,14 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
                               dataModel: _filteredData[index],
                               updateRating: (rating) =>
                                   widget.updateRate(index, rating),
-
+                              addOrder: ({
+                                required dataModel,
+                                required orderSize
+                              }) =>
+                                  _cubit.addOrder(
+                                      dataModel: dataModel,
+                                      orderSize: orderSize
+                                  ),
                             );
                           } else {
                             return Center(
@@ -207,11 +218,8 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
       titleSpacing: -10.0,
       scrolledUnderElevation: AppValues.none,
       backgroundColor: AppColors.darkGrey,
-      leading: IconButton(
-        icon: Icon(CupertinoIcons.arrowshape_turn_up_left_fill,
-            color: AppColors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
+      leading: BackButtonWidget(
+          color: AppColors.white, onPressed: () => Navigator.pop(context)),
       actions: [
         PopupMenuButton<String>(
           icon: Icon(Icons.menu, color: AppColors.white),
@@ -220,10 +228,13 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
             return [
               PopupMenuItem<String>(
                   child: Center(child: const Text('التقييم')),
-                  onTap: () => EvaluationScreen()
+                  onTap: () =>
+                      BuildNavigatorPush.build(
+                          context: context, link: EvaluationScreen()
+                      )
               ),
               PopupMenuItem<String>(
-                child: Center(child: const Text('الاعدادات')),
+                child: Center(child: const Text('الحساب')),
                 onTap: () =>
                     BuildNavigatorPush.build(
                         context: context, link: const UserInfoScreen()),

@@ -1,32 +1,32 @@
-import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
-
 import 'item_image_section.dart';
 import 'item_action_buttons.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/data_model.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../cart/presentation/cubits/cart_data_cubit.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_snack_bar.dart';
 import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
 import 'package:international_cuisine/features/cart/presentation/screens/cart_data_screen.dart';
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
 
 
 final List<String> _mealSizes = ['صغير', 'وسط', 'كبير'];
 final List<Color> _mealColors = [AppColors.primaryAmber, Colors.orange, Colors.red];
 
 class ItemBuilder extends StatefulWidget {
-  final DataModel _dataModel;
-  final Function(int) _updateRating;
+  final DataModel dataModel;
+  final void Function(int) updateRating;
+  final Future<void> Function({
+  required String orderSize,
+  required DataModel dataModel
+  }) addOrder;
 
   const ItemBuilder({
-    required DataModel dataModel,
-    required dynamic Function(int) updateRating,
+    required this.addOrder,
+    required this.dataModel,
+    required this.updateRating,
     Key? key,
-  })  : _updateRating = updateRating,
-        _dataModel = dataModel,
-        super(key: key);
+  });
 
   @override
   State<ItemBuilder> createState() => _ItemBuilderState();
@@ -37,9 +37,9 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
   static const _sizeChangeDuration = Duration(milliseconds: 100);
 
   late PageController _sizeController;
-  late AnimationController _animationController;
   late Animation<Color?> _colorAnimation;
   late Animation<double> _scaleAnimation;
+  late AnimationController _animationController;
 
   int _currentSizeIndex = 0;
   double _userRating = 0;
@@ -48,7 +48,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
   void initState() {
     super.initState();
     _initControllers();
-    _userRating = widget._dataModel.rating!.toDouble();
+    _userRating = widget.dataModel.ratingToDouble;
   }
 
   void _initControllers() {
@@ -94,13 +94,12 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
   void _updateRating(double rating) {
     setState(() {
       _userRating = rating;
-      widget._dataModel.rating = _userRating.toInt();
-      widget._updateRating(_userRating.toInt());
+      widget.updateRating(_userRating.toInt());
     });
   }
 
   void _addToCartAndShowSnackBar() {
-    if (widget._dataModel.getSelectedItem <= 0) {
+    if (widget.dataModel.getSelectedItem <= 0) {
       BuildSnackBar.show(
           context: context,
           message: 'الكمية يجب أن تكون أكبر من الصفر',
@@ -109,8 +108,8 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
       return;
     }
 
-    context.read<CartDataCubit>().addOrder(
-      dataModel: widget._dataModel,
+    widget.addOrder(
+      dataModel: widget.dataModel,
       orderSize: _mealSizes[_currentSizeIndex],
     ).whenComplete(() {
       BuildSnackBar.show(
@@ -121,10 +120,10 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
   }
 
   void _addToCartAndNavigate() {
-    context.read<CartDataCubit>().addOrder(
-      dataModel: widget._dataModel,
+    widget.addOrder(
+      dataModel: widget.dataModel,
       orderSize: _mealSizes[_currentSizeIndex],
-    ).then((_) {
+    ).whenComplete(() {
       BuildNavigatorPush.build(
           context: context,
           link: CartDataScreen()
@@ -150,7 +149,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
       child: Column(
         children: [
           ItemImageSection(
-            dataModel: widget._dataModel,
+            dataModel: widget.dataModel,
             currentSizeIndex: _currentSizeIndex,
             sizeController: _sizeController,
             colorAnimation: _colorAnimation,
@@ -162,7 +161,7 @@ class _ItemBuilderState extends State<ItemBuilder> with TickerProviderStateMixin
             onRatingUpdate: _updateRating,
           ),
           ItemActionButtons(
-            dataModel: widget._dataModel,
+            dataModel: widget.dataModel,
             currentSizeIndex: _currentSizeIndex,
             mealSizes: _mealSizes,
             onAddToCartAndShowSnackBar: _addToCartAndShowSnackBar,

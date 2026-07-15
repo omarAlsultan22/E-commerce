@@ -1,23 +1,25 @@
 class DataModel {
-  final String? orderImage;
-  final String? orderName;
-  List<String>? ordersNumber;
   int? rating;
-  int? orderPrice;
   bool isActive;
   int selectedItem;
+  final int? orderPrice;
+  final String? orderName;
+  final String? orderImage;
+  final List<String>? ordersNumber;
 
   DataModel({
-    this.orderImage,
-    this.orderName,
-    this.orderPrice,
     this.rating,
-    this.isActive = false,
+    this.orderName,
+    this.orderImage,
+    this.orderPrice,
     this.ordersNumber,
+    this.isActive = false,
     this.selectedItem = 1,
   });
 
   int get getSelectedItem => selectedItem;
+
+  double get ratingToDouble => rating!.toDouble();
 
   factory DataModel.fromFirestore(Map<String, dynamic> json){
     return DataModel(

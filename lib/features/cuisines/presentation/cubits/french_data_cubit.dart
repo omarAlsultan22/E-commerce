@@ -25,16 +25,6 @@ class FrenchDataCubit extends BaseCountriesCubit {
 
   static const _french = 'french';
 
-  void startMonitoring() {
-    _connectivityProvider.addListener(handleConnectionChange);
-  }
-
-  void handleConnectionChange() {
-    if (_connectivityProvider.isConnected && state.firstModel == null) {
-      getInitialData();
-    }
-  }
-
   @override
   Future<void> fetchData({required bool isLoadingMore}) async {
     if (!state.hasMore) return;
@@ -49,7 +39,7 @@ class FrenchDataCubit extends BaseCountriesCubit {
           isLoadingMore ? state.lastDocument : null
       );
 
-      if(state.categoryDataIsEmpty && newState.isEmpty) {
+      if (state.categoryDataIsEmpty && newState.isEmpty) {
         state.copyWith(subState: InitialState());
         return;
       }
@@ -150,11 +140,5 @@ class FrenchDataCubit extends BaseCountriesCubit {
   @override
   void clearDataSearch() {
     emit(state.copyWith(firstModel: state.updateSearchList([])));
-  }
-
-  @override
-  Future<void> close() {
-    _connectivityProvider.removeListener(handleConnectionChange);
-    return super.close();
   }
 }

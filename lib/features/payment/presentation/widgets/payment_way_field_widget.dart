@@ -4,12 +4,12 @@ import 'package:international_cuisine/core/constants/app_borders.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 
 
-class PaymentFieldLayout extends StatelessWidget {
+class PaymentFieldWidget extends StatelessWidget {
   final String iconName;
   final IconData iconType;
   final VoidCallback onTap;
 
-  const PaymentFieldLayout({
+  const PaymentFieldWidget({
     required this.iconName,
     required this.iconType,
     required this.onTap,

@@ -1,5 +1,5 @@
-import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
 import 'package:international_cuisine/features/cuisines/data/models/data_model.dart';
+import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
 import 'package:international_cuisine/core/presentation/states/app_sup_states.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 import '../../../../core/presentation/states/base/main_app_sub_state.dart';
@@ -41,31 +41,28 @@ class CartDataState extends SingleModelAppState<List<OrderModel>> {
     required DataModel dataModel,
     required OrderModel orderModel
   }) {
-    final existingItemIndex = shoppingList.indexWhere((item) =>
+    final updatedList = List<OrderModel>.from(shoppingList);
+    final existingItemIndex = updatedList.indexWhere((item) =>
     item.order == orderModel.order);
 
     if (existingItemIndex != -1) {
-      shoppingList[existingItemIndex].item =
-          shoppingList[existingItemIndex].item + dataModel.getSelectedItem;
+      updatedList[existingItemIndex].item =
+          updatedList[existingItemIndex].item + dataModel.getSelectedItem;
     } else {
-      shoppingList.add(orderModel);
+      updatedList.add(orderModel);
     }
-    return shoppingList;
+    return updatedList;
   }
 
-  void removeItem(int index) {
-    shoppingList.removeAt(index);
-  }
-
-  void clearCart() {
-    shoppingList.clear();
+  List<OrderModel> removeItem(int index) {
+    final updatedList = List<OrderModel>.from(shoppingList);
+    updatedList.removeAt(index);
+    return updatedList;
   }
 
   @override
   CartDataState copyWith({
     List<OrderModel>? firstModel,
-    Never? secondModel,
-    bool? isConnected,
     MainAppSubState? subState
   }) {
     return CartDataState(

@@ -1,7 +1,8 @@
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_with_delay.dart';
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
 import 'package:international_cuisine/features/auth/presentation/screens/sgin_in_screen.dart';
 import 'package:international_cuisine/core/presentation/utils/validate/validator_input.dart';
-import 'package:international_cuisine/core/presentation/widgets/icon_button_widget.dart';
+import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import '../../../../auth/presentation/screens/change_email_&_password_screen.dart';
 import 'package:international_cuisine/core/constants/app_label_texts.dart';
@@ -15,8 +16,6 @@ import '../../../../../core/presentation/widgets/loading_widget.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
 import '../../../../../core/data/models/message_result.dart';
 import '../../../../../core/data/models/user_model.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../cubits/user_info_cubit.dart';
 import 'package:flutter/material.dart';
 
 
@@ -42,8 +41,6 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   final _phoneController = TextEditingController();
   final _locationController = TextEditingController();
 
-  late UserInfoCubit _cubit;
-
   static final _borderRadius = AppBorders.borderRadius_12;
 
   //spaces
@@ -53,7 +50,6 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   @override
   void initState() {
     super.initState();
-    _cubit = context.read<UserInfoCubit>();
     _initializeControllers(
         firstName: widget.userModel.firstName,
         lastName: widget.userModel.lastName,
@@ -67,6 +63,9 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
     super.didUpdateWidget(oldWidget);
     if (widget.messageResult.message != null) {
       _showMessageResult(widget.messageResult);
+    }
+    if (widget.messageResult.error == null) {
+      BuildNavigatorWithDelay.build(context: context, link: SignInScreen());
     }
     setState(() {});
   }
@@ -96,9 +95,9 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: AppColors.primaryBrown,
+        backgroundColor: AppColors.darkGrey,
         appBar: _buildAppBar(),
-        body: _buildBody(context, _cubit),
+        body: _buildBody(),
       ),
     );
   }
@@ -109,7 +108,6 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
         message: messageResult.message!,
         backgroundColor: messageResult.color!
     );
-    BuildNavigatorWithDelay.build(context: context, link: SignInScreen());
   }
 
   AppBar _buildAppBar() {
@@ -117,21 +115,23 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
         backgroundColor: Colors.transparent,
         elevation: AppValues.none,
         title: const Text(
-          'الإعدادات',
+          'الحساب الشخصي',
           style: TextStyle(color: AppColors.white),
         ),
-        leading: const IconButtonWidget()
+        leading: BackButtonWidget(color: AppColors.white,
+            onPressed: widget.messageResult.isLoading ? null : () =>
+                Navigator.pop(context))
     );
   }
 
-  Widget _buildBody(BuildContext context, UserInfoCubit cubit) {
+  Widget _buildBody() {
     return Container(
       decoration: _buildBackgroundDecoration(),
-      child: _buildFormContent(context, cubit),
+      child: _buildFormContent(),
     );
   }
 
-  Widget _buildFormContent(BuildContext context, UserInfoCubit cubit) {
+  Widget _buildFormContent() {
     return IgnorePointer(
       ignoring: widget.messageResult.isLoading,
       child: SingleChildScrollView(
@@ -153,7 +153,7 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
               AppSpaces.verticalSpacing_24,
               _buildChangePasswordButton(),
               _verticalSpacing16,
-              _buildUpdateButton(cubit),
+              _buildUpdateButton(),
             ],
           ),
         ),
@@ -277,12 +277,12 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
     );
   }
 
-  Widget _buildUpdateButton(UserInfoCubit cubit) {
+  Widget _buildUpdateButton() {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
           style: _updateButtonStyle(),
-          onPressed: () {
+          onPressed: widget.messageResult.isLoading ? null : () {
             widget.onUpdate(
                 UserModel(
                   firstName: _firstNameController.text,
@@ -312,11 +312,9 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   }
 
   void _navigateToChangePassword() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ChangeEmailAndPasswordScreen(),
-      ),
+    BuildNavigatorPush.build(
+      context: context,
+      link: const ChangeEmailAndPasswordScreen(),
     );
   }
 
@@ -327,7 +325,7 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
         end: Alignment.bottomCenter,
         colors: const[
           AppColors.darkGrey,
-          AppColors.mediumGrey,
+          AppColors.mediumGrey800,
         ],
       ),
     );

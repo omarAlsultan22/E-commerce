@@ -31,7 +31,7 @@ class UserInfoScreen extends StatelessWidget {
         create: (context) =>
             UserInfoCubit(
                 userInfoUseCase: _userInfoUseCase,
-                connectivityProvider: _connectivityProvider),
+                connectivityProvider: _connectivityProvider)..getInfo(),
         child: BlocBuilder<UserInfoCubit, UserInfoState>(
             builder: (context, state) {
               final cubit = UserInfoCubit.get(context);
@@ -42,21 +42,18 @@ class UserInfoScreen extends StatelessWidget {
                   onLoading: () =>
                   const LoadingStateWidget(),
                   onLoaded: (loadedState) {
-                    if (loadedState is DoubleModelSuccessState) {
-                      UserInfoLayout(
-                        userModel: loadedState.firstModel,
-                        messageResult: loadedState.secondModel,
-                        onUpdate: (userModel) =>
-                            cubit.updateInfo(
-                              firstName: userModel.firstName,
-                              lastName: userModel.lastName,
-                              userPhone: userModel.userPhone,
-                              userLocation: userModel.userLocation,
-                            ),
-                      );
-                    }
-                    return const InitialStateWidget(
-                        _userInfo, Icons.info);
+                    final data = loadedState as DoubleModelSuccessState;
+                    return UserInfoLayout(
+                      userModel: data.firstModel,
+                      messageResult: data.secondModel,
+                      onUpdate: (userModel) =>
+                          cubit.updateInfo(
+                            firstName: userModel.firstName,
+                            lastName: userModel.lastName,
+                            userPhone: userModel.userPhone,
+                            userLocation: userModel.userLocation,
+                          ),
+                    );
                   },
                   onError: (error) =>
                       error.buildErrorWidget(onRetry: () => cubit.getInfo())

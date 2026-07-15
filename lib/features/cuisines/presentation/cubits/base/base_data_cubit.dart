@@ -9,10 +9,6 @@ abstract class BaseCountriesCubit extends Cubit<CategoriesState> with ErrorHandl
       CategoriesState.initial()
   );
 
-  void startMonitoring();
-
-  void handleConnectionChange();
-
   Future<void> fetchData({required bool isLoadingMore});
 
   Future<void> updateRating({

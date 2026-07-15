@@ -1,394 +1,229 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:international_cuisine/core/constants/app_keys.dart';
+import '../../utils/helpers/image_preloader.dart';
+import '../../utils/helpers/cuisine_navigation_helper.dart';
+import '../../utils/helpers/slide_animation_controller.dart';
+import '../../utils/helpers/rotation_animation_controller.dart';
+import '../../../../auth/presentation/screens/sgin_in_screen.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
-import '../../../../../core/presentation/utils/helpers/image_helpers.dart';
+import 'package:international_cuisine/core/data/models/message_result.dart';
 import 'package:international_cuisine/features/home/data/models/home_model.dart';
-
-// Screens
-import '../../../../auth/presentation/screens/sgin_in_screen.dart';
-import '../../../../cuisines/presentation/screens/french_screen.dart';
-import '../../../../cuisines/presentation/screens/syrian_screen.dart';
-import '../../../../cuisines/presentation/screens/italian_screen.dart';
-import '../../../../cuisines/presentation/screens/mexican_screen.dart';
-import '../../../../cuisines/presentation/screens/turkish_screen.dart';
-import '../../../../cuisines/presentation/screens/chinese_screen.dart';
-import '../../../../cuisines/presentation/screens/japanese_screen.dart';
-import '../../../../cuisines/presentation/screens/egyptian_screen.dart';
+import 'package:international_cuisine/core/presentation/widgets/build_snack_bar.dart';
+import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
+import 'package:international_cuisine/features/home/presentation/widgets/cuisine_card_widget.dart';
+import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push_replacement.dart';
 
 
 class HomeLayout extends StatefulWidget {
+  final VoidCallback signOut;
+  final MessageResult messageResult;
   final List<HomeDataModel> homeData;
 
-  const HomeLayout({required this.homeData, Key? key}) : super(key: key);
+  const HomeLayout({
+    super.key,
+    required this.signOut,
+    required this.homeData,
+    required this.messageResult,
+  });
 
   @override
   State<HomeLayout> createState() => _HomeLayoutState();
 }
 
-class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
+class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin ,  WidgetsBindingObserver{
+  // Constants
+  static const double _spacing = 155.0;
+  static const BorderRadius _borderRadius = BorderRadius.all(
+      Radius.circular(16));
+  static const double _endPoint = AppValues.none;
 
-  //values
-  static const _startPoint = 300.0;
-  static const _endPoint = AppValues.none;
-  static const _fullAngle = 360.0;
+  // Controllers
+  late final SlideAnimationController _slideAnimation;
+  late final RotationAnimationController _rotationAnimation;
+  final ImagePreloader _imagePreloader = ImagePreloader();
 
-  //spaces
-  static const _spacing = 155.0;
-  static const _borderRadius = BorderRadius.all(Radius.circular(16));
-
-  late Timer _rotationTimer;
-  double _rotationAngle = _endPoint;
-  final double _secondsToComplete = 8.0;
-
-  late AnimationController _slideController;
-  late Animation<double> _leftColumnAnimation;
-  late Animation<double> _rightColumnAnimation;
-
+  // State
+  bool isPressed = false;
   bool _showSlideAnimation = false;
+  double _rotationAngle = _endPoint;
 
   @override
   void initState() {
     super.initState();
+    _initializeControllers();
     _initializeApp();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeLayout oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _handleMessageResult();
+  }
+
+  void _initializeControllers() {
+    _slideAnimation = SlideAnimationController();
+    _slideAnimation.initialize(this);
+    _rotationAnimation = RotationAnimationController();
   }
 
   Future<void> _initializeApp() async {
-    await _preloadImages();
+    await _imagePreloader.preloadImages(
+      context: context,
+      homeData: widget.homeData,
+    );
+
     if (mounted) {
       setState(() {
         _showSlideAnimation = true;
       });
-      _startRotationAnimation();
-      _setupSlideAnimations();
-    }
-  }
 
-
-  Future<void> _preloadImages() async {
-    final List<Future<void>> imageFutures = [];
-
-    for (var item in widget.homeData) {
-      final image = NetworkImage(item.image);
-      final completer = image.evict().then((_) {
-        return precacheImage(image, context);
-      });
-      imageFutures.add(completer);
-    }
-
-    await Future.wait(imageFutures);
-  }
-
-  void _startRotationAnimation() {
-    final anglePerFrame = _fullAngle /
-        (_secondsToComplete * 60);
-
-    _rotationTimer = Timer.periodic(
-      const Duration(milliseconds: 1000 ~/ 60),
-          (timer) {
-        if (!mounted) {
-          timer.cancel();
-          return;
-        }
-
-        setState(() {
-          _rotationAngle += anglePerFrame;
-          if (_rotationAngle >= _fullAngle) {
-            _rotationAngle = _fullAngle;
-            timer.cancel();
+      _rotationAnimation.start(
+        onAngleUpdate: (angle) {
+          if (mounted) {
+            setState(() => _rotationAngle = angle);
           }
-        });
-      },
-    );
+        },
+        onComplete: () {
+          if (mounted) {
+            _slideAnimation.forward();
+          }
+        },
+        mounted: mounted,
+      );
+    }
   }
 
-  void _setupSlideAnimations() {
-    _slideController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _leftColumnAnimation =
-        Tween<double>(begin: _startPoint, end: _endPoint).animate(
-          CurvedAnimation(
-            parent: _slideController,
-            curve: Curves.easeOut,
-          ),
-        );
-
-    _rightColumnAnimation =
-        Tween<double>(begin: -_startPoint, end: _endPoint).animate(
-          CurvedAnimation(
-            parent: _slideController,
-            curve: Curves.easeOut,
-          ),
-        );
-
-    _slideController.forward();
-  }
-
-  Future<void> _signOut() async {
-    try {
-      final sharedPreferences = await SharedPreferences.getInstance();
-      await sharedPreferences.remove(AppKeys.uId);
-      await FirebaseAuth.instance.signOut();
-
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const SignInScreen()),
-        );
-      }
-    } catch (e) {
-      print('Error during sign-out: $e');
-      // You might want to show a snackbar or dialog here
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('حدث خطأ أثناء تسجيل الخروج: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+  void _handleMessageResult() {
+    if (widget.messageResult.message != null) {
+      _showMessageResult(widget.messageResult);
+      if (widget.messageResult.error == null) {
+        BuildNavigatorPushReplacement.build(
+          context: context,
+          link: const SignInScreen(),
         );
       }
     }
   }
 
-  void _navigateToCuisineScreen(Widget screen) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => screen),
+  void _showMessageResult(MessageResult messageResult) {
+    BuildSnackBar.show(
+      context: context,
+      message: messageResult.message!,
+      backgroundColor: messageResult.color!,
     );
   }
 
   @override
   void dispose() {
-    _rotationTimer.cancel();
-    _slideController.dispose();
+    _rotationAnimation.dispose();
+    _slideAnimation.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return _buildHomeScreen();
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.detached) {
+      CartDataCubit.get(context).saveCartToHive();
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
-  Widget _buildHomeScreen() {
+  @override
+  Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: AppColors.grey,
-        appBar: AppBar(
-          elevation: AppValues.none,
-          backgroundColor: AppColors.grey,
-          centerTitle: true,
-          title: const Text(
-            'اختر مطبخك',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppColors.white,
-            ),
-          ),
-          leading: IconButton(
-            onPressed: _signOut,
-            icon: const Icon(Icons.logout, color: AppColors.white),
-            tooltip: 'تسجيل الخروج',
-          ),
-        ),
-        body: Padding(
-          padding: AppPaddings.all_vSmall,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildLeftColumn(),
-              const SizedBox(width: 10.0),
-              _buildRightColumn(),
-            ],
-          ),
-        ),
+        appBar: _buildAppBar(),
+        body: _buildBody(),
       ),
     );
   }
 
-  Widget _buildLeftColumn() {
-    return AnimatedBuilder(
-      animation: _slideController,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(
-              _showSlideAnimation ? _leftColumnAnimation.value : _endPoint,
-              _endPoint),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _buildCuisineCard(index: 0, screen: EgyptianScreen()),
-              _buildCuisineCard(index: 2, screen: TurkishScreen()),
-              _buildCuisineCard(index: 4, screen: ChineseScreen()),
-              _buildCuisineCard(index: 6, screen: ItalianScreen()),
-            ],
-          ),
-        );
-      },
+  AppBar _buildAppBar() {
+    return AppBar(
+      elevation: AppValues.none,
+      backgroundColor: AppColors.grey,
+      centerTitle: true,
+      title: const Text(
+        'اختر مطبخك',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: AppColors.white,
+        ),
+      ),
+      leading: IconButton(
+        onPressed: isPressed ? null : () {
+          widget.signOut();
+          isPressed = true;
+        },
+        icon: const Icon(Icons.logout, color: AppColors.white),
+        tooltip: 'تسجيل الخروج',
+      ),
     );
   }
 
-  Widget _buildRightColumn() {
-    return AnimatedBuilder(
-      animation: _slideController,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(
-              _showSlideAnimation ? _rightColumnAnimation.value : _endPoint,
-              _endPoint),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _buildCuisineCard(index: 1, screen: SyrianScreen()),
-              _buildCuisineCard(index: 3, screen: MexicanScreen()),
-              _buildCuisineCard(index: 5, screen: JapaneseScreen()),
-              _buildCuisineCard(index: 7, screen: FrenchScreen()),
-            ],
+  Widget _buildBody() {
+    return Padding(
+      padding: AppPaddings.all_vSmall,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildColumn(
+            indices: CuisineNavigationHelper.getLeftColumnIndices(),
+            animation: _slideAnimation.leftAnimation,
           ),
-        );
-      },
+          const SizedBox(width: 10.0),
+          _buildColumn(
+            indices: CuisineNavigationHelper.getRightColumnIndices(),
+            animation: _slideAnimation.rightAnimation,
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildCuisineCard({
-    required int index,
-    required Widget screen
+  Widget _buildColumn({
+    required List<int> indices,
+    required Animation<double> animation,
   }) {
+    return AnimatedBuilder(
+      animation: _slideAnimation.controller,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(
+            _showSlideAnimation ? animation.value : _endPoint,
+            _endPoint,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: indices.map((index) {
+              return _buildCuisineCard(index);
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCuisineCard(int index) {
     if (index >= widget.homeData.length) {
-      return const SizedBox(); // Handle out of bounds
+      return const SizedBox();
     }
 
-    final _cuisine = widget.homeData[index];
+    final cuisine = widget.homeData[index];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: InkWell(
-        onTap: () => _navigateToCuisineScreen(screen),
-        borderRadius: _borderRadius,
-        child: Container(
-          width: _spacing,
-          height: _spacing,
-          decoration: BoxDecoration(
-            borderRadius: _borderRadius,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.black.withOpacity(0.3),
-                blurRadius: 8.0,
-                offset: const Offset(AppValues.none, 4.0),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: _borderRadius,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                _buildCuisineImage(_cuisine.image),
-                _buildCuisineOverlay(),
-                _buildCuisineTitle(_cuisine.title),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCuisineImage(String imageUrl) {
-    return Hero(
-      tag: imageUrl,
-      child: Image.network(
-        imageUrl,
-        fit: BoxFit.cover,
-        cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
-            context,
-            targetHeight: _spacing,
-            qualityFactor: 1.5
-        ),
-        cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
-            context,
-            targetWidth: _spacing
-        ),
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                  loadingProgress.expectedTotalBytes!
-                  : null,
-              color: AppColors.white,
-            ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: Color(0xFF424242),
-            child: const Icon(
-              Icons.broken_image,
-              color: AppColors.white,
-              size: 50.0,
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildCuisineOverlay() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColors.transparent,
-            AppColors.transparent,
-            AppColors.black.withOpacity(0.8),
-          ],
-          stops: const [AppValues.none, 0.5, 1.0],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCuisineTitle(String title) {
-    return Positioned(
-      left: AppValues.none,
-      right: AppValues.none,
-      bottom: 12.0,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20.0,
-            color: AppColors.white,
-            shadows: [
-              Shadow(
-                blurRadius: 6.0,
-                color: AppColors.black,
-                offset: Offset(2.0, 2.0),
-              ),
-            ],
-          ),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
+    return CuisineCardWidget(
+      cuisine: cuisine,
+      index: index,
+      spacing: _spacing,
+      borderRadius: _borderRadius,
+      onTap: () => CuisineNavigationHelper.navigateToCuisine(context, index),
     );
   }
 }
-
-

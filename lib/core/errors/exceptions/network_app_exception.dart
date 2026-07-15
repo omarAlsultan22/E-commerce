@@ -14,7 +14,7 @@ class NetworkAppException extends AppException {
   });
 
   @override
-  Widget buildErrorWidget({VoidCallback? onRetry}) {
+  Widget buildErrorWidget({required VoidCallback onRetry}) {
     return InternetUnavailability(
         onRetry: onRetry,
         connectivityService: connectivityService

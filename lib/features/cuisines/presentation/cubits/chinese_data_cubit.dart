@@ -25,16 +25,6 @@ class ChineseDataCubit extends BaseCountriesCubit {
 
   static const _chinese = 'chinese';
 
-  void startMonitoring() {
-    _connectivityProvider.addListener(handleConnectionChange);
-  }
-
-  void handleConnectionChange() {
-    if (_connectivityProvider.isConnected && state.firstModel == null) {
-      getInitialData();
-    }
-  }
-
   @override
   Future<void> fetchData({required bool isLoadingMore}) async {
     if (!state.hasMore) return;
@@ -49,7 +39,7 @@ class ChineseDataCubit extends BaseCountriesCubit {
           isLoadingMore ? state.lastDocument : null
       );
 
-      if(state.categoryDataIsEmpty && newState.isEmpty) {
+      if (state.categoryDataIsEmpty && newState.isEmpty) {
         state.copyWith(subState: InitialState());
         return;
       }
@@ -84,7 +74,7 @@ class ChineseDataCubit extends BaseCountriesCubit {
           onError: (failure) =>
               state.copyWith(
                 subState: ErrorState(
-                  failure: failure
+                    failure: failure
                 ),
               )
       );
@@ -149,11 +139,5 @@ class ChineseDataCubit extends BaseCountriesCubit {
   @override
   void clearDataSearch() {
     emit(state.copyWith(firstModel: state.updateSearchList([])));
-  }
-
-  @override
-  Future<void> close() {
-    _connectivityProvider.removeListener(handleConnectionChange);
-    return super.close();
   }
 }

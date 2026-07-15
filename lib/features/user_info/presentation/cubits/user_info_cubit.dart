@@ -5,12 +5,10 @@ import '../../domain/useCases/user_info_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
-import '../../../../core/errors/exceptions/network_app_exception.dart';
-import 'package:international_cuisine/core/constants/app_strings.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 
 
-class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfoState>{
+class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfoState> {
   final UserInfoUseCase _userInfoUseCase;
   final ConnectivityProvider _connectivityProvider;
 
@@ -23,16 +21,6 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
         super(UserInfoState.initial());
 
   static UserInfoCubit get(context) => BlocProvider.of(context);
-
-  void startMonitoring() {
-    _connectivityProvider.addListener(_handleConnectionChange);
-  }
-
-  void _handleConnectionChange() {
-    if (_connectivityProvider.isConnected && state.userModel == null) {
-      getInfo();
-    }
-  }
 
   Future<void> updateInfo({
     required String firstName,
@@ -48,13 +36,15 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
       );
     }
     if (!_connectivityProvider.isConnected) {
-      emit(
-          buildState(
-            MessageResult.error(
-              error: NetworkAppException(message: AppStrings.noInternetMessage
+      handleError(
+        error: SocketException,
+        stackTrace: StackTrace.current,
+        onError: (failure) =>
+            buildState(
+              MessageResult.error(
+                  error: failure
               ),
             ),
-          )
       );
       return;
     }
@@ -63,10 +53,10 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
 
     try {
       await _userInfoUseCase.updateInfoExecute(
-        firstName: firstName,
-        lastName: lastName,
-        userPhone: userPhone,
-        userLocation: userLocation
+          firstName: firstName,
+          lastName: lastName,
+          userPhone: userPhone,
+          userLocation: userLocation
       );
       emit(buildState(MessageResult.success()));
     }
@@ -75,11 +65,11 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-          buildState(
-              MessageResult.error(
-                error: failure,
+              buildState(
+                  MessageResult.error(
+                    error: failure,
+                  )
               )
-          )
       );
     }
   }
@@ -104,7 +94,7 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
     try {
       final userInfo = await _userInfoUseCase.getInfoExecute();
 
-      if(userInfo == null) {
+      if (userInfo == null) {
         state.copyWith(subState: InitialState());
         return;
       }
@@ -126,11 +116,5 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
               )
       );
     }
-  }
-
-  @override
-  Future<void> close() {
-    _connectivityProvider.removeListener(_handleConnectionChange);
-    return super.close();
   }
 }

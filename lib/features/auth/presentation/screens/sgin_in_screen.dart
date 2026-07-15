@@ -1,5 +1,5 @@
 import 'package:international_cuisine/features/auth/data/repositories_impl/firebase_auth_repository.dart';
-import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
+import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import '../../../../core/data/data_sources/local/shared_preferences.dart';
 import '../../../../core/data/data_sources/remote/firebase_auth.dart';
 import '../../../../core/presentation/states/message_state.dart';
@@ -20,23 +20,27 @@ class SignInScreen extends StatelessWidget {
     final _authRepository = FirebaseAuthRepository(authService: _auth);
     final _useCase = SignInUseCase(
         authRepository: _authRepository, cacheHelper: _cacheHelper);
-    final _connectivityService = ConnectivityService();
-    final _cubit = SignInCubit(
-        useCase: _useCase, connectivityService: _connectivityService);
-    return BlocBuilder<SignInCubit, MessageState>(
-        builder: (context, state) {
-          return SignInLayout(
-              cacheHelper: _cacheHelper,
-              messageResult: state.messageResult!,
-              onUpdate: ({
-                required String userEmail,
-                required String userPassword
-              }) =>
-                  _cubit.signIn(
-                      userEmail: userEmail, userPassword: userPassword
-                  )
-          );
-        }
+    final _connectivityProvider = ConnectivityProvider();
+    return BlocProvider(create: (context) =>
+        SignInCubit(useCase: _useCase,
+            connectivityProvider: _connectivityProvider),
+        child: BlocBuilder<SignInCubit, MessageState>(
+            builder: (context, state) {
+              final _cubit = SignInCubit.get(context);
+              return SignInLayout(
+                  cacheHelper: _cacheHelper,
+                  messageResult: state.messageResult!,
+                  onUpdate: ({
+                    required String userEmail,
+                    required String userPassword
+                  }) =>
+                      _cubit.signIn(
+                          userEmail: userEmail,
+                          userPassword: userPassword
+                      )
+              );
+            }
+        )
     );
   }
 }

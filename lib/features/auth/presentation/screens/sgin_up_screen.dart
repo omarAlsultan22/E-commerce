@@ -1,4 +1,4 @@
-import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
+import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/data/data_sources/remote/firestore.dart';
 import '../../../../core/data/data_sources/local/shared_preferences.dart';
 import '../../data/repositories_impl/firebase_sign_up_repository.dart';
@@ -27,31 +27,34 @@ class SignUpScreen extends StatelessWidget {
         authRepository: _authRepository,
         signUpRepository: _signUpRepository,
         cacheHelper: _cacheHelper);
-    final _connectivityService = ConnectivityService();
-    final _cubit = SignUpCubit(
-        useCase: _useCase, connectivityService: _connectivityService);
-    return BlocBuilder<SignUpCubit, MessageState>(
-        builder: (context, state) {
-          return SignUpLayout(
-              messageResult: state.messageResult!,
-              onUpdate: ({
-                required String firstName,
-                required String lastName,
-                required String userEmail,
-                required String userPassword,
-                required String userPhone,
-                required String userLocation
-              }) =>
-                  _cubit.signUp(
-                      firstName: firstName,
-                      lastName: lastName,
-                      userEmail: userEmail,
-                      userPassword: userPassword,
-                      userPhone: userPhone,
-                      userLocation: userLocation
-                  )
-          );
-        }
+    final _connectivityProvider = ConnectivityProvider();
+    return BlocProvider(create: (context) =>
+        SignUpCubit(useCase: _useCase,
+            connectivityProvider: _connectivityProvider),
+        child: BlocBuilder<SignUpCubit, MessageState>(
+            builder: (context, state) {
+              final _cubit = SignUpCubit.get(context);
+              return SignUpLayout(
+                  messageResult: state.messageResult!,
+                  onUpdate: ({
+                    required String firstName,
+                    required String lastName,
+                    required String userEmail,
+                    required String userPassword,
+                    required String userPhone,
+                    required String userLocation
+                  }) =>
+                      _cubit.signUp(
+                          firstName: firstName,
+                          lastName: lastName,
+                          userEmail: userEmail,
+                          userPassword: userPassword,
+                          userPhone: userPhone,
+                          userLocation: userLocation
+                      )
+              );
+            }
+        )
     );
   }
 }

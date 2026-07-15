@@ -1,4 +1,4 @@
-import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
+import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import '../../../../core/data/data_sources/remote/firebase_auth.dart';
 import '../../data/repositories_impl/firebase_auth_repository.dart';
 import '../../../../core/presentation/states/message_state.dart';
@@ -13,23 +13,26 @@ class ForgetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = FirebaseAuthService();
-    final authRepository = FirebaseAuthRepository(authService: auth);
-    final connectivityService = ConnectivityService();
-    final cubit = ForgetPasswordCubit(
-        repository: authRepository, connectivityService: connectivityService);
-    return BlocBuilder<ForgetPasswordCubit, MessageState>(
-        builder: (context, state) {
-          return ForgetPasswordLayout(
-              messageResult: state.messageResult!,
-              onUpdate: ({
-                required String userEmail,
-              }) =>
-                  cubit.sendResetEmail(
-                      userEmail: userEmail
-                  )
-          );
-        }
+    final _auth = FirebaseAuthService();
+    final _authRepository = FirebaseAuthRepository(authService: _auth);
+    final _connectivityProvider = ConnectivityProvider();
+    return BlocProvider(create: (context) =>
+        ForgetPasswordCubit(repository: _authRepository,
+            connectivityProvider: _connectivityProvider),
+        child: BlocBuilder<ForgetPasswordCubit, MessageState>(
+            builder: (context, state) {
+              final _cubit = ForgetPasswordCubit.get(context);
+              return ForgetPasswordLayout(
+                  messageResult: state.messageResult!,
+                  onUpdate: ({
+                    required String userEmail,
+                  }) =>
+                      _cubit.sendResetEmail(
+                          userEmail: userEmail
+                      )
+              );
+            }
+        )
     );
   }
 }

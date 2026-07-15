@@ -1,24 +1,23 @@
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/message_state.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
-import '../../../../core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/errors/exceptions/security_app_exception.dart';
-import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
+import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 
 
-class ForgetPasswordCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageState>{
+class ForgetPasswordCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageState> {
   final AuthRepository _repository;
-  final ConnectivityService _connectivityService;
+  final ConnectivityProvider _connectivityProvider;
 
   ForgetPasswordCubit({
     required AuthRepository repository,
-    required ConnectivityService connectivityService
+    required ConnectivityProvider connectivityProvider
   })
       : _repository = repository,
-        _connectivityService = connectivityService,
+        _connectivityProvider = connectivityProvider,
         super(MessageState.initial());
 
   static ForgetPasswordCubit get(context) => BlocProvider.of(context);
@@ -26,17 +25,22 @@ class ForgetPasswordCubit extends Cubit<MessageState> with ErrorHandlerMixin<Mes
   Future<void> sendResetEmail({
     required String userEmail
   }) async {
-    final isConnected = await _connectivityService.checkInternetConnection();
-    if (!isConnected) {
-      emit(
-        MessageState(
-          messageResult: MessageResult.error(
-              error: NetworkAppException(message: AppStrings.noInternetMessage)),
-        ),
+    if (!_connectivityProvider.isConnected) {
+      handleError(
+          error: SocketException,
+          stackTrace: StackTrace.current,
+          onError: (failure) =>
+              MessageState(
+                messageResult: MessageResult.error(
+                    error: failure
+                ),
+              )
       );
       return;
     }
+
     emit(MessageState(messageResult: MessageResult.loading()));
+
     try {
       if (userEmail.isEmpty) {
         emit(

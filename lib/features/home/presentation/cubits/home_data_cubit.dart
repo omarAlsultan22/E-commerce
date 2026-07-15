@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/data/models/message_result.dart';
+import '../../../auth/domain/useCases/sign_out_useCase.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
@@ -8,32 +10,23 @@ import 'package:international_cuisine/features/home/presentation/states/home_dat
 
 
 class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeDataState> {
+  final SignOutUseCase _signOutUseCase;
   final HomeDataUseCase _homeDataUseCase;
   final ConnectivityProvider _connectivityProvider;
 
   HomeDataCubit({
+    required SignOutUseCase signOutUseCase,
     required HomeDataUseCase homeDataUseCase,
     required ConnectivityProvider connectivityProvider
   })
-      : _homeDataUseCase = homeDataUseCase,
+      : _signOutUseCase = signOutUseCase,
+        _homeDataUseCase = homeDataUseCase,
         _connectivityProvider = connectivityProvider,
         super(
           HomeDataState.initial()
-      ) {
-    _startMonitoring();
-  }
+      );
 
   static HomeDataCubit get(context) => BlocProvider.of<HomeDataCubit>(context);
-
-  void _startMonitoring() {
-    _connectivityProvider.addListener(_handleConnectionChange);
-  }
-
-  void _handleConnectionChange() {
-    if (_connectivityProvider.isConnected && state.dataISEmpty) {
-      getData();
-    }
-  }
 
   Future<void> getData() async {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
@@ -81,9 +74,22 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
     }
   }
 
-  @override
-  Future<void> close() {
-    _connectivityProvider.removeListener(_handleConnectionChange);
-    return super.close();
+  Future<void> signOut() async {
+    try {
+      _signOutUseCase.signOutExecute();
+      emit(
+          state.copyWith(secondModel: MessageResult.success(message: 'تم تسجيل الخروج بنجاح')));
+    } catch (e, stackTrace) {
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                  secondModel: MessageResult.error(
+                      error: failure, message: 'حدث خطأ أثناء تسجيل الخروج: '
+                  )
+              )
+      );
+    }
   }
 }

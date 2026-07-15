@@ -75,6 +75,7 @@ class LocationManager {
   }
 }
 
+
 class LocationState {
   final bool isLoading;
   final String address;
@@ -89,6 +90,8 @@ class LocationState {
     this.errorMessage,
     this.placemark,
   });
+
+  bool get addressIsEmpty => address.isEmpty;
 
   factory LocationState.initial() {
     return LocationState(

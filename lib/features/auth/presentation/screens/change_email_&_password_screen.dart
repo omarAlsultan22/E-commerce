@@ -6,7 +6,7 @@ import '../../../../core/presentation/states/message_state.dart';
 import '../../data/repositories_impl/firebase_auth_repository.dart';
 import '../../domain/useCases/change_email_and_password_useCase.dart';
 import 'package:international_cuisine/core/data/data_sources/remote/firebase_auth.dart';
-import '../../../../core/domain/services/connectivity_service/connectivity_service.dart';
+import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 
 
@@ -20,26 +20,29 @@ class ChangeEmailAndPasswordScreen extends StatelessWidget {
     final _authRepository = FirebaseAuthRepository(authService: _auth);
     final _useCase = ChangeEmailAndPasswordUseCase(
         authRepository: _authRepository);
-    final _connectivityService = ConnectivityService();
-    final _cubit = ChangeEmailAndPasswordCubit(
-        useCase: _useCase, connectivityService: _connectivityService);
-    return BlocBuilder<ChangeEmailAndPasswordCubit, MessageState>(
-        builder: (context, state) {
-          return ChangeEmailAndPasswordLayout(
-              cacheHelper: _cacheHelper,
-              messageResult: state.messageResult!,
-              onUpdate: ({
-                required String newEmail,
-                required String currentPassword,
-                required String newPassword
-              }) =>
-                  _cubit.changeEmailAndPassword(
-                      newEmail: newEmail,
-                      currentPassword: currentPassword,
-                      newPassword: newPassword
-                  )
-          );
-        }
+    final _connectivityProvider = ConnectivityProvider();
+    return BlocProvider(create: (context) =>
+        ChangeEmailAndPasswordCubit(useCase: _useCase,
+            connectivityProvider: _connectivityProvider),
+        child: BlocBuilder<ChangeEmailAndPasswordCubit, MessageState>(
+            builder: (context, state) {
+              final _cubit = ChangeEmailAndPasswordCubit.get(context);
+              return ChangeEmailAndPasswordLayout(
+                  cacheHelper: _cacheHelper,
+                  messageResult: state.messageResult!,
+                  onUpdate: ({
+                    required String newEmail,
+                    required String currentPassword,
+                    required String newPassword
+                  }) =>
+                      _cubit.changeEmailAndPassword(
+                          newEmail: newEmail,
+                          currentPassword: currentPassword,
+                          newPassword: newPassword
+                      )
+              );
+            }
+        )
     );
   }
 }

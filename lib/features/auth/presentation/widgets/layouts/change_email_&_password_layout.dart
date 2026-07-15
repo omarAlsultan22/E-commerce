@@ -1,8 +1,9 @@
-import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
-import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
+import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:international_cuisine/features/auth/presentation/screens/sgin_in_screen.dart';
-import '../../../../../core/data/data_sources/local/shared_preferences.dart';
+import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import '../../../../../core/presentation/widgets/navigation/navigator_with_delay.dart';
+import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
+import '../../../../../core/data/data_sources/local/shared_preferences.dart';
 import 'package:international_cuisine/core/constants/app_text_styles.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
@@ -65,6 +66,9 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
     if (widget.messageResult.message != null) {
       _clearUserData();
       _showMessageResult(widget.messageResult);
+      if (widget.messageResult.error == null) {
+        BuildNavigatorWithDelay.build(context: context, link: SignInScreen());
+      }
     }
     setState(() {});
   }
@@ -99,12 +103,11 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   }
 
   Widget _buildBackButton() {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
+    return BackButtonWidget(
       color: AppColors.white,
       onPressed: widget.messageResult.isLoading
-          ? () => Navigator.pop(context)
-          : null,
+          ? null
+          : ()=> Navigator.pop(context),
     );
   }
 
@@ -120,8 +123,8 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
           padding: _paddingSymmetric,
         ),
         onPressed: widget.messageResult.isLoading
-            ? () => _onSavePressed()
-            : null,
+            ? null
+            : () => _onSavePressed(),
         child: _buildSaveButtonContent(),
       ),
     );
@@ -306,13 +309,13 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
         message: messageResult.message!,
         backgroundColor: messageResult.color!
     );
-    BuildNavigatorWithDelay.build(context: context, link: SignInScreen());
   }
 
   void _showPasswordMismatchError() {
     BuildSnackBar.show(
         context: context,
         message: 'كلمة المرور الجديدة غير متطابقة',
-        backgroundColor: AppColors.errorRed);
+        backgroundColor: AppColors.errorRed
+    );
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../constants/payment_strings.dart';
-import '../../constants/payment_text_styles.dart';
-import '../../constants/payment_dimensions.dart';
 import '../../constants/payment_constants.dart';
+import '../../constants/payment_dimensions.dart';
+import '../../constants/payment_text_styles.dart';
 
 
 class PaymentMethodSelector extends StatelessWidget {
   final int selectedPaymentMethod;
-  final Function(int) onMethodSelected;
+  final ValueChanged<int> onMethodSelected;
 
   const PaymentMethodSelector({
     super.key,
@@ -19,7 +19,8 @@ class PaymentMethodSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(PaymentStrings.totalAmount, style: PaymentTextStyles.titleBold),
+        const Text(
+            PaymentStrings.totalAmount, style: PaymentTextStyles.titleBold),
         PaymentDimensions.verticalSpacing10,
         Row(
           children: [

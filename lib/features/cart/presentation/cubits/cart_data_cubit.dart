@@ -16,18 +16,10 @@ class CartDataCubit extends Cubit<CartDataState> with ErrorHandlerMixin<CartData
       :
         _useCase = useCase,
         super(
-          CartDataState.initial());
+          CartDataState.initial()
+      );
 
   static CartDataCubit get(context) => BlocProvider.of(context);
-
-  List<OrderModel> get getData => state.shoppingList;
-
-  void _checkListIsEmpty(List<OrderModel> shoppingList) {
-    if (shoppingList.isEmpty) {
-      emit(state.copyWith(subState: InitialState()));
-      return;
-    }
-  }
 
   Future<void> addOrder({
     required String orderSize,
@@ -43,9 +35,6 @@ class CartDataCubit extends Cubit<CartDataState> with ErrorHandlerMixin<CartData
         dataModel: dataModel, orderModel: orderModel
     );
 
-    _checkListIsEmpty(shoppingList);
-
-    print(shoppingList.length);
     emit(
         state.copyWith(
             firstModel: shoppingList,
@@ -54,12 +43,14 @@ class CartDataCubit extends Cubit<CartDataState> with ErrorHandlerMixin<CartData
     );
   }
 
-  void removeItem(int index) {
+  Future<void> removeItem(int index) async {
     try {
-      state.removeItem(index);
-      _useCase.removeItemExecute(index: index);
-      _checkListIsEmpty(state.shoppingList);
-      emit(state.copyWith());
+      await _useCase.removeItemExecute(index: index);
+      final shoppingList = state.removeItem(index);
+      if(shoppingList.isEmpty){
+        emit(state.copyWith(firstModel: const[], subState: InitialState()));
+      }
+      emit(state.copyWith(firstModel: shoppingList));
     }
     catch (e, stackTrace) {
       handleError(
@@ -103,11 +94,12 @@ class CartDataCubit extends Cubit<CartDataState> with ErrorHandlerMixin<CartData
   }
 
   Future<void> getCartData() async {
-    emit(state.copyWith(subState: LoadingState()));
     try {
       final shoppingList = await _useCase.getCartDataExecute();
 
-      _checkListIsEmpty(shoppingList);
+      if(shoppingList.isEmpty){
+        return;
+      }
 
       emit(state.copyWith(
           firstModel: shoppingList, subState: SuccessState()));

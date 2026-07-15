@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import '../../screens/sgin_in_screen.dart';
 import '../../utils/validate/validate_email.dart';
 import '../../utils/validate/validate_password.dart';
@@ -71,6 +72,9 @@ class _SignUpLayoutState extends State<SignUpLayout> {
     if (widget.messageResult.message != null) {
       _showMessageResult(widget.messageResult);
     }
+    if (widget.messageResult.error == null) {
+      BuildNavigatorWithDelay.build(context: context, link: SignInScreen());
+    }
     setState(() {});
   }
 
@@ -102,7 +106,6 @@ class _SignUpLayoutState extends State<SignUpLayout> {
         message: messageResult.message!,
         backgroundColor: messageResult.color!
     );
-    BuildNavigatorWithDelay.build(context: context, link: SignInScreen());
   }
 
   void _togglePasswordVisibility() {
@@ -116,10 +119,10 @@ class _SignUpLayoutState extends State<SignUpLayout> {
     return Scaffold(
       backgroundColor: AppColors.darkGrey,
       appBar: AppBar(
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back, color: AppColors.white),
-        ),
+        leading: BackButtonWidget(
+            color: AppColors.white,
+            onPressed: widget.messageResult.isLoading ? null : () =>
+                Navigator.pop(context)),
         backgroundColor: Colors.transparent,
         elevation: AppValues.none,
         scrolledUnderElevation: AppValues.none,

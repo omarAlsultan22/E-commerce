@@ -1,4 +1,6 @@
 import 'package:international_cuisine/features/auth/constants/auth_label_texts_constants.dart';
+import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
+import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
 import '../../../../../core/data/models/message_result.dart';
 import '../../../../../core/constants/app_colors.dart';
@@ -62,8 +64,11 @@ class _ForgotPasswordScreenState extends State<ForgetPasswordLayout> {
     return Scaffold(
       backgroundColor: AppColors.darkGrey,
       appBar: AppBar(
-          title: const Text('نسيت كلمة المرور'),
-          backgroundColor: AppColors.transparent
+        title: const Text('نسيت كلمة المرور'),
+        backgroundColor: AppColors.transparent,
+        leading: BackButtonWidget(
+            onPressed: widget.messageResult.isLoading ? null : () =>
+                Navigator.pop(context)),
       ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
@@ -78,8 +83,12 @@ class _ForgotPasswordScreenState extends State<ForgetPasswordLayout> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _sendResetEmail,
-              child: const Text('إرسال رابط إعادة التعيين'),
+              onPressed: widget.messageResult.isLoading
+                  ? null
+                  : _sendResetEmail,
+              child: widget.messageResult.isLoading
+                  ? LoadingWidget()
+                  : const Text('إرسال رابط إعادة التعيين'),
             ),
           ],
         ),
