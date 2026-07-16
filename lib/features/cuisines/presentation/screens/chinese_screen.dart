@@ -3,6 +3,7 @@ import '../states/categories_state.dart';
 import '../cubits/chinese_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/lists/searchable_list_builder.dart';
+import '../../../../core/presentation/widgets/appbar_widget.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
 import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
@@ -54,7 +55,10 @@ class _ChineseScreenState extends State<ChineseScreen> {
               );
             },
             onError: (error) =>
-                error.buildErrorWidget(onRetry: _cubit.getInitialData)
+                error.buildErrorWidget(
+                  onRetry: _cubit.getInitialData,
+                  appBar: AppbarWidget.build(context),
+                )
         );
       },
     );

@@ -3,6 +3,7 @@ import '../states/categories_state.dart';
 import '../cubits/italian_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/lists/searchable_list_builder.dart';
+import '../../../../core/presentation/widgets/appbar_widget.dart';
 import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
 import 'package:international_cuisine/core/presentation/widgets/states/initial_state_widget.dart';
@@ -53,7 +54,10 @@ class _ItalianScreenState extends State<ItalianScreen> {
               );
             },
             onError: (error) =>
-                error.buildErrorWidget(onRetry: _cubit.getInitialData)
+                error.buildErrorWidget(
+                  onRetry: _cubit.getInitialData,
+                  appBar: AppbarWidget.build(context),
+                )
         );
       },
     );

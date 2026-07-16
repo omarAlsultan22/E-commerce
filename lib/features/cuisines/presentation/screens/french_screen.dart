@@ -3,6 +3,7 @@ import '../states/categories_state.dart';
 import '../cubits/french_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/lists/searchable_list_builder.dart';
+import '../../../../core/presentation/widgets/appbar_widget.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
 import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
@@ -36,24 +37,27 @@ class _FrenchScreenState extends State<FrenchScreen> {
             onLoading: () => const LoadingStateWidget(),
             onLoaded: (loadedState) {
               final data = loadedState as DoubleModelSuccessState;
-                return SearchableListBuilder(
-                  isLocked: false,
-                  title: 'المطبخ الفرنسي',
-                  categoriesModel: data.firstModel,
-                  messageResult: data.secondModel,
-                  getMoreData: () => _cubit.loadMoreData(),
-                  clearData: () => _cubit.clearDataSearch(),
-                  getSearchData: (searchText) =>
-                      _cubit.getDataSearch(searchText),
-                  updateRate: (index, rating) =>
-                      _cubit.updateRating(
-                          index: index,
-                          rating: rating
-                      ),
-                );
-              },
+              return SearchableListBuilder(
+                isLocked: false,
+                title: 'المطبخ الفرنسي',
+                categoriesModel: data.firstModel,
+                messageResult: data.secondModel,
+                getMoreData: () => _cubit.loadMoreData(),
+                clearData: () => _cubit.clearDataSearch(),
+                getSearchData: (searchText) =>
+                    _cubit.getDataSearch(searchText),
+                updateRate: (index, rating) =>
+                    _cubit.updateRating(
+                        index: index,
+                        rating: rating
+                    ),
+              );
+            },
             onError: (error) =>
-                error.buildErrorWidget(onRetry: _cubit.getInitialData)
+                error.buildErrorWidget(
+                  onRetry: _cubit.getInitialData,
+                  appBar: AppbarWidget.build(context),
+                )
         );
       },
     );

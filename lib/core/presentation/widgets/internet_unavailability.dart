@@ -8,79 +8,84 @@ import '../../domain/services/connectivity_service/connectivity_service.dart';
 
 class InternetUnavailability extends StatelessWidget {
   final VoidCallback onRetry;
+  final PreferredSizeWidget? appBar;
   final ConnectivityService? connectivityService;
 
   const InternetUnavailability({
-  super.key,
-  required this.onRetry,
-  required this.connectivityService
+    super.key,
+    this.appBar,
+    required this.onRetry,
+    required this.connectivityService
   });
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Container(
-            color: AppColors.white,
-          ),
-
-          Opacity(
-            opacity: 0.3,
-            child: Image.asset(
-              AppAssets.originalLogo,
-              fit: BoxFit.contain,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: appBar,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Container(
+              color: AppColors.white,
             ),
-          ),
 
-          // محتوى الشاشة
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.wifi_off,
-                  size: 80,
-                  color: const Color(0xFF757575),
-                ),
+            Opacity(
+              opacity: 0.3,
+              child: Image.asset(
+                AppAssets.originalLogo,
+                fit: BoxFit.contain,
+              ),
+            ),
 
-                const SizedBox(height: 20),
-
-                // النصوص
-                _buildText('OOPS!', 28.0),
-                AppSpaces.verticalSpacing_8,
-                _buildText('NO INTERNET', 24.0),
-                const SizedBox(height: 20),
-                _buildText(
-                  'Please check your network connection.',
-                  16.0,
-                  fontWeight: FontWeight.normal,
-                  color: const Color(0xFF616161),
-                ),
-
-                const SizedBox(height: 40),
-
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async => _hasInternet(),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: AppBorders.borderRadius_12,
-                      ),
-                    ),
-                    child: _buildText('TRY AGAIN', 18.0),
+            // محتوى الشاشة
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.wifi_off,
+                    size: 80,
+                    color: const Color(0xFF757575),
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 20),
+
+                  // النصوص
+                  _buildText('OOPS!', 28.0),
+                  AppSpaces.verticalSpacing_8,
+                  _buildText('NO INTERNET', 24.0),
+                  const SizedBox(height: 20),
+                  _buildText(
+                    'Please check your network connection.',
+                    16.0,
+                    fontWeight: FontWeight.normal,
+                    color: const Color(0xFF616161),
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async => _hasInternet(),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppBorders.borderRadius_12,
+                        ),
+                      ),
+                      child: _buildText('TRY AGAIN', 18.0),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

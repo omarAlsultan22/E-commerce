@@ -40,6 +40,7 @@ void main() async {
         MaterialApp(
             debugShowCheckedModeBanner: false,
             home: exception.buildErrorWidget(
+                appBar: null,
                 onRetry: () => runApp(const MyApp())
             )
         )

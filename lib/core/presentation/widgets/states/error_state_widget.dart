@@ -5,11 +5,13 @@ class ErrorStateWidget extends StatelessWidget {
   final String? error;
   final String buttonText;
   final VoidCallback? onRetry;
+  final PreferredSizeWidget? appBar;
 
   const ErrorStateWidget({
     super.key,
     this.error,
     this.onRetry,
+    this.appBar,
     this.buttonText = 'Retry',
   });
 
@@ -18,6 +20,7 @@ class ErrorStateWidget extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        appBar: appBar,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

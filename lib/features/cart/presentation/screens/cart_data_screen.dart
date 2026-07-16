@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../cubits/cart_data_cubit.dart';
 import '../states/cart_data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/presentation/widgets/appbar_widget.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
@@ -65,7 +66,11 @@ class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObse
                 );
               },
               onError: (error) =>
-                  error.buildErrorWidget(onRetry: cubit.getCartData)
+                  error.buildErrorWidget(
+                    onRetry: cubit.getCartData,
+                    appBar: AppbarWidget.build(context),
+
+                  )
           );
         }
     );

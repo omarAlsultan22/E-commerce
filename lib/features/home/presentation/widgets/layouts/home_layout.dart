@@ -70,10 +70,12 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin ,
   }
 
   Future<void> _initializeApp() async {
+    /*
     await _imagePreloader.preloadImages(
       context: context,
       homeData: widget.homeData,
     );
+     */
 
     if (mounted) {
       setState(() {

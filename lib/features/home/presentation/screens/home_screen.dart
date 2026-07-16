@@ -2,6 +2,7 @@ import 'package:international_cuisine/features/home/presentation/widgets/layouts
 import 'package:international_cuisine/features/home/presentation/states/home_data_state.dart';
 import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
+import '../../../../core/presentation/widgets/appbar_widget.dart';
 import '../../../cuisines/constants/cuisines_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +32,9 @@ class HomeScreen extends StatelessWidget {
               );
             },
             onError: (error) =>
-                error.buildErrorWidget(onRetry: _cubit.getData
+                error.buildErrorWidget(
+                    appBar: null,
+                    onRetry: _cubit.getData
                 )
         );
       },

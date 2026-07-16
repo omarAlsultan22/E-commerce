@@ -73,8 +73,6 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMi
       final userInfo = await _getUserInfo();
       final shoppingList = await _getShoppingList();
 
-      print('${userInfo}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>......');
-      print('${shoppingList.length}>>>>>>>>>>>>>>>>>>>>>>>>>>>.');
       if (userInfo == null || shoppingList.isEmpty) {
         state.copyWith(subState: InitialState());
         return;

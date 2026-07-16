@@ -1,6 +1,7 @@
 import 'package:international_cuisine/core/presentation/widgets/states/loading_state_widget.dart';
 import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
+import 'package:international_cuisine/core/presentation/widgets/appbar_widget.dart';
 import 'package:international_cuisine/core/data/data_sources/remote/firestore.dart';
 import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
@@ -29,9 +30,10 @@ class UserInfoScreen extends StatelessWidget {
     final _connectivityProvider = ConnectivityProvider();
     return BlocProvider(
         create: (context) =>
-            UserInfoCubit(
-                userInfoUseCase: _userInfoUseCase,
-                connectivityProvider: _connectivityProvider)..getInfo(),
+        UserInfoCubit(
+            userInfoUseCase: _userInfoUseCase,
+            connectivityProvider: _connectivityProvider)
+          ..getInfo(),
         child: BlocBuilder<UserInfoCubit, UserInfoState>(
             builder: (context, state) {
               final cubit = UserInfoCubit.get(context);
@@ -56,7 +58,10 @@ class UserInfoScreen extends StatelessWidget {
                     );
                   },
                   onError: (error) =>
-                      error.buildErrorWidget(onRetry: () => cubit.getInfo())
+                      error.buildErrorWidget(
+                          onRetry: () => cubit.getInfo(),
+                          appBar: AppbarWidget.build(context)
+                      )
               );
             }
         )
