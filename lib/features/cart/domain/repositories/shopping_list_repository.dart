@@ -8,9 +8,5 @@ abstract class ShoppingListRepository {
     required List<OrderModel> shoppingList
   });
 
-  Future<void> removeItemFromHive({
-    required int index
-});
-
   Future<void> clearDataFromHive();
 }

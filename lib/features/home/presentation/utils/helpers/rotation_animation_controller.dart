@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 
 
 class RotationAnimationController {
@@ -15,7 +14,6 @@ class RotationAnimationController {
 
   void start({
     required Function(double) onAngleUpdate,
-    required VoidCallback onComplete,
     required bool mounted,
   }) {
     final anglePerFrame = fullAngle / (secondsToComplete * 60);
@@ -33,7 +31,6 @@ class RotationAnimationController {
           _currentAngle = fullAngle;
           timer.cancel();
           _isComplete = true;
-          onComplete();
         }
         onAngleUpdate(_currentAngle);
       },

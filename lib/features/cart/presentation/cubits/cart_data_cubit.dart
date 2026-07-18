@@ -45,7 +45,6 @@ class CartDataCubit extends Cubit<CartDataState> with ErrorHandlerMixin<CartData
 
   Future<void> removeItem(int index) async {
     try {
-      await _useCase.removeItemExecute(index: index);
       final shoppingList = state.removeItem(index);
       if(shoppingList.isEmpty){
         emit(state.copyWith(firstModel: const[], subState: InitialState()));

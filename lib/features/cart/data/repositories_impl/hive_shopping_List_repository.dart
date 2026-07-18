@@ -31,17 +31,6 @@ class HiveShoppingListRepository implements ShoppingListRepository {
   }
 
   @override
-  Future<void> removeItemFromHive({
-    required int index
-  }) async {
-    try {
-      await _hiveStore.removeItem(index);
-    } catch (e) {
-      throw Exception('Failed to remove item: $e');
-    }
-  }
-
-  @override
   Future<void> clearDataFromHive() async {
     try {
       await _hiveStore.clearData();

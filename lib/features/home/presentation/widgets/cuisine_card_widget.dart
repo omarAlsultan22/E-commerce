@@ -1,9 +1,9 @@
-// features/home/presentation/widgets/cuisine_card_widget.dart
 import 'package:flutter/material.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
-import 'package:international_cuisine/core/presentation/utils/helpers/image_helpers.dart';
 import 'package:international_cuisine/features/home/data/models/home_model.dart';
+import 'package:international_cuisine/core/presentation/utils/helpers/image_helpers.dart';
+
 
 class CuisineCardWidget extends StatelessWidget {
   final HomeDataModel cuisine;
@@ -58,44 +58,28 @@ class CuisineCardWidget extends StatelessWidget {
   }
 
   Widget _buildCuisineImage(BuildContext context) {
-    return Hero(
-      tag: cuisine.image,
-      child: Image.network(
-        cuisine.image,
-        fit: BoxFit.cover,
-        cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
-          context,
-          targetHeight: spacing,
-          qualityFactor: 1.5,
-        ),
-        cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
-          context,
-          targetWidth: spacing,
-        ),
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                  loadingProgress.expectedTotalBytes!
-                  : null,
-              color: AppColors.white,
-            ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: const Color(0xFF424242),
-            child: const Icon(
-              Icons.broken_image,
-              color: AppColors.white,
-              size: 50.0,
-            ),
-          );
-        },
+    return Image.network(
+      cuisine.image,
+      fit: BoxFit.cover,
+      cacheHeight: ImageHelpers.calculateOptimalCacheHeight(
+        context,
+        targetHeight: spacing,
+        qualityFactor: 1.5,
       ),
+      cacheWidth: ImageHelpers.calculateOptimalCacheWidth(
+        context,
+        targetWidth: spacing,
+      ),
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          color: const Color(0xFF424242),
+          child: const Icon(
+            Icons.broken_image,
+            color: AppColors.white,
+            size: 50.0,
+          ),
+        );
+      },
     );
   }
 

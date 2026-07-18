@@ -2,7 +2,6 @@ import 'package:international_cuisine/features/home/presentation/widgets/layouts
 import 'package:international_cuisine/features/home/presentation/states/home_data_state.dart';
 import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
-import '../../../../core/presentation/widgets/appbar_widget.dart';
 import '../../../cuisines/constants/cuisines_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,6 +24,7 @@ class HomeScreen extends StatelessWidget {
             onLoading: () => const IntroScreen(),
             onLoaded: (loadedState) {
               final data = loadedState as DoubleModelSuccessState;
+
               return HomeLayout(
                 signOut: _cubit.signOut,
                 homeData: data.firstModel,

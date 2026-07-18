@@ -12,8 +12,8 @@ import 'core/domain/services/connectivity_service/connectivity_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final _hiveStore = HiveStore();
   final _cacheHelper = CacheHelper();
+  final _hiveStore = HiveStore(cacheHelper: _cacheHelper);
   final _connectivityService = ConnectivityService();
 
   try {
@@ -38,13 +38,35 @@ void main() async {
     final exception = errorHandler.handleException();
     runApp(
         MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: exception.buildErrorWidget(
-                appBar: null,
-                onRetry: () => runApp(const MyApp())
-            )
+          debugShowCheckedModeBanner: false,
+          home: exception.buildErrorWidget(
+              appBar: null,
+              onRetry: () => runApp(const MyApp())
+          ),
         )
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

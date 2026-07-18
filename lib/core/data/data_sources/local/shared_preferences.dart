@@ -5,7 +5,11 @@ class CacheHelper {
 
   static late SharedPreferences sharedPreferences;
 
-  init() async {
+  static final CacheHelper _instance = CacheHelper._internal();
+  factory CacheHelper() => _instance;
+  CacheHelper._internal();
+
+  Future<void> init() async {
     sharedPreferences = await SharedPreferences.getInstance();
   }
 

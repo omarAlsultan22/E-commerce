@@ -11,7 +11,6 @@ import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/data/models/message_result.dart';
 import 'package:international_cuisine/features/home/data/models/home_model.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_snack_bar.dart';
-import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
 import 'package:international_cuisine/features/home/presentation/widgets/cuisine_card_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push_replacement.dart';
 
@@ -32,7 +31,7 @@ class HomeLayout extends StatefulWidget {
   State<HomeLayout> createState() => _HomeLayoutState();
 }
 
-class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin ,  WidgetsBindingObserver{
+class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin{
   // Constants
   static const double _spacing = 155.0;
   static const BorderRadius _borderRadius = BorderRadius.all(
@@ -54,7 +53,6 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin ,
     super.initState();
     _initializeControllers();
     _initializeApp();
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -70,32 +68,24 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin ,
   }
 
   Future<void> _initializeApp() async {
-    /*
     await _imagePreloader.preloadImages(
-      context: context,
-      homeData: widget.homeData,
-    );
-     */
-
-    if (mounted) {
-      setState(() {
-        _showSlideAnimation = true;
-      });
-
-      _rotationAnimation.start(
-        onAngleUpdate: (angle) {
-          if (mounted) {
-            setState(() => _rotationAngle = angle);
-          }
-        },
+        context: context,
+        homeData: widget.homeData,
         onComplete: () {
-          if (mounted) {
-            _slideAnimation.forward();
-          }
-        },
-        mounted: mounted,
-      );
-    }
+          setState(() {
+            _showSlideAnimation = true;
+          });
+          _rotationAnimation.start(
+            onAngleUpdate: (angle) {
+              if (mounted) {
+                setState(() => _rotationAngle += angle);
+              }
+            },
+            mounted: mounted,
+          );
+          _slideAnimation.forward();
+        }
+    );
   }
 
   void _handleMessageResult() {
@@ -122,16 +112,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin ,
   void dispose() {
     _rotationAnimation.dispose();
     _slideAnimation.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.detached) {
-      CartDataCubit.get(context).saveCartToHive();
-    }
-    super.didChangeAppLifecycleState(state);
   }
 
   @override

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../core/navigation/navigation_keys.dart';
+import 'package:international_cuisine/core/services/app_lifecycle_service.dart';
 import '../core/domain/services/connectivity_service/connectivity_provider.dart';
-import 'package:international_cuisine/core/data/data_sources/remote/firebase_auth.dart';
 import 'package:international_cuisine/features/home/presentation/screens/home_screen.dart';
 
 //cubits
@@ -20,6 +21,7 @@ import '../features/cuisines/presentation/cubits/egyptian_data_cubit.dart';
 //dataSources
 import '../core/data/data_sources/remote/firestore.dart';
 import 'package:international_cuisine/core/data/data_sources/local/hive.dart';
+import 'package:international_cuisine/core/data/data_sources/remote/firebase_auth.dart';
 import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 
 //useCases
@@ -35,9 +37,27 @@ import 'package:international_cuisine/features/home/data/repositories_impl/fires
 import 'package:international_cuisine/features/cuisines/data/repositories_impl/firestore_cuisine_data_repository.dart';
 
 
-class MyApp extends StatelessWidget {
-
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final AppLifecycleService _lifecycleService;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycleService = AppLifecycleService();
+  }
+
+  @override
+  void dispose() {
+    _lifecycleService.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +82,7 @@ class MyApp extends StatelessWidget {
     final _connectivityProvider = ConnectivityProvider();
 
     //cart useCase
-    final _hiveStore = HiveStore();
+    final _hiveStore = HiveStore(cacheHelper: _cacheHelper);
     final _hiveRepository = HiveShoppingListRepository(hiveStore: _hiveStore);
     final _cartUseCase = CartDataUseCase(
         repository: _hiveRepository, cacheHelper: _cacheHelper);
@@ -111,6 +131,7 @@ class MyApp extends StatelessWidget {
                   connectivityProvider: _connectivityProvider)),
         ],
         child: MaterialApp(
+            navigatorKey: NavigationKeys.navigatorKey,
             debugShowCheckedModeBanner: false,
             home: const HomeScreen()
         )

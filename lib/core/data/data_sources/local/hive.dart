@@ -1,14 +1,20 @@
-import '../../../../features/cart/data/models/order_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../../../features/cart/data/models/order_model.dart';
+import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 
 
 class HiveStore {
-  static Box<List<OrderModel>>? _box;
-  static const String _boxName = 'shoppingList';
+  final CacheHelper _cacheHelper;
+  HiveStore({
+    required CacheHelper cacheHelper
+  }) : _cacheHelper = cacheHelper;
 
-  Box<List<OrderModel>> get box {
+  static Box<OrderModel>? _box;
+
+  Box<OrderModel> get box {
     if (_box == null || !_box!.isOpen) {
-      throw Exception('HiveOperations not initialized or box is closed. Call init() first.');
+      throw Exception(
+          'HiveOperations not initialized or box is closed. Call init() first.');
     }
     return _box!;
   }
@@ -16,18 +22,22 @@ class HiveStore {
   Future<void> init() async {
     await Hive.initFlutter();
     Hive.registerAdapter(OrderModelAdapter());
-    _box = await Hive.openBox<List<OrderModel>>('shoppingList');
+    _box = await Hive.openBox<OrderModel>('shoppingList');
     print('Box is opened..................');
   }
 
   Future<void> saveLocalData(List<OrderModel> value) async {
     try {
       if (_box == null || !_box!.isOpen) {
+        print('im here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.');
         await init();
       }
 
-      await _box!.put(_boxName, value);
-      print("Data saved successfully for key: $_boxName");
+      await clearData();
+
+      for (int i = 0; i < value.length; i++) {
+        await _box!.put('item_$i', value[i]);
+      }
     } catch (e) {
       print("Error saving local data: $e");
       rethrow;
@@ -40,27 +50,25 @@ class HiveStore {
         await init();
       }
 
-      final value = _box!.get(_boxName);
+      List<OrderModel> items = [];
 
-      if (value == null) {
+      final count = await _cacheHelper.getIntValue(key: 'itemsCount') ?? 0;
+
+      for (int i = 0; i < count; i++) {
+        final item = await _box!.get('item_$i');
+        if (item != null) {
+          items.add(item);
+        }
+      }
+
+      if (items.isEmpty) {
         return [];
       }
 
-      return List<OrderModel>.from(value);
-
+      return items;
     } catch (e) {
       print("Error getting local data: $e");
       return [];
-    }
-  }
-
-  Future<void> removeItem(int index) async {
-    try {
-      if (_box != null && _box!.isOpen) {
-        await _box!.delete(index);
-      }
-    } catch (e) {
-      print("Error deleting data: $e");
     }
   }
 
@@ -73,15 +81,4 @@ class HiveStore {
       print("Error clearing data: $e");
     }
   }
-
-
-  Future<void> closeBox() async {
-    try {
-      await _box?.close();
-    } catch (e) {
-      print("Error closing box: $e");
-    }
-  }
-
-  static bool get isInitialized => _box != null && _box!.isOpen;
 }
