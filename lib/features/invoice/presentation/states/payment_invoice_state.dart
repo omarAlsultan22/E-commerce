@@ -2,9 +2,9 @@ import 'package:international_cuisine/core/presentation/states/app_sub_states.da
 import 'package:international_cuisine/core/presentation/states/app_sup_states.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 import '../../../../core/presentation/states/base/main_app_sub_state.dart';
-import '../../../../core/presentation/states/base/main_loaded_state.dart';
 import 'package:international_cuisine/core/data/models/user_model.dart';
 import '../../../../core/errors/exceptions/base/app_exception.dart';
+import '../../../../core/presentation/states/loaded_states.dart';
 
 
 class PaymentInvoiceState extends DoubleModelAppState<UserModel, List<OrderModel>>{
@@ -42,7 +42,7 @@ class PaymentInvoiceState extends DoubleModelAppState<UserModel, List<OrderModel
     R Function()? onConnection,
     required R Function() onInitial,
     required R Function() onLoading,
-    required R Function(LoadedState) onLoaded,
+    required R Function(DoubleModelSuccessState) onLoaded,
     required R Function(AppException) onError
   }) {
     return subState.when(

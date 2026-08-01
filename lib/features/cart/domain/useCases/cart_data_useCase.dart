@@ -21,6 +21,7 @@ class CartDataUseCase {
     required List<OrderModel> shoppingList
   }) async {
     try {
+      await clearCartExecute();
       await _repository.saveDataToHive(shoppingList: shoppingList);
       await _cacheHelper.setIntValue(
           key: 'itemsCount', value: shoppingList.length);
@@ -46,7 +47,7 @@ class CartDataUseCase {
       if (savedTime == 0 || currentTime - savedTime > expiryMilliseconds) {
         print('Cart data expired or not found, removing...');
         await _cacheHelper.removeValue(key: time);
-        await _repository.clearDataFromHive();
+        await clearCartExecute();
         return [];
       } else {
         return await _repository.getDataFromHive();

@@ -10,8 +10,6 @@ abstract class MainAppSupState{
     required this.subState
   });
 
-  LoadedState get dataModels;
-
   R when<R>({
     required R Function() onInitial,
     required R Function() onLoading,

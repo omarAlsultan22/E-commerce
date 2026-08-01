@@ -1,6 +1,5 @@
 import 'base/main_app_sup_state.dart';
 import 'base/main_app_sub_state.dart';
-import 'base/main_loaded_state.dart';
 import 'loaded_states.dart';
 
 
@@ -12,8 +11,7 @@ abstract class SingleModelAppState<T> extends MainAppSupState {
     required this.firstModel
   });
 
-  @override
-  LoadedState get dataModels => SingleModelSuccessState<T>(firstModel: firstModel);
+  SingleModelSuccessState get dataModels => SingleModelSuccessState<T>(firstModel: firstModel);
 
   SingleModelAppState copyWith({
     T? firstModel,
@@ -32,8 +30,7 @@ abstract class DoubleModelAppState<T, U> extends MainAppSupState {
     required this.secondModel,
   });
 
-  @override
-  LoadedState get dataModels =>
+  DoubleModelSuccessState get dataModels =>
       DoubleModelSuccessState<T, U>(
           firstModel: firstModel,
           secondModel: secondModel

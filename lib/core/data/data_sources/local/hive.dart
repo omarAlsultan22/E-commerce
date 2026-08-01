@@ -23,20 +23,16 @@ class HiveStore {
     await Hive.initFlutter();
     Hive.registerAdapter(OrderModelAdapter());
     _box = await Hive.openBox<OrderModel>('shoppingList');
-    print('Box is opened..................');
   }
 
-  Future<void> saveLocalData(List<OrderModel> value) async {
+  Future<void> saveLocalData(List<OrderModel> data) async {
     try {
       if (_box == null || !_box!.isOpen) {
-        print('im here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.');
         await init();
       }
 
-      await clearData();
-
-      for (int i = 0; i < value.length; i++) {
-        await _box!.put('item_$i', value[i]);
+      for (int i = 0; i < data.length; i++) {
+        await _box!.put('item_$i', data[i]);
       }
     } catch (e) {
       print("Error saving local data: $e");

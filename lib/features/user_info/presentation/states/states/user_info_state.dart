@@ -1,9 +1,9 @@
 import '../../../../../core/data/models/user_model.dart';
+import '../../../../../core/presentation/states/loaded_states.dart';
 import '../../../../../core/errors/exceptions/base/app_exception.dart';
 import 'package:international_cuisine/core/data/models/message_result.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
 import 'package:international_cuisine/core/presentation/states/app_sup_states.dart';
-import 'package:international_cuisine/core/presentation/states/base/main_loaded_state.dart';
 import 'package:international_cuisine/core/presentation/states/base/main_app_sub_state.dart';
 
 
@@ -41,7 +41,7 @@ class UserInfoState extends DoubleModelAppState<UserModel, MessageResult> {
   R when<R>({
     required R Function() onInitial,
     required R Function() onLoading,
-    required R Function(LoadedState) onLoaded,
+    required R Function(DoubleModelSuccessState) onLoaded,
     required R Function(AppException) onError
   }) {
     return subState.when(

@@ -1,17 +1,17 @@
-// lib/features/payment/presentation/providers/payment_provider.dart
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
-import '../../../../core/presentation/widgets/navigation/navigator_with_delay.dart';
-import '../../../invoice/presentation/screens/payment_invoice_screen.dart';
-import '../../constants/payment_strings.dart';
-import '../../services/paymob_service.dart';
 import '../../services/fawry_service.dart';
-import '../../services/payment_storage_service.dart';
-import '../../constants/payment_constants.dart';
+import '../../services/paymob_service.dart';
 import '../../constants/api_json_keys.dart';
+import '../../constants/payment_strings.dart';
 import '../../constants/paymob_constants.dart';
+import '../../constants/payment_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../services/payment_storage_service.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../invoice/presentation/screens/payment_invoice_screen.dart';
+import '../../../../core/presentation/widgets/navigation/navigator_with_delay.dart';
+import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
+
 
 class PaymentProvider extends ChangeNotifier {
   // Services
@@ -37,8 +37,11 @@ class PaymentProvider extends ChangeNotifier {
 
   // Getters
   bool get isLoading => _isLoading;
+
   int get selectedPaymentMethod => _selectedPaymentMethod;
+
   bool get saveCard => _saveCard;
+
   double get totalAmount => _totalAmount;
 
   // Setters مع notifyListeners
@@ -132,9 +135,11 @@ class PaymentProvider extends ChangeNotifier {
       if (_selectedPaymentMethod == PaymentConstants.paymentMethodCard) {
         await _payWithPaymobCard();
         await _saveCardDetails();
-      } else if (_selectedPaymentMethod == PaymentConstants.paymentMethodFawry) {
+      } else
+      if (_selectedPaymentMethod == PaymentConstants.paymentMethodFawry) {
         await _payWithFawry();
-      } else if (_selectedPaymentMethod == PaymentConstants.paymentMethodVodafone) {
+      } else
+      if (_selectedPaymentMethod == PaymentConstants.paymentMethodVodafone) {
         await _payWithVodafoneCash();
       }
 
@@ -143,7 +148,6 @@ class PaymentProvider extends ChangeNotifier {
 
       // التنقل إلى شاشة النجاح
       _navigateToSuccessScreen(context);
-
     } catch (e) {
       _showPaymentResult(
           context,
@@ -163,12 +167,16 @@ class PaymentProvider extends ChangeNotifier {
       ApiJsonKeys.firstName: cardHolderController.text
           .split(' ')
           .isNotEmpty
-          ? cardHolderController.text.split(' ').first
+          ? cardHolderController.text
+          .split(' ')
+          .first
           : 'User',
       ApiJsonKeys.lastName: cardHolderController.text
           .split(' ')
           .length > 1
-          ? cardHolderController.text.split(' ').last
+          ? cardHolderController.text
+          .split(' ')
+          .last
           : 'Customer',
       ApiJsonKeys.email: emailController.text,
       ApiJsonKeys.phoneNumber: phoneController.text,
@@ -244,18 +252,20 @@ class PaymentProvider extends ChangeNotifier {
   void _showPaymentResult(BuildContext context, bool success, String message) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          success ? PaymentStrings.paymentSuccess : PaymentStrings.paymentFailed,
-        ),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(PaymentStrings.ok),
+      builder: (context) =>
+          AlertDialog(
+            title: Text(
+              success ? PaymentStrings.paymentSuccess : PaymentStrings
+                  .paymentFailed,
+            ),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(PaymentStrings.ok),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 

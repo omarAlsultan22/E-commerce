@@ -36,8 +36,7 @@ class _ChineseScreenState extends State<ChineseScreen> {
                 CuisinesConstants.data, CuisinesConstants.menu
             ),
             onLoading: () => const LoadingStateWidget(),
-            onLoaded: (loadedState) {
-              final data = loadedState as DoubleModelSuccessState;
+            onLoaded: (data) {
               return SearchableListBuilder(
                 isLocked: false,
                 title: 'المطبخ الصيني',

@@ -7,7 +7,6 @@ import 'package:international_cuisine/core/data/data_sources/local/shared_prefer
 import 'package:international_cuisine/features/home/presentation/screens/home_screen.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
-import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
@@ -108,8 +107,7 @@ class PaymentInvoiceScreen extends StatelessWidget {
               return state.when(
                   onInitial: () => _initialState(),
                   onLoading: () => LoadingStateWidget(),
-                  onLoaded: (loadedState) {
-                    final data = loadedState as DoubleModelSuccessState;
+                  onLoaded: (data) {
                     return PaymentInvoiceLayout(
                       isPaid: isPaid,
                       userInfoModel: data.firstModel,

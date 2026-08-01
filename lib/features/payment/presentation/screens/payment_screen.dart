@@ -1,7 +1,7 @@
-import '../widgets/layout/payment_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/payment_provider.dart';
+import '../widgets/layout/payment_layout.dart';
 
 
 class PaymentScreen extends StatefulWidget {

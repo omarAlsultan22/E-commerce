@@ -3,8 +3,8 @@ import 'package:international_cuisine/core/presentation/states/app_sup_states.da
 import 'package:international_cuisine/features/home/data/models/home_model.dart';
 import 'package:international_cuisine/core/data/models/message_result.dart';
 import '../../../../core/presentation/states/base/main_app_sub_state.dart';
-import '../../../../core/presentation/states/base/main_loaded_state.dart';
 import '../../../../core/errors/exceptions/base/app_exception.dart';
+import '../../../../core/presentation/states/loaded_states.dart';
 
 
 class HomeDataState extends DoubleModelAppState<List<HomeDataModel>, MessageResult>{
@@ -42,7 +42,7 @@ class HomeDataState extends DoubleModelAppState<List<HomeDataModel>, MessageResu
     R Function()? onConnection,
     required R Function() onInitial,
     required R Function() onLoading,
-    required R Function(LoadedState) onLoaded,
+    required R Function(DoubleModelSuccessState) onLoaded,
     required R Function(AppException) onError
   }) {
     return subState.when(

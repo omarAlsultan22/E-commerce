@@ -3,7 +3,6 @@ import 'package:international_cuisine/core/data/data_sources/local/shared_prefer
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/presentation/widgets/appbar_widget.dart';
 import 'package:international_cuisine/core/data/data_sources/remote/firestore.dart';
-import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
 import '../../data/repositories_impl/firestore_user_info_repository.dart';
 import '../../domain/useCases/user_info_useCase.dart';
@@ -43,8 +42,7 @@ class UserInfoScreen extends StatelessWidget {
                       _userInfo, Icons.info),
                   onLoading: () =>
                   const LoadingStateWidget(),
-                  onLoaded: (loadedState) {
-                    final data = loadedState as DoubleModelSuccessState;
+                  onLoaded: (data) {
                     return UserInfoLayout(
                       userModel: data.firstModel,
                       messageResult: data.secondModel,

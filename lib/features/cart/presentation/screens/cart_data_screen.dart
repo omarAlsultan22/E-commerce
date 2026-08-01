@@ -6,7 +6,6 @@ import '../../../../core/presentation/widgets/appbar_widget.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
-import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:international_cuisine/features/cart/presentation/widgets/layouts/cart_data_layout.dart';
 
@@ -59,10 +58,9 @@ class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObse
           return state.when(
               onInitial: () => _initialState(),
               onLoading: () => const LoadingStateWidget(),
-              onLoaded: (loadedState) {
+              onLoaded: (data) {
                 return CartDataLayout(
-                    shoppingList: (loadedState as SingleModelSuccessState)
-                        .firstModel
+                    shoppingList: data.firstModel
                 );
               },
               onError: (error) =>

@@ -13,7 +13,6 @@ import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
 import '../../../../../core/data/models/message_result.dart';
 import '../../../data/models/categories_model.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/models/data_model.dart';
 import 'package:flutter/material.dart';
 import '../item_builder.dart';
@@ -54,7 +53,7 @@ class _SearchableListBuilderState extends State<SearchableListBuilder> {
   @override
   void initState() {
     super.initState();
-    _cubit = context.read<CartDataCubit>();
+    _cubit = CartDataCubit.get(context);
     _searchController.addListener(_performSearch);
     _scrollController.addListener(_onScrollData);
   }
