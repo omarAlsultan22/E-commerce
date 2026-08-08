@@ -16,22 +16,25 @@ class HomeScreen extends StatelessWidget {
     return BlocBuilder<HomeDataCubit, HomeDataState>(
       builder: (context, state) {
         final _cubit = HomeDataCubit.get(context);
+
         return state.when(
-            onInitial: () =>
-            const InitialStateWidget(
-                CuisinesConstants.data, CuisinesConstants.menu),
-            onLoading: () => const IntroScreen(),
-            onLoaded: (data) {
-              return HomeLayout(
-                signOut: _cubit.signOut,
-                homeData: data.firstModel,
-                messageResult: data.secondModel,
-              );
-            },
-            onError: (error) =>
-                error.buildErrorWidget(
-                    onRetry: _cubit.getData
-                )
+          onInitial: () =>
+          const InitialStateWidget(
+              CuisinesConstants.data,
+              CuisinesConstants.menu
+          ),
+          onLoading: () => const IntroScreen(),
+          onLoaded: (data) {
+            return HomeLayout(
+              signOut: _cubit.signOut,
+              homeData: data.firstModel,
+              messageResult: data.secondModel,
+            );
+          },
+          onError: (error) =>
+              error.buildErrorWidget(
+                  onRetry: _cubit.getData
+              ),
         );
       },
     );

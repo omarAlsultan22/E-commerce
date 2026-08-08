@@ -1,11 +1,7 @@
 import 'package:international_cuisine/core/presentation/widgets/states/loading_state_widget.dart';
-import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
-import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/presentation/widgets/appbar_widget.dart';
-import 'package:international_cuisine/core/data/data_sources/remote/firestore.dart';
 import '../../../../core/presentation/widgets/states/initial_state_widget.dart';
-import '../../data/repositories_impl/firestore_user_info_repository.dart';
-import '../../domain/useCases/user_info_useCase.dart';
+import '../../../../core/di/service _locator.dart';
 import '../widgets/layouts/user_info_layout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../states/states/user_info_state.dart';
@@ -20,18 +16,9 @@ class UserInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _repository = FirestoreService();
-    final _cacheHelper = CacheHelper();
-    final _userInfoRepository = FirestoreUserInfoRepository(
-        repository: _repository, cacheHelper: _cacheHelper);
-    final _userInfoUseCase = UserInfoUseCase(
-        userInfoRepository: _userInfoRepository);
-    final _connectivityProvider = ConnectivityProvider();
     return BlocProvider(
         create: (context) =>
-        UserInfoCubit(
-            userInfoUseCase: _userInfoUseCase,
-            connectivityProvider: _connectivityProvider)
+        sl<UserInfoCubit>()
           ..getInfo(),
         child: BlocBuilder<UserInfoCubit, UserInfoState>(
             builder: (context, state) {

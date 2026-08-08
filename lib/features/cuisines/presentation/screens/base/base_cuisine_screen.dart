@@ -31,38 +31,42 @@ abstract class BaseCuisineScreenState<T extends BaseCuisineScreen>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BaseCuisineCubit, CategoriesState>(
-      builder: (context, state) {
-        return state.when(
-            onInitial: () =>
-            const InitialStateWidget(
-                CuisinesConstants.data,
-                CuisinesConstants.menu
-            ),
-            onLoading: () => const LoadingStateWidget(),
-            onLoaded: (data) {
-              return SearchableListBuilder(
-                isLocked: false,
-                title: widget.title,
-                categoriesModel: data.firstModel,
-                messageResult: data.secondModel,
-                getMoreData: () => cubit.loadMoreData(),
-                clearData: () => cubit.clearDataSearch(),
-                getSearchData: (searchText) => cubit.getDataSearch(searchText),
-                updateRate: (index, rating) =>
-                    cubit.updateRating(
-                        index: index,
-                        rating: rating
-                    ),
-              );
-            },
-            onError: (error) =>
-                error.buildErrorWidget(
-                  onRetry: cubit.getInitialData,
-                  appBar: AppbarWidget.build(context),
-                )
-        );
-      },
+    return BlocProvider.value(
+        value: cubit,
+        child: BlocBuilder<BaseCuisineCubit, CategoriesState>(
+          builder: (context, state) {
+            return state.when(
+                onInitial: () =>
+                const InitialStateWidget(
+                    CuisinesConstants.data,
+                    CuisinesConstants.menu
+                ),
+                onLoading: () => const LoadingStateWidget(),
+                onLoaded: (data) {
+                  return SearchableListBuilder(
+                    isLocked: false,
+                    title: widget.title,
+                    categoriesModel: data.firstModel,
+                    messageResult: data.secondModel,
+                    getMoreData: () => cubit.loadMoreData(),
+                    clearData: () => cubit.clearDataSearch(),
+                    getSearchData: (searchText) =>
+                        cubit.getDataSearch(searchText),
+                    updateRate: (index, rating) =>
+                        cubit.updateRating(
+                            index: index,
+                            rating: rating
+                        ),
+                  );
+                },
+                onError: (error) =>
+                    error.buildErrorWidget(
+                      onRetry: cubit.getInitialData,
+                      appBar: AppbarWidget.build(context),
+                    )
+            );
+          },
+        )
     );
   }
 }

@@ -1,20 +1,15 @@
-import 'package:international_cuisine/features/invoice/data/repositories_impl/firestore_payment_invoice_repository.dart';
 import 'package:international_cuisine/features/invoice/presentation/widgets/layouts/payment_invoice_layout.dart';
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push_replacement.dart';
-import 'package:international_cuisine/features/invoice/domain/useCases/payment_Invoice_useCase.dart';
-import 'package:international_cuisine/features/cart/presentation/cubits/cart_data_cubit.dart';
-import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
 import 'package:international_cuisine/features/home/presentation/screens/home_screen.dart';
-import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import '../../../../core/presentation/widgets/states/loading_state_widget.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
 import '../../../../core/presentation/widgets/appbar_widget.dart';
-import '../../../../core/data/data_sources/remote/firestore.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:quickalert/models/quickalert_type.dart';
+import '../../../../core/di/service _locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubits/payment_invoice_cubit.dart';
 import '../states/payment_invoice_state.dart';
@@ -28,17 +23,6 @@ class PaymentInvoiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _cacheHelper = CacheHelper();
-    final _repository = FirestoreService();
-    final _cartState = CartDataCubit
-        .get(context)
-        .state;
-    final _userInfoRepository = FirestorePaymentInvoiceRepository(
-        repository: _repository, cacheHelper: _cacheHelper);
-    final _useCase = PaymentInvoiceUseCase(
-        userInfoRepository: _userInfoRepository);
-    final _connectivityProvider = ConnectivityProvider();
-
     void _stateListener(PaymentInvoiceState state) {
       if (state.listIsNotEmpty) {
         QuickAlert.show(
@@ -94,9 +78,7 @@ class PaymentInvoiceScreen extends StatelessWidget {
     }
 
     return BlocProvider(create: (context) =>
-    PaymentInvoiceCubit(cartDataState: _cartState,
-        useCase: _useCase,
-        connectivityProvider: _connectivityProvider)
+    sl<PaymentInvoiceCubit>()
       ..displayInvoice(),
         child: BlocConsumer<PaymentInvoiceCubit, PaymentInvoiceState>(
             listener: (context, state) {
