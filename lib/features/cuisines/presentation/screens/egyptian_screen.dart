@@ -1,65 +1,22 @@
-import 'package:flutter/material.dart';
-import '../states/categories_state.dart';
+import '../cubits/base/base_data_cubit.dart';
 import '../cubits/egyptian_data_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/lists/searchable_list_builder.dart';
-import '../../../../core/presentation/widgets/appbar_widget.dart';
-import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
-import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
-import 'package:international_cuisine/core/presentation/widgets/states/initial_state_widget.dart';
-import 'package:international_cuisine/core/presentation/widgets/states/loading_state_widget.dart';
+import 'package:flutter/cupertino.dart';
+import 'base/base_cuisine_screen.dart';
 
 
-class EgyptianScreen extends StatefulWidget {
+class EgyptianScreen extends BaseCuisineScreen {
   const EgyptianScreen({super.key});
+
+  @override
+  String get title => 'المطبخ المصري';
+
+  @override
+  BaseCuisineCubit createCubit(BuildContext context) =>
+      EgyptianDataCubit.get(context);
 
   @override
   State<EgyptianScreen> createState() => _EgyptianScreenState();
 }
 
-class _EgyptianScreenState extends State<EgyptianScreen> {
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<EgyptianDataCubit>().getInitialData();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<EgyptianDataCubit, CategoriesState>(
-      builder: (context, state) {
-        final _cubit = context.read<EgyptianDataCubit>();
-        return state.when(
-            onInitial: () =>
-            const InitialStateWidget(
-                CuisinesConstants.data, CuisinesConstants.menu),
-            onLoading: () => const LoadingStateWidget(),
-            onLoaded: (data) {
-              return SearchableListBuilder(
-                isLocked: false,
-                title: 'المطبخ المصري',
-                categoriesModel: data.firstModel,
-                messageResult: data.secondModel,
-                getMoreData: () => _cubit.loadMoreData(),
-                clearData: () => _cubit.clearDataSearch(),
-                getSearchData: (searchText) =>
-                    _cubit.getDataSearch(searchText),
-                updateRate: (index, rating) =>
-                    _cubit.updateRating(
-                        index: index,
-                        rating: rating
-                    ),
-              );
-            },
-            onError: (error) =>
-                error.buildErrorWidget(
-                  onRetry: _cubit.getInitialData,
-                  appBar: AppbarWidget.build(context),
-                )
-        );
-      },
-    );
-  }
-}
+class _EgyptianScreenState extends BaseCuisineScreenState<EgyptianScreen> {}
 

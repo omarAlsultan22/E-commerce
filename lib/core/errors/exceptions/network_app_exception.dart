@@ -15,8 +15,8 @@ class NetworkAppException extends AppException {
 
   @override
   Widget buildErrorWidget({
+    PreferredSizeWidget? appBar,
     required VoidCallback onRetry,
-    required PreferredSizeWidget? appBar
   }) {
     return InternetUnavailability(
         appBar: appBar,

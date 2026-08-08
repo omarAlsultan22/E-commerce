@@ -129,6 +129,7 @@ class _MyAppState extends State<MyApp> {
           BlocProvider(create: (context) =>
               TurkishDataCubit(dataUseCases: _dataUseCases,
                   connectivityProvider: _connectivityProvider)),
+
         ],
         child: MaterialApp(
             navigatorKey: NavigationKeys.navigatorKey,

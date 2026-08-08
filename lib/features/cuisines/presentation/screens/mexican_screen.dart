@@ -1,65 +1,22 @@
-import 'package:flutter/material.dart';
-import '../states/categories_state.dart';
+import '../cubits/base/base_data_cubit.dart';
 import '../cubits/mexican_data_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/lists/searchable_list_builder.dart';
-import '../../../../core/presentation/widgets/appbar_widget.dart';
-import 'package:international_cuisine/core/presentation/states/loaded_states.dart';
-import 'package:international_cuisine/features/cuisines/constants/cuisines_constants.dart';
-import 'package:international_cuisine/core/presentation/widgets/states/initial_state_widget.dart';
-import 'package:international_cuisine/core/presentation/widgets/states/loading_state_widget.dart';
+import 'package:flutter/cupertino.dart';
+import 'base/base_cuisine_screen.dart';
 
 
-class MexicanScreen extends StatefulWidget {
+class MexicanScreen extends BaseCuisineScreen {
   const MexicanScreen({super.key});
+
+  @override
+  String get title => 'المطبخ المكسيكي';
+
+  @override
+  BaseCuisineCubit createCubit(BuildContext context) =>
+      MexicanDataCubit.get(context);
 
   @override
   State<MexicanScreen> createState() => _MexicanScreenState();
 }
 
-class _MexicanScreenState extends State<MexicanScreen> {
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<MexicanDataCubit>().getInitialData();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<MexicanDataCubit, CategoriesState>(
-      builder: (context, state) {
-        final _cubit = context.read<MexicanDataCubit>();
-        return state.when(
-            onInitial: () =>
-            const InitialStateWidget(
-                CuisinesConstants.data, CuisinesConstants.menu),
-            onLoading: () => const LoadingStateWidget(),
-            onLoaded: (data) {
-              return SearchableListBuilder(
-                isLocked: false,
-                title: 'المطبخ المكسيكي',
-                categoriesModel: data.firstModel,
-                messageResult: data.secondModel,
-                getMoreData: () => _cubit.loadMoreData(),
-                clearData: () => _cubit.clearDataSearch(),
-                getSearchData: (searchText) =>
-                    _cubit.getDataSearch(searchText),
-                updateRate: (index, rating) =>
-                    _cubit.updateRating(
-                        index: index,
-                        rating: rating
-                    ),
-              );
-            },
-            onError: (error) =>
-                error.buildErrorWidget(
-                  onRetry: _cubit.getInitialData,
-                  appBar: AppbarWidget.build(context),
-                )
-        );
-      },
-    );
-  }
-}
+class _MexicanScreenState extends BaseCuisineScreenState<MexicanScreen> {}
 

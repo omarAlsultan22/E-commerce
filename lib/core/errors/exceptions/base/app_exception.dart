@@ -16,8 +16,8 @@ abstract class AppException implements Exception {
   });
 
   Widget buildErrorWidget({
+    PreferredSizeWidget? appBar,
     required VoidCallback onRetry,
-    required PreferredSizeWidget? appBar
   }) {
     return ErrorStateWidget(
         appBar: appBar,

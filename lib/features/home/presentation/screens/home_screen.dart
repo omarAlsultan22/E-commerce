@@ -30,7 +30,6 @@ class HomeScreen extends StatelessWidget {
             },
             onError: (error) =>
                 error.buildErrorWidget(
-                    appBar: null,
                     onRetry: _cubit.getData
                 )
         );
