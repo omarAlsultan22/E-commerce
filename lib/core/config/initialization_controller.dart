@@ -1,4 +1,5 @@
 import 'firebase_options.dart';
+import '../di/service _locator.dart';
 import '../data/data_sources/local/hive.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../data/data_sources/local/shared_preferences.dart';
@@ -30,8 +31,8 @@ class InitializationController {
   Future<void> init() async {
     if (_isInitialized) return;
 
-    _cacheHelper = CacheHelper();
-    _hiveStore = HiveStore(cacheHelper: _cacheHelper);
+    _hiveStore = sl<HiveStore>();
+    _cacheHelper = sl<CacheHelper>();
 
     await _initializeServices();
 
