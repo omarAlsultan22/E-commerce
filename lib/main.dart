@@ -30,7 +30,6 @@ void main() async {
               builder: (context) =>
                   Scaffold(
                     body: exception.buildErrorWidget(
-                      appBar: null,
                       onRetry: () async {
                         try {
                           await initializationController.retryInit();
