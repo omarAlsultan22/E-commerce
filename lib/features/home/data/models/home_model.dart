@@ -9,8 +9,8 @@ class HomeDataModel {
 
   factory HomeDataModel.fromJson(Map<String, dynamic> json) {
     return HomeDataModel(
-      image: json['imageData'],
-      title: json['title'],
+      title: json['title'] ?? '',
+      image: json['imageData'] ?? '',
     );
   }
 }

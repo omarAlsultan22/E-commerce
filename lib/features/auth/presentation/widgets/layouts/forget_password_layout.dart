@@ -1,7 +1,6 @@
 import 'package:international_cuisine/features/auth/constants/auth_label_texts_constants.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
-import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
-import '../../../../../core/presentation/widgets/build_snack_bar.dart';
+import 'package:international_cuisine/features/auth/presentation/mixins/auth_mixin.dart';
 import '../../../../../core/data/models/message_result.dart';
 import '../../../../../core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,11 @@ class ForgetPasswordLayout extends StatefulWidget {
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgetPasswordLayout> {
+class _ForgotPasswordScreenState extends State<ForgetPasswordLayout> with AuthMixin<ForgetPasswordLayout> {
+  bool _isPressed = true;
+
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _emailController = TextEditingController();
 
   @override
@@ -39,24 +42,23 @@ class _ForgotPasswordScreenState extends State<ForgetPasswordLayout> {
   @override
   void didUpdateWidget(covariant ForgetPasswordLayout oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.messageResult.message != null) {
-      _showMessageResult(widget.messageResult);
-    }
-    setState(() {});
+    handleMessageResultAndNavigate(
+        messageResult: widget.messageResult,
+        onNavigate: () => Navigator.pop(context));
   }
 
-  void _showMessageResult(MessageResult messageResult) {
-    BuildSnackBar.show(
-        context: context,
-        message: messageResult.message!,
-        backgroundColor: messageResult.color!
-    );
-    Navigator.pop(context);
+  void _updateLockButton(bool value) {
+    setState(() => _isPressed = value);
   }
 
   Future<void> _sendResetEmail() async {
-    final email = _emailController.text.trim();
-    widget.onUpdate(userEmail: email);
+    if (validator(_formKey)) {
+      _updateLockButton(false);
+      hideKeyboard(context);
+      final email = _emailController.text.trim();
+      widget.onUpdate(userEmail: email);
+      _updateLockButton(true);
+    }
   }
 
   @override
@@ -83,12 +85,14 @@ class _ForgotPasswordScreenState extends State<ForgetPasswordLayout> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: widget.messageResult.isLoading
-                  ? null
-                  : _sendResetEmail,
-              child: widget.messageResult.isLoading
-                  ? LoadingWidget()
-                  : const Text('إرسال رابط إعادة التعيين'),
+                style: buttonStyle(),
+                onPressed: _isPressed
+                    ? _sendResetEmail
+                    : null,
+                child: buildButtonContent(
+                    text: 'إرسال رابط إعادة التعيين',
+                    isLoading: widget.messageResult.isLoading
+                )
             ),
           ],
         ),

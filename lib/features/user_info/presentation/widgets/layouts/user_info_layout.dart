@@ -1,18 +1,15 @@
-import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_with_delay.dart';
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
-import 'package:international_cuisine/features/auth/presentation/screens/sgin_in_screen.dart';
 import 'package:international_cuisine/core/presentation/utils/validate/validator_input.dart';
+import 'package:international_cuisine/features/auth/presentation/mixins/auth_mixin.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import '../../../../auth/presentation/screens/change_email_&_password_screen.dart';
 import 'package:international_cuisine/core/constants/app_label_texts.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
-import '../../../../../core/presentation/widgets/build_snack_bar.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
-import '../../../../../core/presentation/widgets/loading_widget.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
 import '../../../../../core/data/models/message_result.dart';
 import '../../../../../core/data/models/user_model.dart';
@@ -34,7 +31,8 @@ class UserInfoLayout extends StatefulWidget {
   State<UserInfoLayout> createState() => _UserInfoLayoutState();
 }
 
-class _UserInfoLayoutState extends State<UserInfoLayout> {
+class _UserInfoLayoutState extends State<UserInfoLayout> with AuthMixin<UserInfoLayout> {
+  bool _isPressed = true;
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
@@ -61,13 +59,7 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
   @override
   void didUpdateWidget(covariant UserInfoLayout oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.messageResult.message != null) {
-      _showMessageResult(widget.messageResult);
-    }
-    if (widget.messageResult.error == null) {
-      BuildNavigatorWithDelay.build(context: context, link: SignInScreen());
-    }
-    setState(() {});
+    handleMessageResult(messageResult: widget.messageResult);
   }
 
   @override
@@ -99,14 +91,6 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
         appBar: _buildAppBar(),
         body: _buildBody(),
       ),
-    );
-  }
-
-  void _showMessageResult(MessageResult messageResult) {
-    BuildSnackBar.show(
-        context: context,
-        message: messageResult.message!,
-        backgroundColor: messageResult.color!
     );
   }
 
@@ -277,39 +261,40 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
     );
   }
 
+  void _updateLockButton(bool value) {
+    setState(() => _isPressed = value);
+  }
+
   Widget _buildUpdateButton() {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-          style: _updateButtonStyle(),
-          onPressed: widget.messageResult.isLoading ? null : () {
-            widget.onUpdate(
-                UserModel(
-                  firstName: _firstNameController.text,
-                  lastName: _lastNameController.text,
-                  userPhone: _phoneController.text,
-                  userLocation: _locationController.text,
-                )
-            );
-            setState(() {});
-          },
-          child: _buildUpdateButtonContent()
+          style: buttonStyle(),
+          onPressed: _isPressed ? _onSavePressed : null,
+          child: buildButtonContent(
+              text: 'تحديث',
+              isLoading: widget.messageResult.isLoading
+          )
       ),
     );
   }
 
-  Widget _buildUpdateButtonContent() {
-    return widget.messageResult.isLoading
-        ? const LoadingWidget()
-        : const Text(
-      'تحديث',
-      style: TextStyle(
-        fontSize: AppSizes.fontSize18,
-        fontWeight: FontWeight.bold,
-        color: AppColors.white,
-      ),
+  Future<void> _onSavePressed() async {
+    if (!validator(_formKey)) return;
+    _updateLockButton(false);
+    hideKeyboard(context);
+    widget.onUpdate(
+        UserModel(
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
+          userPhone: _phoneController.text,
+          userLocation: _locationController.text,
+        )
     );
+    _updateLockButton(true);
+    setState(() {});
   }
+
 
   void _navigateToChangePassword() {
     BuildNavigatorPush.build(
@@ -339,18 +324,6 @@ class _UserInfoLayoutState extends State<UserInfoLayout> {
       shape: RoundedRectangleBorder(
         borderRadius: _borderRadius,
       ),
-    );
-  }
-
-  ButtonStyle _updateButtonStyle() {
-    return ElevatedButton.styleFrom(
-      backgroundColor: AppColors.primaryAmber,
-      padding: EdgeInsets.symmetric(
-          vertical: 16.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: _borderRadius,
-      ),
-      elevation: 4.0,
     );
   }
 }

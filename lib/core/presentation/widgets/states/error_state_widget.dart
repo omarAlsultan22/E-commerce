@@ -27,7 +27,7 @@ class ErrorStateWidget extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                child: Text('Error: $error'),
+                child: Text('خطأ: $error'),
               ),
               const SizedBox(height: 30),
               ElevatedButton(

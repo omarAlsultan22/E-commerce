@@ -22,14 +22,14 @@ class SlideAnimationController {
     _leftColumnAnimation = Tween<double>(begin: startPoint, end: endPoint).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.easeOut,
+        curve: Curves.fastOutSlowIn,
       ),
     );
 
     _rightColumnAnimation = Tween<double>(begin: -startPoint, end: endPoint).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.easeOut,
+        curve: Curves.fastOutSlowIn,
       ),
     );
   }

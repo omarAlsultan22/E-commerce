@@ -1,3 +1,5 @@
+import 'package:international_cuisine/core/di/service%20_locator.dart';
+
 import 'app/my_app.dart';
 import 'package:flutter/material.dart';
 import 'core/config/bloc_observer.dart';
@@ -11,6 +13,7 @@ import 'core/presentation/widgets/build_snack_bar.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
+  setupServiceLocator();
   final initializationController = InitializationController();
 
   try {
@@ -36,8 +39,8 @@ void main() async {
                           runApp(const MyApp());
                         } catch (e) {
                           BuildSnackBar.show(
-                              message: 'Initialization failed',
                               context: context,
+                              message: 'Initialization failed',
                               backgroundColor: AppColors.errorRed
                           );
                         }

@@ -45,15 +45,15 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin{
 
   // State
   bool isPressed = false;
-  bool _showSlideAnimation = false;
   double _rotationAngle = _endPoint;
 
   @override
   void initState() {
     super.initState();
     _initializeControllers();
-    _initializeApp();
-  }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeApp();
+    });  }
 
   @override
   void didUpdateWidget(covariant HomeLayout oldWidget) {
@@ -72,9 +72,6 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin{
         context: context,
         homeData: widget.homeData,
         onComplete: () {
-          setState(() {
-            _showSlideAnimation = true;
-          });
           _rotationAnimation.start(
             onAngleUpdate: (angle) {
               if (mounted) {
@@ -180,7 +177,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin{
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(
-            _showSlideAnimation ? animation.value : _endPoint,
+            animation.value,
             _endPoint,
           ),
           child: Column(

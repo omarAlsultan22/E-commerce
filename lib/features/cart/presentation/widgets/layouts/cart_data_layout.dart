@@ -2,7 +2,6 @@ import 'package:international_cuisine/core/data/data_sources/local/shared_prefer
 import 'package:international_cuisine/core/presentation/utils/helpers/image_helpers.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import '../../../../location/presentation/screens/fixed_location_picker_screen.dart';
-import 'package:international_cuisine/core/constants/app_text_styles.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
@@ -115,7 +114,11 @@ class _CartDataLayoutState extends State<CartDataLayout>{
         children: [
           const Text(
             'المجموع الكلي:',
-            style: AppTextStyles.textStyle18,
+            style: TextStyle(
+              color: AppColors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: AppSizes.fontSize18,
+            ),
           ),
           Text(
             '$totalAmount ج',

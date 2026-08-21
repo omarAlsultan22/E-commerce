@@ -10,15 +10,12 @@ import 'package:international_cuisine/core/constants/app_keys.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
-import '../../../../../core/presentation/widgets/build_snack_bar.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
-import 'package:international_cuisine/core/constants/app_text_styles.dart';
 import '../../../../../core/data/data_sources/local/shared_preferences.dart';
-import 'package:international_cuisine/core/presentation/widgets/loading_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
+import 'package:international_cuisine/features/auth/presentation/mixins/auth_mixin.dart';
 import 'package:international_cuisine/features/auth/constants/auth_hint_texts_constants.dart';
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
-import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_with_delay.dart';
 
 
 class SignInLayout extends StatefulWidget {
@@ -39,7 +36,8 @@ class SignInLayout extends StatefulWidget {
   State<SignInLayout> createState() => _SignInLayoutState();
 }
 
-class _SignInLayoutState extends State<SignInLayout> {
+class _SignInLayoutState extends State<SignInLayout> with AuthMixin<SignInLayout> {
+  bool _isPressed = true;
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -64,13 +62,10 @@ class _SignInLayoutState extends State<SignInLayout> {
   @override
   void didUpdateWidget(covariant SignInLayout oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.messageResult.message != null) {
-      _showMessageResult(widget.messageResult);
-    }
-    if (widget.messageResult.error == null) {
-      BuildNavigatorWithDelay.build(context: context, link: const HomeScreen());
-    }
-    setState(() {});
+    handleMessageResultAndNavigate(
+        messageResult: widget.messageResult,
+        onNavigate: _navigateToHome
+    );
   }
 
   @override
@@ -160,34 +155,20 @@ class _SignInLayoutState extends State<SignInLayout> {
       prefixIcon: Icons.lock,
       obscureText: _isObscure,
       validator: (value) => ValidatePassword.validator(value),
-      suffixIcon: _buildVisibilityToggle(),
-    );
-  }
-
-  Widget _buildVisibilityToggle() {
-    return IconButton(
-      icon: Icon(
-        _isObscure ? Icons.visibility_off : Icons.visibility,
-        color: AppColors.primaryAmber,
+      suffixIcon: buildPasswordVisibilityToggle(
+          isObscure: _isObscure,
+          onToggle: () => setState(() => _isObscure = !_isObscure)
       ),
-      onPressed: () => setState(() => _isObscure = !_isObscure),
     );
   }
 
   Widget _buildLoginButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: widget.messageResult.isLoading ? null : _submitForm,
-      style: _loginButtonStyle(),
-      child: _buildLoginButtonContent(),
-    );
-  }
-
-  Widget _buildLoginButtonContent() {
-    return widget.messageResult.isLoading
-        ? const LoadingWidget()
-        : const Text(
-      "دخول",
-      style: AppTextStyles.textStyle18,
+      onPressed: _isPressed ? _submitForm : null,
+      style: buttonStyle(),
+      child: buildButtonContent(
+          text: 'دخول',
+          isLoading: widget.messageResult.isLoading),
     );
   }
 
@@ -228,47 +209,32 @@ class _SignInLayoutState extends State<SignInLayout> {
   Future<void> _checkExistingUser() async {
     final userId = await widget.cacheHelper.getStringValue(key: AppKeys.uId);
     if (userId != null && mounted) {
-      BuildNavigatorPush.build(context: context, link: const HomeScreen()
-      );
+      _navigateToHome();
     }
+  }
+
+  void _navigateToHome() {
+    BuildNavigatorPush.build(context: context, link: const HomeScreen());
   }
 
   void _navigateToSignUp() {
     BuildNavigatorPush.build(context: context, link: const SignUpScreen());
   }
 
+  void _updateLockButton(bool value) {
+    setState(() => _isPressed = value);
+  }
+
   Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      _hideKeyboard();
+    if (validator(_formKey)) {
+      _updateLockButton(false);
+      hideKeyboard(context);
       widget.onUpdate(
           userEmail: _emailController.text.trim(),
           userPassword: _passwordController.text
       );
+      _updateLockButton(false);
     }
-  }
-
-  void _hideKeyboard() {
-    FocusScope.of(context).unfocus();
-  }
-
-  void _showMessageResult(MessageResult messageResult) {
-    BuildSnackBar.show(
-        context: context,
-        message: messageResult.message!,
-        backgroundColor: messageResult.color!
-    );
-  }
-
-  ButtonStyle _loginButtonStyle() {
-    return ElevatedButton.styleFrom(
-      backgroundColor: AppColors.primaryAmber,
-      foregroundColor: AppColors.black,
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50.0),
-      ),
-      minimumSize: const Size(double.infinity, 50.0),
-    );
   }
 
   ButtonStyle _signUpButtonStyle() {
