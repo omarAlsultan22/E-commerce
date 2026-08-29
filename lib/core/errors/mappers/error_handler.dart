@@ -1,5 +1,9 @@
 import '../exceptions/cache_exceptions/shared_prefs_app_exceptions.dart';
+import '../exceptions/cache_exceptions/hive_app_exceptions.dart';
+import '../exceptions/url_launcher_app_exceptions.dart';
 import '../exceptions/unknown_app_exception.dart';
+import '../exceptions/components_exception.dart';
+import '../exceptions/validation_exception.dart';
 import '../exceptions/base/app_exception.dart';
 import 'package:flutter/services.dart';
 import 'exception_mapper.dart';
@@ -25,21 +29,21 @@ class ErrorHandler {
 
     return _mapByTypePattern() ??
         _mapByStringPattern() ??
-        _mapBySharedPrefError() ??
+        _mapByUrlLauncherError() ??
+        _componentsException() ??
+        _sharedPrefsException() ??
+        _validationException() ??
+        _hiveException() ??
         UnknownAppException(message: error.toString());
   }
 
   // ==================== Helper Functions for Checking ====================
 
-  bool _isSharedPrefsError() {
+  bool _isUrlLauncherError() {
     final errorStr = error.toString().toLowerCase();
-    return error is PlatformException &&
-        (errorStr.contains('shared_preferences') ||
-            errorStr.contains('sharedpreferences')) ||
-        error is MissingPluginException &&
-            errorStr.contains('shared_preferences') ||
-        errorStr.contains('sharedpreferences') ||
-        errorStr.contains('preferences') && errorStr.contains('instance');
+    return errorStr.contains('url_launcher') ||
+        error is PlatformException && errorStr.contains('url') ||
+        error is MissingPluginException && errorStr.contains('url');
   }
 
   AppException? _mapByTypePattern() {
@@ -58,9 +62,9 @@ class ErrorHandler {
     return null;
   }
 
-  AppException? _mapBySharedPrefError() {
-    if (_isSharedPrefsError()) {
-      final prefsException = SharedPrefsAppException(
+  AppException? _mapByUrlLauncherError() {
+    if (_isUrlLauncherError()) {
+      final prefsException = UrlLauncherAppException(
         error: error,
         code: (error as PlatformException).code,
       );
@@ -69,11 +73,27 @@ class ErrorHandler {
     return null;
   }
 
+  AppException? _hiveException() {
+    return error is HiveAppException ? error : null;
+  }
+
+  AppException? _validationException() {
+    return error is ValidationException ? error : null;
+  }
+
+  AppException? _componentsException() {
+    return error is ComponentsException ? error : null;
+  }
+
+  AppException? _sharedPrefsException() {
+    return error is SharedPrefsAppException ? error : null;
+  }
+
   void _logError(dynamic error, StackTrace? stackTrace) {
     // For tracking and analytics
     print('════════════════════════════════════════');
     print('❌ Error caught: ${error.runtimeType}');
-    print('Message: $error');
+    print('Message: ${error.toString()}');
     if (stackTrace != null) {
       print('StackTrace: $stackTrace');
     }

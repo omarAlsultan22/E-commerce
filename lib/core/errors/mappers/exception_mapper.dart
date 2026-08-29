@@ -1,16 +1,10 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:dio/dio.dart';
-import 'package:hive/hive.dart';
-import 'package:flutter/services.dart';
-import '../exceptions/dio_app_exception.dart';
 import '../exceptions/firebase_exception.dart';
 import '../exceptions/base/app_exception.dart';
 import '../exceptions/network_app_exception.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../exceptions/cache_exceptions/hive_app_exceptions.dart';
 import 'package:international_cuisine/core/constants/app_strings.dart';
-import '../exceptions/cache_exceptions/shared_prefs_app_exceptions.dart';
 import '../../domain/services/connectivity_service/connectivity_service.dart';
 import 'package:international_cuisine/core/errors/exceptions/client_exception.dart';
 
@@ -21,17 +15,8 @@ class ExceptionMapper {
   ExceptionMapper({required this.error});
 
   static final _connectivityService = ConnectivityService();
-
-  static const String _readOperation = 'read';
-  static const String _writeOperation = 'write';
-
   static const _noInternetMessage = AppStrings.noInternetMessage;
   static const String _msgServerError = 'Cannot reach the server';
-
-  static const String _msgCastError = 'خطأ في نوع البيانات المخزنة';
-  static const String _msgInitError = 'لم تتم تهيئة التخزين المحلي بشكل صحيح';
-  static const String _msgReadError = 'فشل في قراءة البيانات من التخزين المحلي';
-  static const String _msgWriteError = 'فشل في حفظ البيانات إلى التخزين المحلي';
 
   static final Map<String, AppException> _networkPatterns = {
     'socket': NetworkAppException(message: _noInternetMessage),
@@ -43,55 +28,7 @@ class ExceptionMapper {
     'unable to resolve': NetworkAppException(message: _msgServerError),
   };
 
-  static final Map<String, AppException> _sharedPrefsPatterns = {
-    '_casterror': SharedPrefsCastException(
-      message: _msgCastError,
-    ),
-    'null check operator': SharedPrefsCastException(
-      message: _msgCastError,
-    ),
-    'getinstance': SharedPrefsInitException(
-      message: _msgInitError,
-    ),
-    'not initialized': SharedPrefsInitException(
-      message: _msgInitError,
-    ),
-    'binding has not been initialized': SharedPrefsInitException(
-      message: _msgInitError,
-    ),
-    'read': SharedPrefsOperationException(
-      message: _msgReadError,
-      operation: _readOperation,
-    ),
-    'get': SharedPrefsOperationException(
-      message: _msgReadError,
-      operation: _readOperation,
-    ),
-    'write': SharedPrefsOperationException(
-      message: _msgWriteError,
-      operation: _writeOperation,
-    ),
-    'set': SharedPrefsOperationException(
-      message: _msgWriteError,
-      operation: _writeOperation,
-    ),
-    'save': SharedPrefsOperationException(
-      message: _msgWriteError,
-      operation: _writeOperation,
-    ),
-  };
-
   static final Map<Object, AppException Function(dynamic)> _typePatterns = {
-    HiveError: (error) {
-      final hiveException = HiveAppException(error: error.toString());
-      return hiveException.handle();
-    },
-    DioException: (error) {
-      final firebaseException = DioAppException(
-          message: (error as DioException).message ?? 'DIO_ERROR'
-      );
-      return firebaseException.handle();
-    },
     FirebaseException: (error) {
       final firebaseException = FirebaseAppException(
         message: (error as FirebaseException).message ?? 'خطأ في Firebase',
@@ -117,27 +54,14 @@ class ExceptionMapper {
 
   static final RegExp _mergedPatternRegex = RegExp(
     '(${[
-      ..._networkPatterns.keys,
-      ..._sharedPrefsPatterns.keys,
+      _networkPatterns.keys,
     ].join('|')})',
     caseSensitive: false,
   );
 
-  Iterable<String> get keys =>
-      {..._networkPatterns, ..._sharedPrefsPatterns}.keys;
+  Iterable<String> get keys => _networkPatterns.keys;
 
   bool get isKey => _typePatterns.containsKey(error);
-
-  bool isSharedPrefsError() {
-    final errorStr = error.toString().toLowerCase();
-    return error is PlatformException &&
-        (errorStr.contains('shared_preferences') ||
-            errorStr.contains('sharedpreferences')) ||
-        error is MissingPluginException &&
-            errorStr.contains('shared_preferences') ||
-        errorStr.contains('sharedpreferences') ||
-        errorStr.contains('preferences') && errorStr.contains('instance');
-  }
 
   AppException? mapByTypePattern() {
     return _typePatterns[error]!(error);
@@ -148,8 +72,7 @@ class ExceptionMapper {
     final match = _mergedPatternRegex.firstMatch(errorMessage);
     if (match != null) {
       final matchedKey = match.group(0)!;
-      return _networkPatterns[matchedKey] ??
-          _sharedPrefsPatterns[matchedKey];
+      return _networkPatterns[matchedKey];
     }
     return null;
   }

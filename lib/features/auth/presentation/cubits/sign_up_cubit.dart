@@ -55,13 +55,14 @@ class SignUpCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageStat
         userLocation: userLocation,
       );
       emit(MessageState(
-          messageResult: MessageResult.success(message: 'تم انشاء الحساب بنجاح')));
+          messageResult: MessageResult.success(
+              message: 'تم انشاء الحساب بنجاح')));
     } catch (e, stackTrace) {
       handleError(
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              MessageState(messageResult: MessageResult.error(error: failure, message: 'فشل انشاء الحساب: ')
+              MessageState(messageResult: MessageResult.error(error: failure)
               )
       );
     }

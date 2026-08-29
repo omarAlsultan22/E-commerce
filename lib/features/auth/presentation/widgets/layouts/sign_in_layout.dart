@@ -11,7 +11,7 @@ import 'package:international_cuisine/core/constants/app_sizes.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
-import '../../../../../core/data/data_sources/local/shared_preferences.dart';
+import '../../../../../core/data/data_sources/local/cache_helper.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import 'package:international_cuisine/features/auth/presentation/mixins/auth_mixin.dart';
 import 'package:international_cuisine/features/auth/constants/auth_hint_texts_constants.dart';

@@ -49,17 +49,8 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
           hasMore: newState.hasMoreData),
         subState: SuccessState(),
       ));
-    } catch (e, stackTrace) {
-      handleError(
-          error: e,
-          stackTrace: stackTrace,
-          onError: (failure) =>
-              state.copyWith(
-                  subState: ErrorState(
-                      failure: failure
-                  )
-              )
-      );
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -77,12 +68,40 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
       );
       return;
     }
-    await fetchData(isLoadingMore: false);
+    try {
+      await fetchData(isLoadingMore: false);
+    }
+    catch (e, stackTrace) {
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                  subState: ErrorState(
+                      failure: failure
+                  )
+              )
+      );
+    }
   }
 
   Future<void> loadMoreData() async {
     if (!state.hasMore) return;
-    await fetchData(isLoadingMore: true);
+    try {
+      await fetchData(isLoadingMore: true);
+    }
+    catch (e, stackTrace) {
+      handleError(
+          error: e,
+          stackTrace: stackTrace,
+          onError: (failure) =>
+              state.copyWith(
+                  secondModel: MessageResult.error(
+                      error: failure
+                  )
+              )
+      );
+    }
   }
 
 
@@ -91,7 +110,7 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
     required int rating
   }) async {
     try {
-      _dataUseCases.updateRatingExecute(
+      await _dataUseCases.updateRatingExecute(
           collectionId: cuisineName,
           index: index.toString(),
           rating: rating

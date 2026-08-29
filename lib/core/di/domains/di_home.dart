@@ -1,4 +1,4 @@
-import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
+import 'package:international_cuisine/core/data/data_sources/local/cache_helper.dart';
 import '../../../features/home/data/repositories_impl/firestore_home_data_repository.dart';
 import '../../../features/auth/data/repositories_impl/firebase_auth_repository.dart';
 import '../../domain/services/connectivity_service/connectivity_provider.dart';

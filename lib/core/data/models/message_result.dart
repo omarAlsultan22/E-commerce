@@ -9,7 +9,7 @@ class MessageResult {
   final bool isLoading;
   final Color? color;
 
-  MessageResult({
+  const MessageResult({
     this.isLoading = false,
     this.message,
     this.error,
@@ -34,14 +34,12 @@ class MessageResult {
   }
 
   factory MessageResult.error({
-    String? message,
     required AppException error,
   }){
-    final ms = message ?? 'فشل التحديث: ';
     return MessageResult(
-        error: error,
-        color: AppColors.errorRed,
-        message: '$ms${error.message}'
+      error: error,
+      message: error.message,
+      color: AppColors.errorRed,
     );
   }
 }

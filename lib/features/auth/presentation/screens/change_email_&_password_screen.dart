@@ -4,7 +4,7 @@ import '../../../../core/di/service _locator.dart';
 import '../cubits/change_email_and_password_cubit.dart';
 import '../widgets/layouts/change_email_&_password_layout.dart';
 import '../../../../core/presentation/states/message_state.dart';
-import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
+import 'package:international_cuisine/core/data/data_sources/local/cache_helper.dart';
 
 
 class ChangeEmailAndPasswordScreen extends StatelessWidget {

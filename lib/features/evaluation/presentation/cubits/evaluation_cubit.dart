@@ -55,7 +55,7 @@ class EvaluationCubit extends Cubit<MessageState> with ErrorHandlerMixin<Message
           onError: (failure) =>
               MessageState(
                   messageResult: MessageResult.error(
-                      error: failure, message: 'فشل الارسال: '
+                      error: failure
                   )
               )
       );

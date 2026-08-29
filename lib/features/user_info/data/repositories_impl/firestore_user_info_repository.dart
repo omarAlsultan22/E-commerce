@@ -2,7 +2,7 @@ import '../../../../core/data/models/user_model.dart';
 import '../../domain/repositories/user_info_repository.dart';
 import '../../../../core/data/data_sources/remote/firestore.dart';
 import 'package:international_cuisine/core/constants/app_keys.dart';
-import '../../../../core/data/data_sources/local/shared_preferences.dart';
+import '../../../../core/data/data_sources/local/cache_helper.dart';
 
 
 class FirestoreUserInfoRepository implements UserInfoRepository {

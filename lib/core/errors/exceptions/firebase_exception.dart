@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'base/app_exception.dart';
 import 'network_app_exception.dart';
 import 'base/exception_handler.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/services/connectivity_service/connectivity_service.dart';
 
 
@@ -36,8 +35,26 @@ class FirebaseAppException extends AppException implements ExceptionHandler {
         code: 'unauthenticated', message: 'المستخدم غير مصادق عليه'),
     'failed-precondition': FirestoreAppException(
         code: 'failed-precondition', message: 'فشل الشرط المسبق'),
+    'deadline-exceeded': FirestoreAppException(
+        code: 'deadline-exceeded',
+        message: 'انتهت مهلة الطلب، يرجى المحاولة مرة أخرى'),
+    'resource-exhausted': FirestoreAppException(
+        code: 'resource-exhausted',
+        message: 'تم الوصول إلى الحد الأقصى للخادم، حاول مرة أخرى لاحقاً'),
+    'cancelled': FirestoreAppException(
+        code: 'cancelled',
+        message: 'تم إلغاء العملية'),
+    'aborted': FirestoreAppException(
+        code: 'aborted',
+        message: 'فشلت العملية، يرجى المحاولة مرة أخرى'),
+    'fetch-failed': FirestoreAppException(
+        code: 'fetch-failed',
+        message: 'فشل تحميل البيانات، يرجى التحقق من اتصالك.'),
+    'data-corrupted': FirestoreAppException(
+        code: 'data-corrupted',
+        message: 'تنسيق بيانات غير صالح'),
 
-    // Authentication
+    // Auth
     'user-not-found': AuthAppException(
         code: 'user-not-found',
         message: 'لا يوجد مستخدم مسجل بهذا البريد الإلكتروني'),
@@ -58,6 +75,12 @@ class FirebaseAppException extends AppException implements ExceptionHandler {
         code: 'invalid-credential', message: 'بيانات تسجيل الدخول غير صالحة'),
     'requires-recent-login': AuthAppException(
         code: 'requires-recent-login', message: 'يرجى تسجيل الدخول مرة أخرى'),
+    'operation-not-allowed': AuthAppException(
+        code: 'operation-not-allowed',
+        message: 'طريقة تسجيل الدخول هذه غير متاحة'),
+    'account-exists-with-different-credential': AuthAppException(
+        code: 'account-exists-with-different-credential',
+        message: 'البريد الإلكتروني مستخدم بالفعل مع طريقة تسجيل دخول أخرى'),
 
     // Storage
     'object-not-found': StorageAppException(

@@ -1,7 +1,7 @@
 import '../repositories/auth_repository.dart';
 import '../repositories/sign_up_repository.dart';
 import '../../../../core/data/models/user_model.dart';
-import '../../../../core/data/data_sources/local/shared_preferences.dart';
+import '../../../../core/data/data_sources/local/cache_helper.dart';
 
 
 class SignUpUseCase {

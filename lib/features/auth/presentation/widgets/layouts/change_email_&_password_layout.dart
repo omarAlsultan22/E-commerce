@@ -2,7 +2,7 @@ import 'package:international_cuisine/features/auth/presentation/screens/sgin_in
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import '../../../../../core/presentation/widgets/navigation/navigator_with_delay.dart';
-import '../../../../../core/data/data_sources/local/shared_preferences.dart';
+import '../../../../../core/data/data_sources/local/cache_helper.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';

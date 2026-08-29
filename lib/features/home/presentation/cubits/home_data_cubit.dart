@@ -78,7 +78,8 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
     try {
       _signOutUseCase.signOutExecute();
       emit(
-          state.copyWith(secondModel: MessageResult.success(message: 'تم تسجيل الخروج بنجاح')));
+          state.copyWith(secondModel: MessageResult.success(
+              message: 'تم تسجيل الخروج بنجاح')));
     } catch (e, stackTrace) {
       handleError(
           error: e,
@@ -86,7 +87,7 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
           onError: (failure) =>
               state.copyWith(
                   secondModel: MessageResult.error(
-                      error: failure, message: 'حدث خطأ أثناء تسجيل الخروج: '
+                      error: failure
                   )
               )
       );

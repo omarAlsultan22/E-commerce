@@ -2,7 +2,8 @@ import 'firebase_options.dart';
 import '../di/service _locator.dart';
 import '../data/data_sources/local/hive.dart';
 import 'package:firebase_core/firebase_core.dart';
-import '../data/data_sources/local/shared_preferences.dart';
+import '../data/data_sources/local/cache_Helper.dart';
+import 'package:international_cuisine/core/errors/exceptions/components_exception.dart';
 
 
 class InitializationController {
@@ -34,7 +35,12 @@ class InitializationController {
     _hiveStore = sl<HiveStore>();
     _cacheHelper = sl<CacheHelper>();
 
-    await _initializeServices();
+    try {
+      await _initializeServices();
+    }
+    catch (e) {
+      throw ComponentsException(error: e);
+    }
 
     _isInitialized = true;
   }

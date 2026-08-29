@@ -4,7 +4,7 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/message_state.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
-import '../../../../core/errors/exceptions/security_app_exception.dart';
+import 'package:international_cuisine/core/errors/exceptions/validation_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 
 
@@ -32,7 +32,7 @@ class ForgetPasswordCubit extends Cubit<MessageState> with ErrorHandlerMixin<Mes
           onError: (failure) =>
               MessageState(
                 messageResult: MessageResult.error(
-                    error: failure
+                    error: failure,
                 ),
               )
       );
@@ -45,13 +45,13 @@ class ForgetPasswordCubit extends Cubit<MessageState> with ErrorHandlerMixin<Mes
       if (userEmail.isEmpty) {
         emit(
             MessageState(
-              messageResult: MessageResult.error(
-                  error: SecurityAppException(
-                      message: 'الرجاء إدخال بريدك الإلكتروني')),
+                messageResult: MessageResult.error(
+                  error: ValidationException(),
+                )
             )
         );
       }
-      _repository.sendResetEmail(
+      await _repository.sendResetEmail(
         userEmail: userEmail,
       );
       emit(MessageState(

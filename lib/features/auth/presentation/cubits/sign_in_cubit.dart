@@ -4,10 +4,11 @@ import '../../domain/useCases/sign_in_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/message_state.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
+import 'package:international_cuisine/core/errors/exceptions/validation_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 
 
-class SignInCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageState>{
+class SignInCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageState> {
   final SignInUseCase _useCase;
   final ConnectivityProvider _connectivityProvider;
 
@@ -32,7 +33,7 @@ class SignInCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageStat
           onError: (failure) =>
               MessageState(
                 messageResult: MessageResult.error(
-                    error: failure
+                  error: failure,
                 ),
               )
       );
@@ -43,20 +44,23 @@ class SignInCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageStat
 
     try {
       if (userEmail.isEmpty || userPassword.isEmpty) {
-        throw('Fields cannot be empty.');
+        throw ValidationException();
       }
-      _useCase.signInExecute(
+      await _useCase.signInExecute(
           userEmail: userEmail,
           userPassword: userPassword
       );
       emit(MessageState(
-          messageResult: MessageResult.success(message: 'تم تسجيل الدخول بنجاح')));
+          messageResult: MessageResult.success(
+              message: 'تم تسجيل الدخول بنجاح')));
     } catch (e, stackTrace) {
       handleError(
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              MessageState(messageResult: MessageResult.error(error: failure, message: 'فشل تسجيل الدخول: ')
+              MessageState(
+                  messageResult: MessageResult.error(
+                      error: failure)
               )
       );
     }

@@ -1,10 +1,12 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../../features/cart/data/models/order_model.dart';
-import 'package:international_cuisine/core/data/data_sources/local/shared_preferences.dart';
+import '../../../errors/exceptions/cache_exceptions/hive_app_exceptions.dart';
+import 'package:international_cuisine/core/data/data_sources/local/cache_Helper.dart';
 
 
 class HiveStore {
   final CacheHelper _cacheHelper;
+
   HiveStore({
     required CacheHelper cacheHelper
   }) : _cacheHelper = cacheHelper;
@@ -13,16 +15,20 @@ class HiveStore {
 
   Box<OrderModel> get box {
     if (_box == null || !_box!.isOpen) {
-      throw Exception(
-          'HiveOperations not initialized or box is closed. Call init() first.');
+      throw HiveInitializeException();
     }
     return _box!;
   }
 
   Future<void> init() async {
-    await Hive.initFlutter();
-    Hive.registerAdapter(OrderModelAdapter());
-    _box = await Hive.openBox<OrderModel>('shoppingList');
+    try {
+      await Hive.initFlutter();
+      Hive.registerAdapter(OrderModelAdapter());
+      _box = await Hive.openBox<OrderModel>('shoppingList');
+    }
+    catch (e) {
+      throw HiveInitializeException(error: e);
+    }
   }
 
   Future<void> saveLocalData(List<OrderModel> data) async {
@@ -36,7 +42,7 @@ class HiveStore {
       }
     } catch (e) {
       print("Error saving local data: $e");
-      rethrow;
+      throw HiveSaveException(error: e);
     }
   }
 
@@ -62,9 +68,10 @@ class HiveStore {
       }
 
       return items;
-    } catch (e) {
+    }
+    catch (e) {
       print("Error getting local data: $e");
-      return [];
+      throw HiveReadException(error: e);
     }
   }
 
@@ -73,8 +80,10 @@ class HiveStore {
       if (_box != null && _box!.isOpen) {
         await _box!.clear();
       }
-    } catch (e) {
+    }
+    catch (e) {
       print("Error clearing data: $e");
+      throw HiveClearException(error: e);
     }
   }
 }
