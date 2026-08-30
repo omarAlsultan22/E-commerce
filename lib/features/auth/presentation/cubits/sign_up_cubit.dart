@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/useCases/sign_up_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/message_state.dart';
+import '../../../../core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 
@@ -30,17 +30,7 @@ class SignUpCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageStat
     required String userLocation,
   }) async {
     if (!_connectivityProvider.isConnected) {
-      handleError(
-          error: SocketException,
-          stackTrace: StackTrace.current,
-          onError: (failure) =>
-              MessageState(
-                messageResult: MessageResult.error(
-                    error: failure
-                ),
-              )
-      );
-      return;
+      throw NetworkAppException();
     }
 
     emit(MessageState(messageResult: MessageResult.loading()));
@@ -49,9 +39,9 @@ class SignUpCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageStat
       await _useCase.signUpExecute(
         firstName: firstName,
         lastName: lastName,
+        userPhone: userPhone,
         userEmail: userEmail,
         userPassword: userPassword,
-        userPhone: userPhone,
         userLocation: userLocation,
       );
       emit(MessageState(

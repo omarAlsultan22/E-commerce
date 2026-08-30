@@ -15,7 +15,7 @@ class ConnectivityService {
         return true;
       }
       return false;
-    } on SocketException catch (_) {
+    } catch (_) {
       return false;
     }
   }

@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../auth/domain/useCases/sign_out_useCase.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
+import 'package:international_cuisine/core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/features/home/domain/useCases/home_data_useCase.dart';
 import 'package:international_cuisine/features/home/presentation/states/home_data_state.dart';
@@ -30,17 +30,7 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
 
   Future<void> getData() async {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
-      handleError(
-          error: SocketException,
-          stackTrace: StackTrace.current,
-          onError: (failure) =>
-              state.copyWith(
-                subState: ErrorState(
-                    failure: failure
-                ),
-              )
-      );
-      return;
+      throw NetworkAppException();
     }
     emit(
         state.copyWith(
@@ -76,7 +66,7 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
 
   Future<void> signOut() async {
     try {
-      _signOutUseCase.signOutExecute();
+      await _signOutUseCase.signOutExecute();
       emit(
           state.copyWith(secondModel: MessageResult.success(
               message: 'تم تسجيل الخروج بنجاح')));

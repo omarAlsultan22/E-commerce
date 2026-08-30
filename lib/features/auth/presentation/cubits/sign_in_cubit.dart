@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/useCases/sign_in_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/message_state.dart';
+import '../../../../core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import 'package:international_cuisine/core/errors/exceptions/validation_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
@@ -27,17 +27,7 @@ class SignInCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageStat
     required String userPassword,
   }) async {
     if (!_connectivityProvider.isConnected) {
-      handleError(
-          error: SocketException,
-          stackTrace: StackTrace.current,
-          onError: (failure) =>
-              MessageState(
-                messageResult: MessageResult.error(
-                  error: failure,
-                ),
-              )
-      );
-      return;
+      throw NetworkAppException();
     }
 
     emit(MessageState(messageResult: MessageResult.loading()));

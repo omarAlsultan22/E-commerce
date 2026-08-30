@@ -1,9 +1,9 @@
-import 'dart:io';
 import '../states/states/user_info_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/useCases/user_info_useCase.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/app_sub_states.dart';
+import '../../../../core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 
@@ -36,17 +36,7 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
       );
     }
     if (!_connectivityProvider.isConnected) {
-      handleError(
-        error: SocketException,
-        stackTrace: StackTrace.current,
-        onError: (failure) =>
-            buildState(
-              MessageResult.error(
-                  error: failure
-              ),
-            ),
-      );
-      return;
+      throw NetworkAppException();
     }
 
     emit(buildState(MessageResult.loading()));
@@ -76,17 +66,7 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
 
   Future<void> getInfo() async {
     if (!_connectivityProvider.isConnected && state.firstModel == null) {
-      handleError(
-          error: SocketException,
-          stackTrace: StackTrace.current,
-          onError: (failure) =>
-              state.copyWith(
-                subState: ErrorState(
-                  failure: failure,
-                ),
-              )
-      );
-      return;
+      throw NetworkAppException();
     }
     emit(
         state.copyWith(

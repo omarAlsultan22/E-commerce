@@ -1,10 +1,10 @@
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
+import 'package:international_cuisine/core/errors/exceptions/network_app_exception.dart';
 import 'package:international_cuisine/core/presentation/states/message_state.dart';
 import 'package:international_cuisine/core/data/models/message_result.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import '../../domain/useCases/evaluation_useCase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:io';
 
 
 class EvaluationCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageState> {
@@ -26,17 +26,7 @@ class EvaluationCubit extends Cubit<MessageState> with ErrorHandlerMixin<Message
     required String evaluationText
   }) async {
     if (!_connectivityProvider.isConnected) {
-      handleError(
-          error: SocketException,
-          stackTrace: StackTrace.current,
-          onError: (failure) =>
-              MessageState(
-                messageResult: MessageResult.error(
-                    error: failure
-                ),
-              )
-      );
-      return;
+      throw NetworkAppException();
     }
 
     emit(MessageState(messageResult: MessageResult.loading()));
