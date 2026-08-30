@@ -28,13 +28,13 @@ class ForgetPasswordCubit extends Cubit<MessageState> with ErrorHandlerMixin<Mes
     if (!_connectivityProvider.isConnected) {
       throw NetworkAppException();
     }
+    if (userEmail.isEmpty) {
+      throw ValidationException();
+    }
 
     emit(MessageState(messageResult: MessageResult.loading()));
 
     try {
-      if (userEmail.isEmpty) {
-        throw ValidationException();
-      }
       await _repository.sendResetEmail(
         userEmail: userEmail,
       );
