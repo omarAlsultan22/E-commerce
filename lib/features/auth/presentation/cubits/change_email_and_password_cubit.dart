@@ -45,11 +45,11 @@ class ChangeEmailAndPasswordCubit extends Cubit<MessageState> with ErrorHandlerM
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              MessageState(messageResult: MessageResult.error(
-                error: failure,
-              ),
+              MessageState(
+                messageResult: MessageResult.error(
+                  error: failure,
+                ),
               )
-
       );
     }
   }
