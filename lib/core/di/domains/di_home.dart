@@ -1,7 +1,7 @@
-import 'package:international_cuisine/core/data/data_sources/local/cache_helper.dart';
 import '../../../features/home/data/repositories_impl/firestore_home_data_repository.dart';
 import '../../../features/auth/data/repositories_impl/firebase_auth_repository.dart';
 import '../../domain/services/connectivity_service/connectivity_provider.dart';
+import 'package:international_cuisine/core/services/session_service.dart';
 import '../../../features/home/presentation/cubits/home_data_cubit.dart';
 import '../../../features/home/domain/useCases/home_data_useCase.dart';
 import '../../../features/auth/domain/useCases/sign_out_useCase.dart';
@@ -22,7 +22,7 @@ class HomeDependencies {
 
     sl.registerLazySingleton(() =>
         SignOutUseCase(
-            cacheHelper: sl<CacheHelper>(),
+            sessionService: sl<SessionService>(),
             authRepository: sl<FirebaseAuthRepository>()));
 
     // Cubit

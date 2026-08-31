@@ -44,7 +44,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
 
   Future<void> _loadSavedLocation() async {
     try {
-      final savedAddress = await widget.cacheHelper.getStringValue(
+      final savedAddress = await widget.cacheHelper.getString(
         key: AppKeys.location,
       );
 
@@ -83,7 +83,7 @@ class _FixedLocationPickerState extends State<FixedLocationPicker> {
     if (currentState.position == null || currentState.addressIsEmpty) return;
 
     try {
-      await widget.cacheHelper.setStringValue(
+      await widget.cacheHelper.setString(
         key: AppKeys.location,
         value: currentState.address,
       );

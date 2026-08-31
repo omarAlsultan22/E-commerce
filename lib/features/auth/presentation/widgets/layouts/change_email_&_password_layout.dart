@@ -2,12 +2,11 @@ import 'package:international_cuisine/features/auth/presentation/screens/sgin_in
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import '../../../../../core/presentation/widgets/navigation/navigator_with_delay.dart';
-import '../../../../../core/data/data_sources/local/cache_helper.dart';
+import 'package:international_cuisine/core/services/session_service.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
-import 'package:international_cuisine/core/constants/app_keys.dart';
 import '../../../../../core/data/models/message_result.dart';
 import '../../utils/validate/validate_password.dart';
 import '../../utils/validate/validate_email.dart';
@@ -21,13 +20,13 @@ class ChangeEmailAndPasswordLayout extends StatefulWidget {
   required String currentPassword,
   required String newPassword
   }) onUpdate;
-  final CacheHelper cacheHelper;
   final MessageResult messageResult;
+  final SessionService sessionService;
   const ChangeEmailAndPasswordLayout({
     super.key,
     required this.onUpdate,
-    required this.cacheHelper,
-    required this.messageResult
+    required this.messageResult,
+    required this.sessionService,
   });
 
   @override
@@ -271,7 +270,7 @@ class _ChangeEmailAndPasswordLayoutState extends State<ChangeEmailAndPasswordLay
   }
 
   void _clearUserData() {
-    widget.cacheHelper.removeValue(key: AppKeys.uId);
+    widget.sessionService.logout();
   }
 
   String? _validatePasswordConfirmation(dynamic value) {

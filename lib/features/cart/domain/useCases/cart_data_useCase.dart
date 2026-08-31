@@ -23,9 +23,9 @@ class CartDataUseCase {
     try {
       await clearCartExecute();
       await _repository.saveDataToHive(shoppingList: shoppingList);
-      await _cacheHelper.setIntValue(
+      await _cacheHelper.setInt(
           key: 'itemsCount', value: shoppingList.length);
-      await _cacheHelper.setIntValue(key: time, value: DateTime
+      await _cacheHelper.setInt(key: time, value: DateTime
           .now()
           .millisecondsSinceEpoch);
     }
@@ -36,7 +36,7 @@ class CartDataUseCase {
 
   Future<List<OrderModel>> getCartDataExecute() async {
     try {
-      final savedTime = await _cacheHelper.getIntValue(key: time) ??
+      final savedTime = await _cacheHelper.getInt(key: time) ??
           0;
       final currentTime = DateTime
           .now()

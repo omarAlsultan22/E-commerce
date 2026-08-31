@@ -1,5 +1,6 @@
 import 'firebase_options.dart';
 import '../di/service _locator.dart';
+import '../services/session_service.dart';
 import '../data/data_sources/local/hive.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../data/data_sources/local/cache_Helper.dart';
@@ -16,6 +17,7 @@ class InitializationController {
 
   late final HiveStore _hiveStore;
   late final CacheHelper _cacheHelper;
+  late final SessionService _sessionService;
 
   bool _isInitialized = false;
 
@@ -23,6 +25,7 @@ class InitializationController {
     await Future.wait<void>([
       _hiveStore.init(),
       _cacheHelper.init(),
+      _sessionService.loadFromStorage(),
       Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ),
@@ -34,6 +37,7 @@ class InitializationController {
 
     _hiveStore = sl<HiveStore>();
     _cacheHelper = sl<CacheHelper>();
+    _sessionService = sl<SessionService>();
 
     try {
       await _initializeServices();

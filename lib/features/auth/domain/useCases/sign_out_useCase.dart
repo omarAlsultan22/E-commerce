@@ -1,22 +1,21 @@
 import '../repositories/auth_repository.dart';
-import '../../../../core/constants/app_keys.dart';
-import '../../../../core/data/data_sources/local/cache_helper.dart';
+import 'package:international_cuisine/core/services/session_service.dart';
 
 
 class SignOutUseCase {
-  final CacheHelper _cacheHelper;
+  final SessionService _sessionService;
   final AuthRepository _authRepository;
 
   SignOutUseCase({
-    required CacheHelper cacheHelper,
+    required SessionService sessionService,
     required AuthRepository authRepository,
   })
-      : _cacheHelper = cacheHelper,
+      : _sessionService = sessionService,
         _authRepository = authRepository;
 
   Future<void> signOutExecute() async {
     try {
-      await _cacheHelper.removeValue(key: AppKeys.uId);
+      await _sessionService.logout();
       await _authRepository.signOut();
     } catch (e) {
       rethrow;

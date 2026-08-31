@@ -21,7 +21,7 @@ class CacheHelper {
     }
   }
 
-  Future<bool> setStringValue({
+  Future<bool> setString({
     required String key,
     required String value
   }) async {
@@ -33,18 +33,18 @@ class CacheHelper {
     }
   }
 
-  Future<String?> getStringValue({
+  Future<String> getString({
     required String key
   }) async {
     try {
-      return await sharedPreferences.getString(key);
+      return await sharedPreferences.getString(key) ?? '';
     }
     catch (e) {
       throw SharedPrefsReadException(error: e);
     }
   }
 
-  Future<bool> setIntValue({
+  Future<bool> setInt({
     required String key,
     required int value
   }) async {
@@ -56,7 +56,7 @@ class CacheHelper {
     }
   }
 
-  Future<int?> getIntValue({
+  Future<int?> getInt({
     required String key
   }) async {
     try {

@@ -3,6 +3,7 @@ import 'package:international_cuisine/core/data/data_sources/local/cache_helper.
 import '../../../features/invoice/presentation/cubits/payment_invoice_cubit.dart';
 import '../../../features/invoice/domain/useCases/payment_Invoice_useCase.dart';
 import '../../domain/services/connectivity_service/connectivity_provider.dart';
+import 'package:international_cuisine/core/services/session_service.dart';
 import '../../../features/cart/presentation/cubits/cart_data_cubit.dart';
 import '../../data/data_sources/remote/firestore.dart';
 import '../service _locator.dart';
@@ -13,6 +14,7 @@ class InvoiceDependencies {
     // Repository
     sl.registerLazySingleton(() =>
         FirestorePaymentInvoiceRepository(
+            sessionService: sl<SessionService>(),
             repository: sl<FirestoreService>(),
             cacheHelper: sl<CacheHelper>()));
 

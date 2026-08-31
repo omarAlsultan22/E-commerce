@@ -3,23 +3,24 @@ import '../../domain/repositories/user_info_repository.dart';
 import '../../../../core/data/data_sources/remote/firestore.dart';
 import 'package:international_cuisine/core/constants/app_keys.dart';
 import '../../../../core/data/data_sources/local/cache_helper.dart';
+import 'package:international_cuisine/core/services/session_service.dart';
 
 
 class FirestoreUserInfoRepository implements UserInfoRepository {
-  final CacheHelper _cacheHelper;
   final FirestoreService _repository;
+  final SessionService _sessionService;
 
   FirestoreUserInfoRepository({
     required CacheHelper cacheHelper,
-    required FirestoreService repository
+    required FirestoreService repository,
+    required SessionService sessionService,
   })
       : _repository = repository,
-        _cacheHelper = cacheHelper;
+        _sessionService = sessionService;
 
   @override
   Future<UserModel> getInfo() async {
     try {
-      final userId = await _cacheHelper.getStringValue(key: AppKeys.uId);
       final jsonData = await _repository.getDocument(
           collectionPath: AppKeys.userInfo, docId: 'Lcjp7FoCPAo0U3yqqRmm');
       return UserModel.fromDocumentSnapshot(jsonData);
@@ -37,8 +38,6 @@ class FirestoreUserInfoRepository implements UserInfoRepository {
     required String userLocation
   }) async {
     try {
-      final userId = await _cacheHelper.getStringValue(key: AppKeys.uId);
-
       final userModel = UserModel(
         firstName: firstName,
         lastName: lastName,
@@ -46,7 +45,9 @@ class FirestoreUserInfoRepository implements UserInfoRepository {
         userLocation: userLocation,
       );
       await _repository.updateDocument(
-          collectionPath: AppKeys.userInfo, docId: userId!, data: userModel.toJson());
+          collectionPath: AppKeys.userInfo,
+          docId: _sessionService.currentUid,
+          data: userModel.toJson());
     }
     catch (e) {
       rethrow;

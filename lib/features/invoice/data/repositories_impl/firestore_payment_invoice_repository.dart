@@ -5,27 +5,29 @@ import '../../domain/repositories/payment_invoice_repository.dart';
 import '../../presentation/utils/helpers/user_info_converter.dart';
 import 'package:international_cuisine/core/constants/app_keys.dart';
 import '../../../../core/data/data_sources/local/cache_helper.dart';
+import 'package:international_cuisine/core/services/session_service.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
+import 'package:international_cuisine/core/errors/exceptions/validation_exception.dart';
 
 
 class FirestorePaymentInvoiceRepository implements PaymentInvoiceRepository {
   final CacheHelper _cacheHelper;
   final FirestoreService _repository;
+  final SessionService _sessionService;
 
   FirestorePaymentInvoiceRepository({
     required CacheHelper cacheHelper,
-    required FirestoreService repository
+    required FirestoreService repository,
+    required SessionService sessionService,
   })
       : _repository = repository,
-        _cacheHelper = cacheHelper;
-
-  static const uId = AppKeys.uId;
+        _cacheHelper = cacheHelper,
+        _sessionService = sessionService;
 
   @override
   Future<UserModel> getInfo() async {
     try {
-      final userId = await _cacheHelper.getStringValue(key: uId);
-      final location = await _cacheHelper.getStringValue(key: AppKeys.location);
+      final location = await _cacheHelper.getString(key: AppKeys.location);
       final doc = await _repository
           .getDocument(collectionPath: AppKeys.userInfo, docId: 'Lcjp7FoCPAo0U3yqqRmm');
 
@@ -35,7 +37,7 @@ class FirestorePaymentInvoiceRepository implements PaymentInvoiceRepository {
       }
 
       return UserInfoConverter
-          .fromDocumentSnapshot(doc, location!)
+          .fromDocumentSnapshot(doc, location)
           .userModel;
     } catch (e) {
       rethrow;
@@ -49,10 +51,8 @@ class FirestorePaymentInvoiceRepository implements PaymentInvoiceRepository {
   }) async {
     try {
       if (userInfo == null) {
-        throw Exception('User model is null');
+        throw ValidationException(message: 'User information is required to place an order');
       }
-
-      final userId = await _cacheHelper.getStringValue(key: uId);
 
       SendOrderModel data = SendOrderModel(
           userName: ('${userInfo.firstName} ${userInfo.lastName}'),
@@ -63,7 +63,7 @@ class FirestorePaymentInvoiceRepository implements PaymentInvoiceRepository {
 
       await _repository.setData(
           collectionPath: 'processingOrders',
-          docId: userId,
+          docId: _sessionService.currentUid,
           data: data.toJson());
     } catch (e) {
       rethrow;

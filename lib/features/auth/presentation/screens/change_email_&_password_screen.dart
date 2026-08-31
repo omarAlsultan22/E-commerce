@@ -4,7 +4,7 @@ import '../../../../core/di/service _locator.dart';
 import '../cubits/change_email_and_password_cubit.dart';
 import '../widgets/layouts/change_email_&_password_layout.dart';
 import '../../../../core/presentation/states/message_state.dart';
-import 'package:international_cuisine/core/data/data_sources/local/cache_helper.dart';
+import 'package:international_cuisine/core/services/session_service.dart';
 
 
 class ChangeEmailAndPasswordScreen extends StatelessWidget {
@@ -18,8 +18,8 @@ class ChangeEmailAndPasswordScreen extends StatelessWidget {
             builder: (context, state) {
               final _cubit = ChangeEmailAndPasswordCubit.get(context);
               return ChangeEmailAndPasswordLayout(
-                  cacheHelper: sl<CacheHelper>(),
                   messageResult: state.messageResult!,
+                  sessionService: sl<SessionService>(),
                   onUpdate: ({
                     required String newEmail,
                     required String currentPassword,

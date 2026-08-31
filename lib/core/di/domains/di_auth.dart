@@ -5,6 +5,7 @@ import '../../../features/auth/domain/useCases/change_email_and_password_useCase
 import '../../../features/auth/data/repositories_impl/firebase_auth_repository.dart';
 import '../../../features/auth/presentation/cubits/forget_password_cubit.dart';
 import '../../domain/services/connectivity_service/connectivity_provider.dart';
+import 'package:international_cuisine/core/services/session_service.dart';
 import '../../../features/auth/presentation/cubits/sign_in_cubit.dart';
 import '../../../features/auth/presentation/cubits/sign_up_cubit.dart';
 import '../../../features/auth/domain/useCases/sign_in_useCase.dart';
@@ -27,7 +28,7 @@ class AuthDependencies {
     sl.registerLazySingleton(() =>
         SignInUseCase(
             authRepository: sl<FirebaseAuthRepository>(),
-            cacheHelper: sl<CacheHelper>()));
+            sessionService: sl<SessionService>()));
     sl.registerLazySingleton(() =>
         SignUpUseCase(
             authRepository: sl<FirebaseAuthRepository>(),

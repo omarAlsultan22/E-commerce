@@ -42,7 +42,7 @@ class SignUpUseCase {
       await _signUpRepository.createUserInfo(
           userModel: userModel, userCredential: userCredential);
 
-      await _cacheHelper.setStringValue(
+      await _cacheHelper.setString(
           key: 'userName', value: firstName + lastName);
     } catch (e) {
       rethrow;
