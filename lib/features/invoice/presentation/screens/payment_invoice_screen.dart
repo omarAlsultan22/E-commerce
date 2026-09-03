@@ -92,8 +92,8 @@ class PaymentInvoiceScreen extends StatelessWidget {
                   onLoaded: (data) {
                     return PaymentInvoiceLayout(
                       isPaid: isPaid,
-                      userInfoModel: data.firstModel,
-                      shoppingList: data.secondModel,
+                      userInfoModel: data.userModel,
+                      shoppingList: data.shoppingList,
                     );
                   },
                   onError: (error) =>

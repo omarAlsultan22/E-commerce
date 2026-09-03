@@ -60,7 +60,7 @@ class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObse
               onLoading: () => const LoadingStateWidget(),
               onLoaded: (data) {
                 return CartDataLayout(
-                    shoppingList: data.firstModel
+                    shoppingList: data.shoppingList
                 );
               },
               onError: (error) =>

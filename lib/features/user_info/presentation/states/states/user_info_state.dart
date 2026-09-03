@@ -1,47 +1,53 @@
 import '../../../../../core/data/models/user_model.dart';
-import '../../../../../core/presentation/states/loaded_states.dart';
 import '../../../../../core/errors/exceptions/base/app_exception.dart';
 import 'package:international_cuisine/core/data/models/message_result.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
-import 'package:international_cuisine/core/presentation/states/app_sup_states.dart';
 import 'package:international_cuisine/core/presentation/states/base/main_app_sub_state.dart';
+import 'package:international_cuisine/core/presentation/states/base/main_app_sup_state.dart';
+import 'package:international_cuisine/features/user_info/data/models/user_info_success_state.dart';
 
 
-class UserInfoState extends DoubleModelAppState<UserModel, MessageResult> {
-  UserInfoState({
-    super.firstModel,
-    super.secondModel,
+class UserInfoState extends MainAppSupState {
+  final UserModel? userModel;
+  final MessageResult messageResult;
+  const UserInfoState({
+    this.userModel,
     required super.subState,
+    required this.messageResult
   });
 
   factory UserInfoState.initial(){
     return UserInfoState(
-        firstModel: null,
-        secondModel: MessageResult.initial(),
+        userModel: null,
+        messageResult: MessageResult.initial(),
         subState: InitialState()
     );
   }
 
-  UserModel? get userModel => firstModel;
-
-  @override
   UserInfoState copyWith({
-    UserModel? firstModel,
-    MessageResult? secondModel,
+    UserModel? userModel,
+    MessageResult? messageResult,
     MainAppSubState? subState
   }) {
     return UserInfoState(
       subState: subState ?? this.subState,
-      firstModel: firstModel ?? this.firstModel,
-      secondModel: secondModel ?? this.secondModel,
+      userModel: userModel ?? this.userModel,
+      messageResult: messageResult ?? this.messageResult,
     );
   }
+
+  @override
+  UserInfoSuccessState get dataModels =>
+      UserInfoSuccessState(
+          userModel: userModel!,
+          messageResult: messageResult
+      );
 
   @override
   R when<R>({
     required R Function() onInitial,
     required R Function() onLoading,
-    required R Function(DoubleModelSuccessState) onLoaded,
+    required R Function(UserInfoSuccessState) onLoaded,
     required R Function(AppException) onError
   }) {
     return subState.when(

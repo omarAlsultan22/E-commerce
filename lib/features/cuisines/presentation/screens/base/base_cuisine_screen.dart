@@ -46,8 +46,8 @@ abstract class BaseCuisineScreenState<T extends BaseCuisineScreen>
                   return SearchableListBuilder(
                     isLocked: false,
                     title: widget.title,
-                    categoriesModel: data.firstModel,
-                    messageResult: data.secondModel,
+                    messageResult: data.messageResult,
+                    categoriesModel: data.categoriesModel,
                     getMoreData: () => cubit.loadMoreData(),
                     clearData: () => cubit.clearDataSearch(),
                     getSearchData: (searchText) =>

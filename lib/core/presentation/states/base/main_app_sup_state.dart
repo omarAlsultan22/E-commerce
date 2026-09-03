@@ -6,9 +6,11 @@ import '../../../errors/exceptions/base/app_exception.dart';
 abstract class MainAppSupState{
   final MainAppSubState subState;
 
-  MainAppSupState({
+  const MainAppSupState({
     required this.subState
   });
+
+  LoadedState get dataModels;
 
   R when<R>({
     required R Function() onInitial,

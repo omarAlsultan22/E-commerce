@@ -29,7 +29,7 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
   static HomeDataCubit get(context) => BlocProvider.of<HomeDataCubit>(context);
 
   Future<void> getData() async {
-    if (!_connectivityProvider.isConnected && state.firstModel == null) {
+    if (!_connectivityProvider.isConnected && state.dataIsEmpty) {
       throw NetworkAppException();
     }
     emit(
@@ -47,7 +47,7 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
       emit(
           state.copyWith(
               subState: SuccessState(),
-              firstModel: homeData
+              homeData: homeData
           )
       );
     } catch (e, stackTrace) {
@@ -68,7 +68,7 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
     try {
       await _signOutUseCase.signOutExecute();
       emit(
-          state.copyWith(secondModel: MessageResult.success(
+          state.copyWith(messageResult: MessageResult.success(
               message: 'تم تسجيل الخروج بنجاح')));
     } catch (e, stackTrace) {
       handleError(
@@ -76,7 +76,7 @@ class HomeDataCubit extends Cubit<HomeDataState> with ErrorHandlerMixin<HomeData
           stackTrace: stackTrace,
           onError: (failure) =>
               state.copyWith(
-                  secondModel: MessageResult.error(
+                  messageResult: MessageResult.error(
                       error: failure
                   )
               )

@@ -27,8 +27,8 @@ class HomeScreen extends StatelessWidget {
           onLoaded: (data) {
             return HomeLayout(
               signOut: _cubit.signOut,
-              homeData: data.firstModel,
-              messageResult: data.secondModel,
+              homeData: data.homeData,
+              messageResult: data.messageResult,
             );
           },
           onError: (error) =>

@@ -54,7 +54,7 @@ class HiveStore {
 
       List<OrderModel> items = [];
 
-      final count = await _cacheHelper.getIntValue(key: 'itemsCount') ?? 0;
+      final count = await _cacheHelper.getInt(key: 'itemsCount') ?? 0;
 
       for (int i = 0; i < count; i++) {
         final item = await _box!.get('item_$i');

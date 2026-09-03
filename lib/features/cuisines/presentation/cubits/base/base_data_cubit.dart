@@ -41,7 +41,7 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
         return;
       }
 
-      emit(state.copyWith(firstModel: CategoriesModel(
+      emit(state.copyWith(categoriesModel: CategoriesModel(
           categoryData: isLoadingMore
               ? [...state.categoryData, ...newState.dataList]
               : newState.dataList,
@@ -55,7 +55,7 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
   }
 
   Future<void> getInitialData() async {
-    if (!_connectivityProvider.isConnected && state.firstModel == null) {
+    if (!_connectivityProvider.isConnected && state.categoryDataIsEmpty) {
       throw NetworkAppException();
     }
     try {
@@ -86,7 +86,7 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
           stackTrace: stackTrace,
           onError: (failure) =>
               state.copyWith(
-                  secondModel: MessageResult.error(
+                  messageResult: MessageResult.error(
                       error: failure
                   )
               )
@@ -115,7 +115,7 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
           stackTrace: stackTrace,
           onError: (failure) =>
               state.copyWith(
-                secondModel: MessageResult.error(error: failure),
+                messageResult: MessageResult.error(error: failure),
               )
       );
     }
@@ -126,7 +126,8 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
       final _searchData = await _dataUseCases.getDataSearchExecute(
           query: searchText, collectionPath: cuisineName);
 
-      emit(state.copyWith(firstModel: state.updateSearchList(_searchData)));
+      emit(
+          state.copyWith(categoriesModel: state.updateSearchList(_searchData)));
     }
     catch (e, stackTrace) {
       handleError(
@@ -143,7 +144,7 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
   }
 
   void clearDataSearch() {
-    emit(state.copyWith(firstModel: state.updateSearchList([])));
+    emit(state.copyWith(categoriesModel: state.updateSearchList([])));
   }
 }
 

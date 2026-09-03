@@ -31,8 +31,8 @@ class UserInfoScreen extends StatelessWidget {
                   const LoadingStateWidget(),
                   onLoaded: (data) {
                     return UserInfoLayout(
-                      userModel: data.firstModel,
-                      messageResult: data.secondModel,
+                      userModel: data.userModel,
+                      messageResult: data.messageResult,
                       onUpdate: (userModel) =>
                           cubit.updateInfo(
                             firstName: userModel.firstName,

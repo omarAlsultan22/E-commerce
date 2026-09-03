@@ -30,8 +30,8 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
   }) async {
     UserInfoState buildState(MessageResult messageResult) {
       return state.copyWith(
-          firstModel: state.userModel,
-          secondModel: messageResult,
+          userModel: state.userModel,
+          messageResult: messageResult,
           subState: SuccessState()
       );
     }
@@ -65,7 +65,7 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
   }
 
   Future<void> getInfo() async {
-    if (!_connectivityProvider.isConnected && state.firstModel == null) {
+    if (!_connectivityProvider.isConnected && state.userModel == null) {
       throw NetworkAppException();
     }
     emit(
@@ -81,7 +81,7 @@ class UserInfoCubit extends Cubit<UserInfoState> with ErrorHandlerMixin<UserInfo
 
       emit(
           state.copyWith(
-              firstModel: userInfo,
+              userModel: userInfo,
               subState: SuccessState()));
     }
     catch (e, stackTrace) {

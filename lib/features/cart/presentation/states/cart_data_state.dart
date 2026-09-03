@@ -1,26 +1,26 @@
+import 'package:international_cuisine/features/cart/data/models/cart_data_success_state.dart';
+import 'package:international_cuisine/core/presentation/states/base/main_app_sup_state.dart';
 import 'package:international_cuisine/features/cuisines/data/models/data_model.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
-import 'package:international_cuisine/core/presentation/states/app_sup_states.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 import '../../../../core/presentation/states/base/main_app_sub_state.dart';
 import '../../../../core/errors/exceptions/base/app_exception.dart';
-import '../../../../core/presentation/states/loaded_states.dart';
 
 
-class CartDataState extends SingleModelAppState<List<OrderModel>> {
-  CartDataState({
-    super.firstModel,
+class CartDataState extends MainAppSupState {
+  final List<OrderModel> shoppingList;
+
+  const CartDataState({
     required super.subState,
+    required this.shoppingList
   });
 
   factory CartDataState.initial(){
     return CartDataState(
-        firstModel: [],
+        shoppingList: [],
         subState: InitialState()
     );
   }
-
-  List<OrderModel> get shoppingList => firstModel ?? [];
 
   int getTotalPrice() {
     int totalPrice = 0;
@@ -60,23 +60,26 @@ class CartDataState extends SingleModelAppState<List<OrderModel>> {
     return updatedList;
   }
 
-  @override
   CartDataState copyWith({
-    List<OrderModel>? firstModel,
-    MainAppSubState? subState
+    MainAppSubState? subState,
+    List<OrderModel>? shoppingList
   }) {
     return CartDataState(
       subState: subState ?? this.subState,
-      firstModel: firstModel ?? this.firstModel,
+      shoppingList: shoppingList ?? this.shoppingList,
     );
   }
+
+  @override
+  CartDataSuccessState get dataModels =>
+      throw CartDataSuccessState(shoppingList: shoppingList);
 
   @override
   R when<R>({
     R Function()? onConnection,
     required R Function() onInitial,
     required R Function() onLoading,
-    required R Function(SingleModelSuccessState) onLoaded,
+    required R Function(CartDataSuccessState) onLoaded,
     required R Function(AppException) onError
   }) {
     return subState.when(

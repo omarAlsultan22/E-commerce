@@ -53,7 +53,7 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMi
   }
 
   Future<void> displayInvoice() async {
-    if (!_connectivityProvider.isConnected && state.firstModel == null) {
+    if (!_connectivityProvider.isConnected && state.userModel == null) {
       throw NetworkAppException();
     }
     emit(
@@ -74,8 +74,8 @@ class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMi
       );
       emit(
           state.copyWith(
-              firstModel: userInfo,
-              secondModel: shoppingList,
+              userModel: userInfo,
+              shoppingList: shoppingList,
               subState: SuccessState()));
     }
     catch (e, stackTrace) {

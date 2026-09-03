@@ -1,4 +1,4 @@
-import '../modles/send_order_model.dart';
+import '../models/send_order_model.dart';
 import '../../../../core/data/models/user_model.dart';
 import '../../../../core/data/data_sources/remote/firestore.dart';
 import '../../domain/repositories/payment_invoice_repository.dart';

@@ -1,39 +1,42 @@
+import 'package:international_cuisine/features/cuisines/data/models/categories_success_state.dart';
+import 'package:international_cuisine/core/presentation/states/base/main_app_sup_state.dart';
 import 'package:international_cuisine/features/cuisines/data/models/categories_model.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
-import 'package:international_cuisine/core/presentation/states/app_sup_states.dart';
 import 'package:international_cuisine/core/data/models/message_result.dart';
 import '../../../../core/presentation/states/base/main_app_sub_state.dart';
-import '../../../../core/presentation/states/base/main_loaded_state.dart';
 import '../../../../core/errors/exceptions/base/app_exception.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../../core/presentation/states/loaded_states.dart';
 import '../../data/models/data_model.dart';
 
 
-class CategoriesState extends DoubleModelAppState<CategoriesModel, MessageResult> {
-  CategoriesState({
-    super.firstModel,
-    super.secondModel,
+class CategoriesState extends MainAppSupState {
+  final MessageResult messageResult;
+  final CategoriesModel categoriesModel;
+
+  const CategoriesState({
     required super.subState,
+    required this.messageResult,
+    required this.categoriesModel
   });
 
   factory CategoriesState.initial(){
     return CategoriesState(
-        firstModel: CategoriesModel(),
-        secondModel: MessageResult.initial(),
-        subState: InitialState()
+        subState: InitialState(),
+        categoriesModel: CategoriesModel(),
+        messageResult: MessageResult.initial()
     );
   }
 
-  bool get hasMore => firstModel!.hasMore;
+  bool get hasMore => categoriesModel.hasMore;
 
-  DocumentSnapshot get lastDocument => firstModel!.lastDocument!;
+  DocumentSnapshot get lastDocument => categoriesModel.lastDocument!;
 
-  List<DataModel> get categoryData => firstModel!.categoryData!;
+  List<DataModel> get categoryData => categoriesModel.categoryData!;
 
   bool get categoryDataIsEmpty => categoryData.isEmpty;
 
-  DataModel currentDataModel(int index) => firstModel!.currentDataModel(index);
+  DataModel currentDataModel(int index) =>
+      categoriesModel.currentDataModel(index);
 
   CategoriesState updateRating({
     required int index,
@@ -43,31 +46,39 @@ class CategoriesState extends DoubleModelAppState<CategoriesModel, MessageResult
     updatedList[index] = newModel;
 
     return copyWith(
-        firstModel: firstModel!.copyWith(categoryData: updatedList));
+        categoriesModel: categoriesModel.copyWith(categoryData: updatedList));
   }
 
   CategoriesModel updateSearchList(List<DataModel> searchData) =>
-      firstModel!.copyWith(searchData: searchData);
+      categoriesModel.copyWith(searchData: searchData);
 
-  @override
   CategoriesState copyWith({
-    CategoriesModel? firstModel,
-    MessageResult? secondModel,
+    CategoriesModel? categoriesModel,
+    MessageResult? messageResult,
     MainAppSubState? subState
   }) {
     return CategoriesState(
-      subState: subState ?? this.subState,
-      firstModel: firstModel ?? this.firstModel,
-      secondModel: secondModel ?? this.secondModel
+        subState: subState ?? this.subState,
+        messageResult: messageResult ?? this.messageResult,
+        categoriesModel: categoriesModel ?? this.categoriesModel
     );
   }
+
+  @override
+  // TODO: implement dataModels
+  CategoriesSuccessState get dataModels =>
+      throw
+      CategoriesSuccessState(
+          messageResult: messageResult,
+          categoriesModel: categoriesModel
+      );
 
   @override
   R when<R>({
     R Function()? onConnection,
     required R Function() onInitial,
     required R Function() onLoading,
-    required R Function(DoubleModelSuccessState) onLoaded,
+    required R Function(CategoriesSuccessState) onLoaded,
     required R Function(AppException) onError
   }) {
     return subState.when(
