@@ -4,7 +4,7 @@ import '../../../../../core/constants/app_assets.dart';
 import '../../../../../core/constants/app_values.dart';
 import '../../../../../core/constants/app_paddings.dart';
 import '../../../../../core/data/models/message_result.dart';
-import '../../../../../core/presentation/widgets/loading_widget.dart';
+import '../../../../auth/presentation/widgets/loading_widget.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
 import '../../../../../core/presentation/utils/helpers/image_helpers.dart';
 
