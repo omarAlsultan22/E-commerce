@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/message_state.dart';
-import '../../domain/useCases/change_email_and_password_useCase.dart';
+import '../../domain/use_cases/change_email_and_password_use_case.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
@@ -47,7 +47,7 @@ class ChangeEmailAndPasswordCubit extends Cubit<MessageState> with ErrorHandlerM
           onError: (failure) =>
               MessageState(
                 messageResult: MessageResult.error(
-                  error: failure,
+                  failure: failure,
                 ),
               )
       );

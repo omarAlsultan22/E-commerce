@@ -24,13 +24,12 @@ class HomeScreen extends StatelessWidget {
               CuisinesConstants.menu
           ),
           onLoading: () => const IntroScreen(),
-          onLoaded: (data) {
-            return HomeLayout(
-              signOut: _cubit.signOut,
-              homeData: data.homeData,
-              messageResult: data.messageResult,
-            );
-          },
+          onLoaded: (data) =>
+              HomeLayout(
+                signOut: _cubit.signOut,
+                homeData: data.homeData,
+                messageResult: data.messageResult,
+              ),
           onError: (error) =>
               error.buildErrorWidget(
                   onRetry: _cubit.getData

@@ -1,7 +1,7 @@
 import '../../../features/evaluation/data/repositories_impl/firebase_evaluation_repository.dart';
 import '../../../features/evaluation/presentation/cubits/evaluation_cubit.dart';
+import '../../../features/evaluation/domain/use_cases/evaluation_use_case.dart';
 import '../../domain/services/connectivity_service/connectivity_provider.dart';
-import '../../../features/evaluation/domain/useCases/evaluation_useCase.dart';
 import '../../data/data_sources/remote/firestore.dart';
 import '../service _locator.dart';
 

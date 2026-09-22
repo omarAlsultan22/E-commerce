@@ -1,8 +1,7 @@
 import '../../states/categories_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/models/categories_model.dart';
-import '../../../domain/useCases/cuisine_data_useCase.dart';
-import '../../../../../core/data/models/message_result.dart';
+import '../../../domain/use_cases/cuisine_data_use_case.dart';
 import '../../../../../core/presentation/states/app_sub_states.dart';
 import '../../../../../core/presentation/mixins/error_handler_mixin.dart';
 import 'package:international_cuisine/core/errors/exceptions/network_app_exception.dart';
@@ -66,11 +65,7 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              state.copyWith(
-                  subState: ErrorState(
-                      failure: failure
-                  )
-              )
+              state.setErrorState(failure)
       );
     }
   }
@@ -85,11 +80,7 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              state.copyWith(
-                  messageResult: MessageResult.error(
-                      error: failure
-                  )
-              )
+              state.setMessageResult(failure)
       );
     }
   }
@@ -114,9 +105,7 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              state.copyWith(
-                messageResult: MessageResult.error(error: failure),
-              )
+              state.setMessageResult(failure)
       );
     }
   }
@@ -134,11 +123,7 @@ abstract class BaseCuisineCubit extends Cubit<CategoriesState> with ErrorHandler
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              state.copyWith(
-                  subState: ErrorState(
-                      failure: failure
-                  )
-              )
+              state.setErrorState(failure)
       );
     }
   }

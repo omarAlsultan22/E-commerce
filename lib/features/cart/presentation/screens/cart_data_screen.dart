@@ -58,11 +58,10 @@ class _CartDataScreenState extends State<CartDataScreen> with WidgetsBindingObse
           return state.when(
               onInitial: () => _initialState(),
               onLoading: () => const LoadingStateWidget(),
-              onLoaded: (data) {
-                return CartDataLayout(
+              onLoaded: (data) =>
+                CartDataLayout(
                     shoppingList: data.shoppingList
-                );
-              },
+                ),
               onError: (error) =>
                   error.buildErrorWidget(
                     onRetry: cubit.getCartData,

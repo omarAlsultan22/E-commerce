@@ -38,6 +38,9 @@ class CategoriesState extends MainAppSupState {
   DataModel currentDataModel(int index) =>
       categoriesModel.currentDataModel(index);
 
+  CategoriesModel updateSearchList(List<DataModel> searchData) =>
+      categoriesModel.copyWith(searchData: searchData);
+
   CategoriesState updateRating({
     required int index,
     required DataModel newModel
@@ -49,8 +52,20 @@ class CategoriesState extends MainAppSupState {
         categoriesModel: categoriesModel.copyWith(categoryData: updatedList));
   }
 
-  CategoriesModel updateSearchList(List<DataModel> searchData) =>
-      categoriesModel.copyWith(searchData: searchData);
+  //States
+  CategoriesState setMessageResult(AppException failure) {
+    return copyWith(
+        messageResult: MessageResult.error(failure: failure)
+    );
+  }
+
+  CategoriesState setErrorState(AppException failure) {
+    return copyWith(
+        subState: ErrorState(
+            failure: failure
+        )
+    );
+  }
 
   CategoriesState copyWith({
     CategoriesModel? categoriesModel,

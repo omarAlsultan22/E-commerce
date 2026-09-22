@@ -46,7 +46,7 @@ class ForgetPasswordCubit extends Cubit<MessageState> with ErrorHandlerMixin<Mes
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              MessageState(messageResult: MessageResult.error(error: failure)
+              MessageState(messageResult: MessageResult.error(failure: failure)
               )
       );
     }

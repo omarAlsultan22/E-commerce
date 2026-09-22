@@ -60,6 +60,22 @@ class CartDataState extends MainAppSupState {
     return updatedList;
   }
 
+  //States
+  CartDataState setSuccessState(List<OrderModel> shoppingList) {
+    return copyWith(
+        shoppingList: shoppingList,
+        subState: SuccessState()
+    );
+  }
+
+  CartDataState setErrorState(AppException failure) {
+    return copyWith(
+        subState: ErrorState(
+            failure: failure
+        )
+    );
+  }
+
   CartDataState copyWith({
     MainAppSubState? subState,
     List<OrderModel>? shoppingList

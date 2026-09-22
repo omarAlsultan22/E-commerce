@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/useCases/sign_up_useCase.dart';
+import '../../domain/use_cases/sign_up_use_case.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/message_state.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
@@ -52,7 +52,7 @@ class SignUpCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageStat
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              MessageState(messageResult: MessageResult.error(error: failure)
+              MessageState(messageResult: MessageResult.error(failure: failure)
               )
       );
     }

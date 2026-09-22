@@ -26,8 +26,8 @@ class UserInfoState extends MainAppSupState {
 
   UserInfoState copyWith({
     UserModel? userModel,
-    MessageResult? messageResult,
-    MainAppSubState? subState
+    MainAppSubState? subState,
+    MessageResult? messageResult
   }) {
     return UserInfoState(
       subState: subState ?? this.subState,

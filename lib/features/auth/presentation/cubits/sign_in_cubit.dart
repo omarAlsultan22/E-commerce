@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/useCases/sign_in_useCase.dart';
+import '../../domain/use_cases/sign_in_use_case.dart';
 import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/message_state.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
@@ -50,7 +50,7 @@ class SignInCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageStat
           onError: (failure) =>
               MessageState(
                   messageResult: MessageResult.error(
-                      error: failure)
+                      failure: failure)
               )
       );
     }

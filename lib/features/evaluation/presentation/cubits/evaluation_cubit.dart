@@ -3,7 +3,7 @@ import 'package:international_cuisine/core/errors/exceptions/network_app_excepti
 import 'package:international_cuisine/core/presentation/states/message_state.dart';
 import 'package:international_cuisine/core/data/models/message_result.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
-import '../../domain/useCases/evaluation_useCase.dart';
+import '../../domain/use_cases/evaluation_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
@@ -45,7 +45,7 @@ class EvaluationCubit extends Cubit<MessageState> with ErrorHandlerMixin<Message
           onError: (failure) =>
               MessageState(
                   messageResult: MessageResult.error(
-                      error: failure
+                      failure: failure
                   )
               )
       );

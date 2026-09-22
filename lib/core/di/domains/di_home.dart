@@ -3,8 +3,8 @@ import '../../../features/auth/data/repositories_impl/firebase_auth_repository.d
 import '../../domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/services/session_service.dart';
 import '../../../features/home/presentation/cubits/home_data_cubit.dart';
-import '../../../features/home/domain/useCases/home_data_useCase.dart';
-import '../../../features/auth/domain/useCases/sign_out_useCase.dart';
+import '../../../features/home/domain/use_cases/home_data_use_case.dart';
+import '../../../features/auth/domain/use_cases/sign_out_use_case.dart';
 import '../../data/data_sources/remote/firestore.dart';
 import '../service _locator.dart';
 

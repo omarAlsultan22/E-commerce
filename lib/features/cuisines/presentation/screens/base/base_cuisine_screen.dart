@@ -42,23 +42,22 @@ abstract class BaseCuisineScreenState<T extends BaseCuisineScreen>
                     CuisinesConstants.menu
                 ),
                 onLoading: () => const LoadingStateWidget(),
-                onLoaded: (data) {
-                  return SearchableListBuilder(
-                    isLocked: false,
-                    title: widget.title,
-                    messageResult: data.messageResult,
-                    categoriesModel: data.categoriesModel,
-                    getMoreData: () => cubit.loadMoreData(),
-                    clearData: () => cubit.clearDataSearch(),
-                    getSearchData: (searchText) =>
-                        cubit.getDataSearch(searchText),
-                    updateRate: (index, rating) =>
-                        cubit.updateRating(
-                            index: index,
-                            rating: rating
-                        ),
-                  );
-                },
+                onLoaded: (data) =>
+                    SearchableListBuilder(
+                      isLocked: false,
+                      title: widget.title,
+                      messageResult: data.messageResult,
+                      categoriesModel: data.categoriesModel,
+                      getMoreData: () => cubit.loadMoreData(),
+                      clearData: () => cubit.clearDataSearch(),
+                      getSearchData: (searchText) =>
+                          cubit.getDataSearch(searchText),
+                      updateRate: (index, rating) =>
+                          cubit.updateRating(
+                              index: index,
+                              rating: rating
+                          ),
+                    ),
                 onError: (error) =>
                     error.buildErrorWidget(
                       onRetry: cubit.getInitialData,

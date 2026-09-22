@@ -34,11 +34,11 @@ class MessageResult {
   }
 
   factory MessageResult.error({
-    required AppException error,
+    required AppException failure,
   }){
     return MessageResult(
-      error: error,
-      message: error.message,
+      error: failure,
+      message: failure.message,
       color: AppColors.errorRed,
     );
   }

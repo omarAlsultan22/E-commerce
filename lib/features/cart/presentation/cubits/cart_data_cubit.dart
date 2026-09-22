@@ -1,7 +1,7 @@
 import '../states/cart_data_state.dart';
 import '../../data/models/order_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/useCases/cart_data_useCase.dart';
+import '../../domain/use_cases/cart_data_use_case.dart';
 import '../../../cuisines/data/models/data_model.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
@@ -36,10 +36,7 @@ class CartDataCubit extends Cubit<CartDataState> with ErrorHandlerMixin<CartData
     );
 
     emit(
-        state.copyWith(
-            subState: SuccessState(),
-            shoppingList: shoppingList
-        )
+        state.setSuccessState(shoppingList)
     );
   }
 
@@ -56,11 +53,7 @@ class CartDataCubit extends Cubit<CartDataState> with ErrorHandlerMixin<CartData
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              state.copyWith(
-                  subState: ErrorState(
-                      failure: failure
-                  )
-              )
+              state.setErrorState(failure)
       );
     }
   }
@@ -83,11 +76,7 @@ class CartDataCubit extends Cubit<CartDataState> with ErrorHandlerMixin<CartData
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              state.copyWith(
-                  subState: ErrorState(
-                      failure: failure
-                  )
-              )
+              state.setErrorState(failure)
       );
     }
   }
@@ -100,19 +89,15 @@ class CartDataCubit extends Cubit<CartDataState> with ErrorHandlerMixin<CartData
         return;
       }
 
-      emit(state.copyWith(
-          shoppingList: shoppingList, subState: SuccessState()));
+      emit(state.setSuccessState(shoppingList)
+      );
     }
     catch (e, stackTrace) {
       handleError(
           error: e,
           stackTrace: stackTrace,
           onError: (failure) =>
-              state.copyWith(
-                  subState: ErrorState(
-                      failure: failure
-                  )
-              )
+              state.setErrorState(failure)
       );
     }
   }

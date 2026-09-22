@@ -8,7 +8,7 @@ import 'package:international_cuisine/features/cart/data/models/order_model.dart
 import 'package:international_cuisine/core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/features/cart/presentation/states/cart_data_state.dart';
-import 'package:international_cuisine/features/invoice/domain/useCases/payment_Invoice_useCase.dart';
+import 'package:international_cuisine/features/invoice/domain/use_cases/payment_Invoice_use_case.dart';
 
 
 class PaymentInvoiceCubit extends Cubit<PaymentInvoiceState> with ErrorHandlerMixin<PaymentInvoiceState> {
