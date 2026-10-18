@@ -3,16 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/constants/app_durations.dart';
 import '../../utils/helpers/cuisine_data_converter.dart';
 import '../../../../core/data/models/paginated_result.dart';
-import '../../../../core/data/data_sources/remote/firestore.dart';
+import '../../../../core/domain/data_sources/remote/firestore_service.dart';
 import 'package:international_cuisine/features/cuisines/domain/repositories/cuisine_data_repository.dart';
 
 
-class FirestoreCuisineDataRepository implements CuisineDataRepository {
-  final FirestoreService _firestore;
+class CuisineDataRepositoryImpl implements CuisineDataRepository {
+  final FirestoreService _dataSource;
 
-  FirestoreCuisineDataRepository({
-    required FirestoreService firestore
-  }) : _firestore = firestore;
+  CuisineDataRepositoryImpl({
+    required FirestoreService dataSource
+  }) : _dataSource = dataSource;
 
   static const _orderName = 'countriesData';
   static const _collectionId = 'countriesData';
@@ -24,7 +24,7 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     required DocumentSnapshot? lastDocument,
     int pageSize = 5,
   }) async {
-    Query query = _firestore.getSubCollection(
+    Query query = _dataSource.getSubCollection(
         docId: _docId,
         subCollectionPath: collectionPath,
         superCollectionPath: _collectionId);
@@ -32,7 +32,6 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     if (lastDocument != null) {
       query = query.startAfterDocument(lastDocument);
     }
-    try {
       final querySnapshot = await query.limit(pageSize).get().timeout(
           AppDurations.seconds);
 
@@ -54,10 +53,6 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
         lastDocument: querySnapshot.docs.last,
         hasMoreData: data.length == pageSize,
       );
-    }
-    catch (e) {
-      rethrow;
-    }
   }
 
   @override
@@ -71,7 +66,7 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
       return [];
     }
 
-    var firestoreQuery = _firestore
+    var firestoreQuery = _dataSource
         .getSubCollection(
         docId: _docId,
         subCollectionPath: collectionPath,
@@ -79,7 +74,6 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
         .where(_orderName, isGreaterThanOrEqualTo: normalizedQuery)
         .where(_orderName, isLessThanOrEqualTo: '$normalizedQuery\uf8ff');
 
-    try {
       final snapshot = await firestoreQuery.get().timeout(AppDurations.seconds);
 
       return snapshot.docs
@@ -91,10 +85,6 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
         final data = doc.data();
         return DataModel.fromFirestore(data);
       }).toList();
-    }
-    catch (e) {
-      rethrow;
-    }
   }
 
   @override
@@ -103,16 +93,11 @@ class FirestoreCuisineDataRepository implements CuisineDataRepository {
     required String index,
     required int rating
   }) async {
-    try {
-      return await _firestore.updateDocument(
+      return await _dataSource.updateDocument(
         collectionPath: 'collectionId',
         data: {'rating': rating},
         docId: index,
       );
-    }
-    catch (e) {
-      rethrow;
-    }
   }
 }
 

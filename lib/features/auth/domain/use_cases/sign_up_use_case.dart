@@ -1,16 +1,16 @@
 import '../repositories/auth_repository.dart';
 import '../repositories/sign_up_repository.dart';
 import '../../../../core/data/models/user_model.dart';
-import '../../../../core/data/data_sources/local/cache_helper.dart';
+import '../../../../core/data/data_sources/local/cache_helper_impl.dart';
 
 
 class SignUpUseCase {
-  final CacheHelper _cacheHelper;
+  final CacheHelperImpl _cacheHelper;
   final AuthRepository _authRepository;
   final SignUpRepository _signUpRepository;
 
   SignUpUseCase({
-    required CacheHelper cacheHelper,
+    required CacheHelperImpl cacheHelper,
     required AuthRepository authRepository,
     required SignUpRepository signUpRepository
   })
@@ -26,27 +26,23 @@ class SignUpUseCase {
     required String userPhone,
     required String userLocation,
   }) async {
-    try {
-      final userCredential = await _authRepository.signUp(
-        email: userEmail,
-        password: userPassword,
-      );
+    final userCredential = await _authRepository.signUp(
+      email: userEmail,
+      password: userPassword,
+    );
 
-      UserModel userModel = UserModel(
-        firstName: firstName,
-        lastName: lastName,
-        userPhone: userPhone,
-        userLocation: userLocation,
-      );
+    UserModel userModel = UserModel(
+      firstName: firstName,
+      lastName: lastName,
+      userPhone: userPhone,
+      userLocation: userLocation,
+    );
 
-      await _signUpRepository.createUserInfo(
-          userModel: userModel, userCredential: userCredential);
+    await _signUpRepository.createUserInfo(
+        userModel: userModel, userCredential: userCredential);
 
-      await _cacheHelper.setString(
-          key: 'userName', value: firstName + lastName);
-    } catch (e) {
-      rethrow;
-    }
+    await _cacheHelper.setString(
+        key: 'userName', value: firstName + lastName);
   }
 }
 

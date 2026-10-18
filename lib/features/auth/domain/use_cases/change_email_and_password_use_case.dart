@@ -15,15 +15,11 @@ class ChangeEmailAndPasswordUseCase {
     required String newPassword,
     required String currentPassword
   }) async {
-    try {
-      await _authRepository.updateProfile(
-          newEmail: newEmail,
-          newPassword: newPassword,
-          currentPassword: currentPassword
-      );
-    } catch (e) {
-      rethrow;
-    }
+    await _authRepository.updateProfile(
+        newEmail: newEmail,
+        newPassword: newPassword,
+        currentPassword: currentPassword
+    );
   }
 }
 

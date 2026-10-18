@@ -14,12 +14,8 @@ class SignOutUseCase {
         _authRepository = authRepository;
 
   Future<void> signOutExecute() async {
-    try {
       await _sessionService.logout();
       await _authRepository.signOut();
-    } catch (e) {
-      rethrow;
-    }
   }
 }
 

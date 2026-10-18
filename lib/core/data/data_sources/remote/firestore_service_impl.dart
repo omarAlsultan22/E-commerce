@@ -1,11 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../constants/app_durations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:international_cuisine/core/domain/data_sources/remote/firestore_service.dart';
 
 
-class FirestoreService {
+class FirestoreServiceImpl implements FirestoreService {
   static final _firestore = FirebaseFirestore.instance;
 
-  // إضافة بيانات مع إنشاء معرف تلقائي
+  @override
   Future<String> addData({
     required String collectionPath,
     required Map<String, dynamic> data,
@@ -16,7 +17,7 @@ class FirestoreService {
     return docRef.id;
   }
 
-  // إضافة بيانات بمعرف محدد
+  @override
   Future<void> setData({
     required String collectionPath,
     required String? docId,
@@ -26,7 +27,7 @@ class FirestoreService {
         AppDurations.seconds);
   }
 
-  // الحصول على مستند محدد
+  @override
   Future<DocumentSnapshot<Map<String, dynamic>>> getDocument({
     required String collectionPath,
     required String? docId,
@@ -35,6 +36,7 @@ class FirestoreService {
         AppDurations.seconds);
   }
 
+  @override
   Future<QuerySnapshot<Map<String, dynamic>>> getSupCollection({
     required String collectionPath,
   }) {
@@ -42,6 +44,7 @@ class FirestoreService {
         .collection(collectionPath).get().timeout(AppDurations.seconds);
   }
 
+  @override
   Query<Map<String, dynamic>> getSubCollection({
     required String docId,
     required String subCollectionPath,
@@ -53,7 +56,7 @@ class FirestoreService {
         .collection(subCollectionPath);
   }
 
-  // تحديث مستند محدد
+  @override
   Future<void> updateDocument({
     required String collectionPath,
     required String docId,
@@ -63,7 +66,7 @@ class FirestoreService {
         AppDurations.seconds);
   }
 
-  // حذف مستند محدد
+  @override
   Future<void> deleteDocument({
     required String collectionPath,
     required String docId,
@@ -72,7 +75,7 @@ class FirestoreService {
         AppDurations.seconds);
   }
 
-  // الاستماع للتحديثات في الوقت الحقيقي لمستند واحد
+  @override
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamDocument({
     required String collectionPath,
     required String docId,
@@ -81,7 +84,7 @@ class FirestoreService {
         AppDurations.seconds);
   }
 
-  // الاستماع للتحديثات في الوقت الحقيقي لمجموعة كاملة
+  @override
   Stream<QuerySnapshot<Map<String, dynamic>>> streamCollection({
     required String collectionPath,
   }) {

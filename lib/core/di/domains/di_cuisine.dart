@@ -1,5 +1,5 @@
 import '../service _locator.dart';
-import '../../data/data_sources/remote/firestore.dart';
+import '../../data/data_sources/remote/firestore_service_impl.dart';
 import '../../../features/cuisines/presentation/cubits/french_data_cubit.dart';
 import '../../../features/cuisines/presentation/cubits/syrian_data_cubit.dart';
 import '../../domain/services/connectivity_service/connectivity_provider.dart';
@@ -10,19 +10,19 @@ import '../../../features/cuisines/presentation/cubits/turkish_data_cubit.dart';
 import '../../../features/cuisines/domain/use_cases/cuisine_data_use_case.dart';
 import '../../../features/cuisines/presentation/cubits/japanese_data_cubit.dart';
 import '../../../features/cuisines/presentation/cubits/egyptian_data_cubit.dart';
-import '../../../features/cuisines/data/repositories_impl/firestore_cuisine_data_repository.dart';
+import '../../../features/cuisines/data/repositories_impl/cuisine_data_repository_impl.dart';
 
 
 class CuisineDependencies {
   static void register() {
     // Repository
     sl.registerLazySingleton(() =>
-        FirestoreCuisineDataRepository(
-            firestore: sl<FirestoreService>()));
+        CuisineDataRepositoryImpl(
+            dataSource: sl<FirestoreServiceImpl>()));
 
     // UseCase
     sl.registerLazySingleton(() =>
-        CuisineDataUseCase(repository: sl<FirestoreCuisineDataRepository>()));
+        CuisineDataUseCase(repository: sl<CuisineDataRepositoryImpl>()));
 
     // Cubits
     sl.registerFactory(() =>

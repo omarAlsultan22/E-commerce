@@ -1,12 +1,13 @@
-import 'package:international_cuisine/features/cart/data/models/order_model.dart';
-import 'package:international_cuisine/core/data/data_sources/local/hive.dart';
+import '../../../../core/domain/data_sources/local/hive.dart';
 import '../../domain/repositories/shopping_list_repository.dart';
+import 'package:international_cuisine/features/cart/data/models/order_model.dart';
+import 'package:international_cuisine/core/errors/exceptions/cache_exceptions/hive_app_exceptions.dart';
 
 
-class HiveShoppingListRepository implements ShoppingListRepository {
+class ShoppingListRepositoryImpl implements ShoppingListRepository {
   final HiveStore _hiveStore;
 
-  HiveShoppingListRepository({required HiveStore hiveStore})
+  ShoppingListRepositoryImpl({required HiveStore hiveStore})
       : _hiveStore = hiveStore;
 
   @override
@@ -16,7 +17,7 @@ class HiveShoppingListRepository implements ShoppingListRepository {
     try {
       await _hiveStore.saveLocalData(shoppingList);
     } catch (e) {
-      throw Exception('Failed to save cart data: $e');
+      throw HiveSaveException(error: e);
     }
   }
 
@@ -26,7 +27,7 @@ class HiveShoppingListRepository implements ShoppingListRepository {
       final shoppingList = await _hiveStore.getLocalData();
       return shoppingList;
     } catch (e) {
-      throw Exception('Failed to get cart data: $e');
+      throw HiveReadException(error: e);
     }
   }
 
@@ -35,7 +36,7 @@ class HiveShoppingListRepository implements ShoppingListRepository {
     try {
       await _hiveStore.clearData();
     } catch (e) {
-      throw Exception('Failed to clear cart data: $e');
+      throw HiveClearException(error: e);
     }
   }
 }

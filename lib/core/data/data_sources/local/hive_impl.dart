@@ -1,14 +1,15 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../../features/cart/data/models/order_model.dart';
 import '../../../errors/exceptions/cache_exceptions/hive_app_exceptions.dart';
-import 'package:international_cuisine/core/data/data_sources/local/cache_Helper.dart';
+import 'package:international_cuisine/core/domain/data_sources/local/hive.dart';
+import 'package:international_cuisine/core/data/data_sources/local/cache_helper_impl.dart';
 
 
-class HiveStore {
-  final CacheHelper _cacheHelper;
+class HiveStoreImpl implements HiveStore {
+  final CacheHelperImpl _cacheHelper;
 
-  HiveStore({
-    required CacheHelper cacheHelper
+  HiveStoreImpl({
+    required CacheHelperImpl cacheHelper
   }) : _cacheHelper = cacheHelper;
 
   static Box<OrderModel>? _box;
@@ -20,6 +21,7 @@ class HiveStore {
     return _box!;
   }
 
+  @override
   Future<void> init() async {
     try {
       await Hive.initFlutter();
@@ -31,6 +33,7 @@ class HiveStore {
     }
   }
 
+  @override
   Future<void> saveLocalData(List<OrderModel> data) async {
     try {
       if (_box == null || !_box!.isOpen) {
@@ -46,6 +49,7 @@ class HiveStore {
     }
   }
 
+  @override
   Future<List<OrderModel>> getLocalData() async {
     try {
       if (_box == null || !_box!.isOpen) {
@@ -75,6 +79,7 @@ class HiveStore {
     }
   }
 
+  @override
   Future<void> clearData() async {
     try {
       if (_box != null && _box!.isOpen) {

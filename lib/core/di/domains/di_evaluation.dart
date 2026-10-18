@@ -1,8 +1,8 @@
-import '../../../features/evaluation/data/repositories_impl/firebase_evaluation_repository.dart';
+import '../../../features/evaluation/data/repositories_impl/evaluation_repository_impl.dart';
 import '../../../features/evaluation/presentation/cubits/evaluation_cubit.dart';
 import '../../../features/evaluation/domain/use_cases/evaluation_use_case.dart';
 import '../../domain/services/connectivity_service/connectivity_provider.dart';
-import '../../data/data_sources/remote/firestore.dart';
+import '../../data/data_sources/remote/firestore_service_impl.dart';
 import '../service _locator.dart';
 
 
@@ -10,11 +10,11 @@ class EvaluationDependencies {
   static void register() {
     // Repository
     sl.registerLazySingleton(() =>
-        FirebaseEvaluationRepository(firestore: sl<FirestoreService>()));
+        EvaluationRepositoryImpl(dataSource: sl<FirestoreServiceImpl>()));
 
     // UseCase
     sl.registerLazySingleton(() =>
-        EvaluationUseCase(repository: sl<FirebaseEvaluationRepository>()));
+        EvaluationUseCase(repository: sl<EvaluationRepositoryImpl>()));
 
     // Cubit
     sl.registerFactory(() =>

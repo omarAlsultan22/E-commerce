@@ -1,15 +1,15 @@
 import '../repositories/shopping_list_repository.dart';
 import 'package:international_cuisine/core/constants/app_keys.dart';
-import '../../../../core/data/data_sources/local/cache_helper.dart';
+import '../../../../core/data/data_sources/local/cache_helper_impl.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 
 
 class CartDataUseCase {
-  final CacheHelper _cacheHelper;
+  final CacheHelperImpl _cacheHelper;
   ShoppingListRepository _repository;
 
   CartDataUseCase({
-    required CacheHelper cacheHelper,
+    required CacheHelperImpl cacheHelper,
     required ShoppingListRepository repository
   })
       : _repository = repository,
@@ -20,50 +20,35 @@ class CartDataUseCase {
   Future<void> saveCartDataExecute({
     required List<OrderModel> shoppingList
   }) async {
-    try {
-      await clearCartExecute();
-      await _repository.saveDataToHive(shoppingList: shoppingList);
-      await _cacheHelper.setInt(
-          key: 'itemsCount', value: shoppingList.length);
-      await _cacheHelper.setInt(key: time, value: DateTime
-          .now()
-          .millisecondsSinceEpoch);
-    }
-    catch (e) {
-      rethrow;
-    }
+    await clearCartExecute();
+    await _repository.saveDataToHive(shoppingList: shoppingList);
+    await _cacheHelper.setInt(
+        key: 'itemsCount', value: shoppingList.length);
+    await _cacheHelper.setInt(key: time, value: DateTime
+        .now()
+        .millisecondsSinceEpoch);
   }
 
   Future<List<OrderModel>> getCartDataExecute() async {
-    try {
-      final savedTime = await _cacheHelper.getInt(key: time) ??
-          0;
-      final currentTime = DateTime
-          .now()
-          .millisecondsSinceEpoch;
-      const expiryHours = 1;
-      const expiryMilliseconds = expiryHours * 60 * 60 * 1000;
+    final savedTime = await _cacheHelper.getInt(key: time) ??
+        0;
+    final currentTime = DateTime
+        .now()
+        .millisecondsSinceEpoch;
+    const expiryHours = 1;
+    const expiryMilliseconds = expiryHours * 60 * 60 * 1000;
 
-      if (savedTime == 0 || currentTime - savedTime > expiryMilliseconds) {
-        print('Cart data expired or not found, removing...');
-        await _cacheHelper.removeValue(key: time);
-        await clearCartExecute();
-        return [];
-      } else {
-        return await _repository.getDataFromHive();
-      }
-    }
-    catch (e) {
-      throw Exception('Failed to load cart data: $e');
+    if (savedTime == 0 || currentTime - savedTime > expiryMilliseconds) {
+      print('Cart data expired or not found, removing...');
+      await _cacheHelper.removeValue(key: time);
+      await clearCartExecute();
+      return [];
+    } else {
+      return await _repository.getDataFromHive();
     }
   }
 
   Future<void> clearCartExecute() async {
-    try {
-      _repository.clearDataFromHive();
-    }
-    catch (e) {
-      rethrow;
-    }
+    _repository.clearDataFromHive();
   }
 }

@@ -1,28 +1,23 @@
 import '../../domain/repositories/home_data_repository.dart';
-import '../../../../core/data/data_sources/remote/firestore.dart';
+import '../../../../core/domain/data_sources/remote/firestore_service.dart';
 import 'package:international_cuisine/features/home/data/models/home_model.dart';
 import 'package:international_cuisine/features/home/utils/helpers/home_data_converter.dart';
 
 
-class FirestoreHomeDataRepository implements HomeDataRepository {
-  final FirestoreService _repository;
+class HomeDataRepositoryImpl implements HomeDataRepository {
+  final FirestoreService _dataSource;
 
-  FirestoreHomeDataRepository({required FirestoreService repository})
-      : _repository = repository;
+  HomeDataRepositoryImpl({required FirestoreService dataSource})
+      : _dataSource = dataSource;
 
   static const homeData = 'homeData';
 
   @override
   Future<List<HomeDataModel>> getData() async {
-    try {
-      final jsonData = await _repository.getSupCollection(
+      final jsonData = await _dataSource.getSupCollection(
           collectionPath: homeData);
       return HomeModelConverter
           .fromQuerySnapshot(jsonData)
           .data;
-    }
-    catch (e) {
-      rethrow;
-    }
   }
 }

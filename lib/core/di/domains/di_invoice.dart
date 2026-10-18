@@ -1,11 +1,11 @@
-import '../../../features/invoice/data/repositories_impl/firestore_payment_invoice_repository.dart';
-import 'package:international_cuisine/core/data/data_sources/local/cache_helper.dart';
+import '../../../features/invoice/data/repositories_impl/payment_invoice_repository_impl.dart';
+import 'package:international_cuisine/core/data/data_sources/local/cache_helper_impl.dart';
 import '../../../features/invoice/presentation/cubits/payment_invoice_cubit.dart';
 import '../../../features/invoice/domain/use_cases/payment_Invoice_use_case.dart';
 import '../../domain/services/connectivity_service/connectivity_provider.dart';
 import 'package:international_cuisine/core/services/session_service.dart';
 import '../../../features/cart/presentation/cubits/cart_data_cubit.dart';
-import '../../data/data_sources/remote/firestore.dart';
+import '../../data/data_sources/remote/firestore_service_impl.dart';
 import '../service _locator.dart';
 
 
@@ -13,15 +13,15 @@ class InvoiceDependencies {
   static void register() {
     // Repository
     sl.registerLazySingleton(() =>
-        FirestorePaymentInvoiceRepository(
+        PaymentInvoiceRepositoryImpl(
             sessionService: sl<SessionService>(),
-            repository: sl<FirestoreService>(),
-            cacheHelper: sl<CacheHelper>()));
+            dataSource: sl<FirestoreServiceImpl>(),
+            cacheHelper: sl<CacheHelperImpl>()));
 
     // UseCase
     sl.registerLazySingleton(() =>
         PaymentInvoiceUseCase(
-            userInfoRepository: sl<FirestorePaymentInvoiceRepository>()));
+            userInfoRepository: sl<PaymentInvoiceRepositoryImpl>()));
 
     // Cubit
     sl.registerFactory(() =>

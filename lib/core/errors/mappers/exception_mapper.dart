@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import '../exceptions/evaluation_exception.dart';
 import '../exceptions/firebase_exception.dart';
 import '../exceptions/base/app_exception.dart';
 import '../exceptions/validation_exception.dart';
@@ -32,6 +33,8 @@ class ExceptionMapper {
 
   static final Map<Object, AppException Function(dynamic)> _typePatterns = {
     HiveAppException: (error) => error,
+
+    EvaluationException: (error) => error,
 
     ValidationException: (error) => error,
 

@@ -12,11 +12,6 @@ class EvaluationUseCase {
   Future<void> sendEvaluationExecute({
     required String evaluationText
   }) async {
-    try {
-      await _repository.sendEvaluation(evaluationValue: evaluationText);
-    }
-    catch (e) {
-      rethrow;
-    }
+    await _repository.sendEvaluation(evaluationValue: evaluationText);
   }
 }

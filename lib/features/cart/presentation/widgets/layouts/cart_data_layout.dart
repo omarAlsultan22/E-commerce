@@ -1,4 +1,4 @@
-import 'package:international_cuisine/core/data/data_sources/local/cache_helper.dart';
+import 'package:international_cuisine/core/data/data_sources/local/cache_helper_impl.dart';
 import 'package:international_cuisine/core/presentation/utils/helpers/image_helpers.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import '../../../../location/presentation/screens/fixed_location_picker_screen.dart';
@@ -26,7 +26,7 @@ class CartDataLayout extends StatefulWidget {
 
 class _CartDataLayoutState extends State<CartDataLayout>{
   late CartDataCubit _cubit;
-  final _cacheHelper = CacheHelper();
+  final _cacheHelper = CacheHelperImpl();
 
   @override
   void initState() {

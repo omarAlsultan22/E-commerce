@@ -12,25 +12,15 @@ class PaymentInvoiceUseCase {
       :_repository = userInfoRepository;
 
   Future<UserModel> getInfoExecute() async {
-    try {
-      return await _repository.getInfo();
-    }
-    catch (e) {
-      rethrow;
-    }
+    return await _repository.getInfo();
   }
 
   Future<void> sendDataExecute({
     required UserModel? userInfo,
     required List<OrderModel> shoppingList,
   }) async {
-    try {
-      await _repository.sendOrdersToDatabase(
-          userInfo: userInfo, shoppingList: shoppingList);
-    }
-    catch (e) {
-      rethrow;
-    }
+    await _repository.sendOrdersToDatabase(
+        userInfo: userInfo, shoppingList: shoppingList);
   }
 }
 

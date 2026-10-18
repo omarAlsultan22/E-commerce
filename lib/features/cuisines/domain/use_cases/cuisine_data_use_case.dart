@@ -12,33 +12,21 @@ class CuisineDataUseCase {
   })
       : _repository = repository;
 
-  Future<PaginatedResult> getDataExecute(
-      String collectionPath,
-      DocumentSnapshot? lastDocument
-      ) async {
-    try {
-      final result = await _repository.getPaginatedData(
-          collectionPath: collectionPath,
-          lastDocument: lastDocument
-      );
-      return result;
-    }
-    catch (e) {
-      rethrow;
-    }
+  Future<PaginatedResult> getDataExecute(String collectionPath,
+      DocumentSnapshot? lastDocument) async {
+    final result = await _repository.getPaginatedData(
+        collectionPath: collectionPath,
+        lastDocument: lastDocument
+    );
+    return result;
   }
 
   Future<List<DataModel>> getDataSearchExecute({
     required String collectionPath,
     required String query,
   }) async {
-    try {
-      return await _repository.searchByPartialMatch(
-          collectionPath: collectionPath, query: query);
-    }
-    catch (e) {
-      rethrow;
-    }
+    return await _repository.searchByPartialMatch(
+        collectionPath: collectionPath, query: query);
   }
 
   Future<void> updateRatingExecute({
@@ -46,12 +34,7 @@ class CuisineDataUseCase {
     required String index,
     required int rating
   }) async {
-    try {
-      await _repository.updateRating(
-          collectionId: collectionId, index: index, rating: rating);
-    }
-    catch (e) {
-      rethrow;
-    }
+    await _repository.updateRating(
+        collectionId: collectionId, index: index, rating: rating);
   }
 }

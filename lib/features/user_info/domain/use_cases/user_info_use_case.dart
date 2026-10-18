@@ -1,5 +1,5 @@
-import '../../../../core/data/models/user_model.dart';
 import '../repositories/user_info_repository.dart';
+import '../../../../core/data/models/user_model.dart';
 
 
 class UserInfoUseCase {
@@ -11,12 +11,7 @@ class UserInfoUseCase {
       :_repository = userInfoRepository;
 
   Future<UserModel?> getInfoExecute() async {
-    try {
-      return await _repository.getInfo();
-    }
-    catch(e){
-      rethrow;
-    }
+    return await _repository.getInfo();
   }
 
   Future<void> updateInfoExecute({
@@ -25,18 +20,13 @@ class UserInfoUseCase {
     required String userPhone,
     required String userLocation
   }) async {
-    try {
-      return await _repository.updateInfo(
-          firstName: firstName,
-          lastName: lastName,
-          userPhone: userPhone,
-          userLocation: userLocation
+    return await _repository.updateInfo(
+        firstName: firstName,
+        lastName: lastName,
+        userPhone: userPhone,
+        userLocation: userLocation
 
-      );
-    }
-    catch (e) {
-      rethrow;
-    }
+    );
   }
 }
 
