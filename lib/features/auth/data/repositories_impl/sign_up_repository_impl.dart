@@ -6,18 +6,18 @@ import '../../../../core/domain/data_sources/remote/firestore_service.dart';
 
 
 class SignUpRepositoryImpl implements SignUpRepository {
-  final FirestoreService _dataSource;
+  final FirestoreService _service;
 
   SignUpRepositoryImpl({
-    required FirestoreService dataSource
-  }) : _dataSource = dataSource;
+    required FirestoreService service
+  }) : _service = service;
 
   @override
   Future<void> createUserInfo({
     required UserModel userModel,
     required UserCredential userCredential
   }) async {
-    await _dataSource.setData(
+    await _service.setData(
         collectionPath: AppKeys.userInfo,
         docId: userCredential.user!.uid,
         data: userModel.toJson());

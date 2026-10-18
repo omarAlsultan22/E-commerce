@@ -20,7 +20,7 @@ class AuthDependencies {
     // Repository
     sl.registerLazySingleton(() =>
         SignUpRepositoryImpl(
-            dataSource: sl<FirestoreServiceImpl>()));
+            service: sl<FirestoreServiceImpl>()));
     sl.registerLazySingleton(() =>
         AuthRepositoryImpl(authService: sl<AuthServiceImpl>()));
 
