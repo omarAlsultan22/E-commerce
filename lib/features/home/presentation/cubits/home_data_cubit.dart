@@ -4,7 +4,7 @@ import '../../../auth/domain/use_cases/sign_out_use_case.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import 'package:international_cuisine/core/presentation/states/app_sub_states.dart';
 import 'package:international_cuisine/core/errors/exceptions/network_app_exception.dart';
-import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
+import '../../../../core/providers/connectivity_provider.dart';
 import 'package:international_cuisine/features/home/domain/use_cases/home_data_use_case.dart';
 import 'package:international_cuisine/features/home/presentation/states/home_data_state.dart';
 

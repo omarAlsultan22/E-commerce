@@ -2,7 +2,7 @@ import '../service _locator.dart';
 import '../../data/data_sources/remote/firestore_service_impl.dart';
 import '../../../features/cuisines/presentation/cubits/french_data_cubit.dart';
 import '../../../features/cuisines/presentation/cubits/syrian_data_cubit.dart';
-import '../../domain/services/connectivity_service/connectivity_provider.dart';
+import '../../providers/connectivity_provider.dart';
 import '../../../features/cuisines/presentation/cubits/chinese_data_cubit.dart';
 import '../../../features/cuisines/presentation/cubits/italian_data_cubit.dart';
 import '../../../features/cuisines/presentation/cubits/mexican_data_cubit.dart';

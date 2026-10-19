@@ -4,7 +4,7 @@ import '../../../../core/presentation/states/message_state.dart';
 import '../../domain/use_cases/change_email_and_password_use_case.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
-import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
+import '../../../../core/providers/connectivity_provider.dart';
 
 
 class ChangeEmailAndPasswordCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageState> {

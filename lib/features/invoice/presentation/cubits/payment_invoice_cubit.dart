@@ -6,7 +6,7 @@ import '../../../../core/presentation/mixins/error_handler_mixin.dart';
 import 'package:international_cuisine/core/data/models/user_model.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 import 'package:international_cuisine/core/errors/exceptions/network_app_exception.dart';
-import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
+import '../../../../core/providers/connectivity_provider.dart';
 import 'package:international_cuisine/features/cart/presentation/states/cart_data_state.dart';
 import 'package:international_cuisine/features/invoice/domain/use_cases/payment_Invoice_use_case.dart';
 

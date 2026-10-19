@@ -3,7 +3,7 @@ import 'package:international_cuisine/core/constants/app_assets.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
-import '../../domain/services/connectivity_service/connectivity_service.dart';
+import '../../services/connectivity_service.dart';
 
 
 class InternetUnavailability extends StatelessWidget {

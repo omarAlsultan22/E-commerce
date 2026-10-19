@@ -3,7 +3,7 @@ import '../../data/data_sources/local/hive_impl.dart';
 import '../../data/data_sources/remote/firestore_service_impl.dart';
 import '../../data/data_sources/local/cache_helper_impl.dart';
 import '../../data/data_sources/remote/auth_service_impl.dart';
-import '../../domain/services/connectivity_service/connectivity_provider.dart';
+import '../../providers/connectivity_provider.dart';
 
 
 class CoreDependencies {

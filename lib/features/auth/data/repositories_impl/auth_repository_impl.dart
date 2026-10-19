@@ -6,20 +6,20 @@ import 'package:international_cuisine/core/constants/app_durations.dart';
 
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthService _authService;
+  final AuthService _service;
 
   AuthRepositoryImpl({
-    required AuthService authService,
+    required AuthService service,
     FlutterSecureStorage? storage
   })
-      : _authService = authService;
+      : _service = service;
 
   @override
   Future<UserCredential> signIn({
     required String email,
     required String password
   }) async {
-    return await _authService.signIn(
+    return await _service.signIn(
       email: email,
       password: password,
     ).then((value) {
@@ -32,7 +32,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password
   }) async {
-    return await _authService.signUp(
+    return await _service.signUp(
       email: email,
       password: password,
     );
@@ -44,7 +44,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String currentPassword,
     required String newPassword
   }) async {
-    final user = await _authService.updateProfile(
+    final user = await _service.updateProfile(
         newEmail: newEmail,
         currentPassword: currentPassword,
         newPassword: newPassword
@@ -65,11 +65,11 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> sendResetEmail({required String userEmail}) async {
-    await _authService.sendResetEmail(userEmail: userEmail);
+    await _service.sendResetEmail(userEmail: userEmail);
   }
 
   @override
   Future<void> signOut() async {
-    await _authService.signOut();
+    await _service.signOut();
   }
 }

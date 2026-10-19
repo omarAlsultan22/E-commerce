@@ -9,7 +9,7 @@ import '../exceptions/network_app_exception.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../exceptions/cache_exceptions/hive_app_exceptions.dart';
 import '../exceptions/cache_exceptions/shared_prefs_app_exceptions.dart';
-import '../../domain/services/connectivity_service/connectivity_service.dart';
+import '../../services/connectivity_service.dart';
 import 'package:international_cuisine/core/errors/exceptions/client_exception.dart';
 
 

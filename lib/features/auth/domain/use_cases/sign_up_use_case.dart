@@ -1,16 +1,16 @@
 import '../repositories/auth_repository.dart';
 import '../repositories/sign_up_repository.dart';
 import '../../../../core/data/models/user_model.dart';
-import '../../../../core/data/data_sources/local/cache_helper_impl.dart';
+import '../../../../core/domain/data_sources/local/cache_helper.dart';
 
 
 class SignUpUseCase {
-  final CacheHelperImpl _cacheHelper;
+  final CacheHelper _cacheHelper;
   final AuthRepository _authRepository;
   final SignUpRepository _signUpRepository;
 
   SignUpUseCase({
-    required CacheHelperImpl cacheHelper,
+    required CacheHelper cacheHelper,
     required AuthRepository authRepository,
     required SignUpRepository signUpRepository
   })

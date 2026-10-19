@@ -4,7 +4,7 @@ import '../core/di/service _locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../core/navigation/navigation_keys.dart';
 import 'package:international_cuisine/core/services/app_lifecycle_service.dart';
-import '../core/domain/services/connectivity_service/connectivity_provider.dart';
+import '../core/providers/connectivity_provider.dart';
 import 'package:international_cuisine/features/home/presentation/screens/home_screen.dart';
 
 //cubits

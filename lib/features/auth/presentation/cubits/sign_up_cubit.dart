@@ -4,7 +4,7 @@ import '../../../../core/data/models/message_result.dart';
 import '../../../../core/presentation/states/message_state.dart';
 import '../../../../core/errors/exceptions/network_app_exception.dart';
 import '../../../../core/presentation/mixins/error_handler_mixin.dart';
-import '../../../../core/domain/services/connectivity_service/connectivity_provider.dart';
+import '../../../../core/providers/connectivity_provider.dart';
 
 
 class SignUpCubit extends Cubit<MessageState> with ErrorHandlerMixin<MessageState> {

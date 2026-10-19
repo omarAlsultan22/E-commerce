@@ -1,6 +1,6 @@
 import '../../../features/home/data/repositories_impl/home_data_repository_impl.dart';
 import '../../../features/auth/data/repositories_impl/auth_repository_impl.dart';
-import '../../domain/services/connectivity_service/connectivity_provider.dart';
+import '../../providers/connectivity_provider.dart';
 import 'package:international_cuisine/core/services/session_service.dart';
 import '../../../features/home/presentation/cubits/home_data_cubit.dart';
 import '../../../features/home/domain/use_cases/home_data_use_case.dart';
