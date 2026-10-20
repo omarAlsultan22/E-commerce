@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import '../../services/connectivity_service.dart';
+import '../../network/data/connectivity_service.dart';
 import 'package:international_cuisine/core/errors/exceptions/base/app_exception.dart';
 import 'package:international_cuisine/core/presentation/widgets/internet_unavailability.dart';
 
