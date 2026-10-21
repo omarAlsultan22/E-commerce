@@ -1,15 +1,15 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../../domain/data_sources/local/cache_helper.dart';
 import '../../../../features/cart/data/models/order_model.dart';
 import '../../../errors/exceptions/cache_exceptions/hive_app_exceptions.dart';
 import 'package:international_cuisine/core/domain/data_sources/local/hive.dart';
-import 'package:international_cuisine/core/data/data_sources/local/cache_helper_impl.dart';
 
 
 class HiveStoreImpl implements HiveStore {
-  final CacheHelperImpl _cacheHelper;
+  final CacheHelper _cacheHelper;
 
   HiveStoreImpl({
-    required CacheHelperImpl cacheHelper
+    required CacheHelper cacheHelper
   }) : _cacheHelper = cacheHelper;
 
   static Box<OrderModel>? _box;

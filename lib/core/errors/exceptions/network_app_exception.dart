@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import '../../network/data/connectivity_service.dart';
+import '../../network/domain/i_connectivity_service.dart';
 import 'package:international_cuisine/core/errors/exceptions/base/app_exception.dart';
 import 'package:international_cuisine/core/presentation/widgets/internet_unavailability.dart';
 
 
 class NetworkAppException extends AppException {
-  final ConnectivityService? connectivityService;
+  final IConnectivityService? connectivityService;
 
   NetworkAppException({
     super.code,

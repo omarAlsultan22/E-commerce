@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import '../../network/domain/i_connectivity_service.dart';
 import 'package:international_cuisine/core/constants/app_assets.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
-import '../../network/data/connectivity_service.dart';
 
 
 class InternetUnavailability extends StatelessWidget {
   final VoidCallback onRetry;
   final PreferredSizeWidget? appBar;
-  final ConnectivityService? connectivityService;
+  final IConnectivityService? connectivityService;
 
   const InternetUnavailability({
     super.key,

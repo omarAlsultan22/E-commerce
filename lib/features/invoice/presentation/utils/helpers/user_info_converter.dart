@@ -7,7 +7,8 @@ class UserInfoConverter {
 
   UserInfoConverter({required this.userModel});
 
-  factory UserInfoConverter.fromDocumentSnapshot(DocumentSnapshot doc,
+  factory UserInfoConverter.fromDocumentSnapshot(
+      DocumentSnapshot doc,
       String Location) {
     if (!doc.exists || doc.data() == null) {
       throw Exception('User document does not exist or is empty');

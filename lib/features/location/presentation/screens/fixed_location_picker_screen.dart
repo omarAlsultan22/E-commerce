@@ -2,8 +2,8 @@ import 'package:international_cuisine/features/payment/presentation/screens/paym
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_with_delay.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_snack_bar.dart';
-import '../../../../../core/data/data_sources/local/cache_helper_impl.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
+import '../../../../core/domain/data_sources/local/cache_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../../core/constants/app_keys.dart';
 import '../../managers/location_manager.dart';
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 
 
 class FixedLocationPicker extends StatefulWidget {
-  final CacheHelperImpl cacheHelper;
+  final CacheHelper cacheHelper;
 
   const FixedLocationPicker({
     super.key,

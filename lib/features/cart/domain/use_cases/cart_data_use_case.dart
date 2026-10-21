@@ -1,15 +1,15 @@
 import '../repositories/shopping_list_repository.dart';
 import 'package:international_cuisine/core/constants/app_keys.dart';
-import '../../../../core/data/data_sources/local/cache_helper_impl.dart';
+import '../../../../core/domain/data_sources/local/cache_helper.dart';
 import 'package:international_cuisine/features/cart/data/models/order_model.dart';
 
 
 class CartDataUseCase {
-  final CacheHelperImpl _cacheHelper;
+  final CacheHelper _cacheHelper;
   ShoppingListRepository _repository;
 
   CartDataUseCase({
-    required CacheHelperImpl cacheHelper,
+    required CacheHelper cacheHelper,
     required ShoppingListRepository repository
   })
       : _repository = repository,

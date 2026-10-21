@@ -1,4 +1,4 @@
-import 'package:international_cuisine/core/data/repositories_impl/base_user_repository.dart';
+import 'package:international_cuisine/core/domain/repositories/base_user_repository.dart';
 
 
 abstract class UserInfoRepository implements BaseUserInfoRepository {
