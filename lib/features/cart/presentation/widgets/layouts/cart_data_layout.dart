@@ -1,7 +1,7 @@
-import 'package:international_cuisine/core/data/data_sources/local/cache_helper_impl.dart';
 import 'package:international_cuisine/core/presentation/utils/helpers/image_helpers.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import '../../../../location/presentation/screens/fixed_location_picker_screen.dart';
+import '../../../../../core/domain/data_sources/local/cache_helper.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
@@ -9,6 +9,7 @@ import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../../core/di/service _locator.dart';
 import '../../../data/models/order_model.dart';
 import '../../cubits/cart_data_cubit.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class CartDataLayout extends StatefulWidget {
 
 class _CartDataLayoutState extends State<CartDataLayout>{
   late CartDataCubit _cubit;
-  final _cacheHelper = CacheHelperImpl();
+  final _cacheHelper = sl<CacheHelper>();
 
   @override
   void initState() {

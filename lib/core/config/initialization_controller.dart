@@ -3,9 +3,7 @@ import '../di/service _locator.dart';
 import '../services/session_service.dart';
 import '../domain/data_sources/local/hive.dart';
 import 'package:firebase_core/firebase_core.dart';
-import '../data/data_sources/local/hive_impl.dart';
 import '../domain/data_sources/local/cache_helper.dart';
-import '../data/data_sources/local/cache_helper_impl.dart';
 import 'package:international_cuisine/core/errors/exceptions/components_exception.dart';
 
 
@@ -37,8 +35,8 @@ class InitializationController {
   Future<void> init() async {
     if (_isInitialized) return;
 
-    _hiveStore = sl<HiveStoreImpl>();
-    _cacheHelper = sl<CacheHelperImpl>();
+    _hiveStore = sl<HiveStore>();
+    _cacheHelper = sl<CacheHelper>();
     _sessionService = sl<SessionService>();
 
     try {
