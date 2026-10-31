@@ -1,4 +1,4 @@
-import '../data/models/data_model.dart';
+import '../../data/models/data_model.dart';
 
 
 class SizePriceCalculator {

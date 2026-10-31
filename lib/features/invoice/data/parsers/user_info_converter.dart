@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../../../core/data/models/user_model.dart';
+import '../../../../core/data/models/user_model.dart';
 
 
 class UserInfoConverter {

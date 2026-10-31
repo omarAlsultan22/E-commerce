@@ -8,8 +8,8 @@ import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import '../../../../../core/data/models/message_result.dart';
-import '../../utils/validate/validate_password.dart';
-import '../../utils/validate/validate_email.dart';
+import '../../../utils/validate/validate_password.dart';
+import '../../../utils/validate/validate_email.dart';
 import 'package:flutter/material.dart';
 import '../../mixins/auth_mixin.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/models/data_model.dart';
-import '../../utils/size_price_calculator.dart';
+import '../../domain/use_cases/size_price_calculator.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_borders.dart';
 import 'package:international_cuisine/core/constants/app_text_styles.dart';

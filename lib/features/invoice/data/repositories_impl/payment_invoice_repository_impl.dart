@@ -1,7 +1,7 @@
 import '../models/send_order_model.dart';
 import '../../../../core/data/models/user_model.dart';
 import '../../domain/repositories/payment_invoice_repository.dart';
-import '../../presentation/utils/helpers/user_info_converter.dart';
+import '../parsers/user_info_converter.dart';
 import 'package:international_cuisine/core/constants/app_keys.dart';
 import '../../../../core/domain/data_sources/local/cache_helper.dart';
 import 'package:international_cuisine/core/services/session_service.dart';

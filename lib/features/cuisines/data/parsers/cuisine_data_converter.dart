@@ -1,5 +1,5 @@
+import '../models/data_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../data/models/data_model.dart';
 
 
 class DataModelConverter {
