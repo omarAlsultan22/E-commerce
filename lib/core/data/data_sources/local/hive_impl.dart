@@ -4,15 +4,16 @@ import '../../../../features/cart/data/models/order_model.dart';
 import '../../../errors/exceptions/cache_exceptions/hive_app_exceptions.dart';
 import 'package:international_cuisine/core/domain/data_sources/local/hive.dart';
 
-
 class HiveStoreImpl implements HiveStore {
   final CacheHelper _cacheHelper;
+  final HiveInterface _hive;
+  Box<OrderModel>? _box;
 
   HiveStoreImpl({
-    required CacheHelper cacheHelper
-  }) : _cacheHelper = cacheHelper;
-
-  static Box<OrderModel>? _box;
+    required CacheHelper cacheHelper,
+    HiveInterface? hive,
+  })  : _cacheHelper = cacheHelper,
+        _hive = hive ?? Hive;
 
   Box<OrderModel> get box {
     if (_box == null || !_box!.isOpen) {
@@ -24,11 +25,10 @@ class HiveStoreImpl implements HiveStore {
   @override
   Future<void> init() async {
     try {
-      await Hive.initFlutter();
-      Hive.registerAdapter(OrderModelAdapter());
-      _box = await Hive.openBox<OrderModel>('shoppingList');
-    }
-    catch (e) {
+      _hive.initFlutter();
+      _hive.registerAdapter(OrderModelAdapter());
+      _box = await _hive.openBox<OrderModel>('shoppingList');
+    } catch (e) {
       throw HiveInitializeException(error: e);
     }
   }
@@ -44,7 +44,6 @@ class HiveStoreImpl implements HiveStore {
         await _box!.put('item_$i', data[i]);
       }
     } catch (e) {
-      print("Error saving local data: $e");
       throw HiveSaveException(error: e);
     }
   }
@@ -57,24 +56,17 @@ class HiveStoreImpl implements HiveStore {
       }
 
       List<OrderModel> items = [];
-
       final count = await _cacheHelper.getInt(key: 'itemsCount') ?? 0;
 
       for (int i = 0; i < count; i++) {
-        final item = await _box!.get('item_$i');
+        final item = _box!.get('item_$i');  // ← get ليس async
         if (item != null) {
           items.add(item);
         }
       }
 
-      if (items.isEmpty) {
-        return [];
-      }
-
       return items;
-    }
-    catch (e) {
-      print("Error getting local data: $e");
+    } catch (e) {
       throw HiveReadException(error: e);
     }
   }
@@ -85,9 +77,7 @@ class HiveStoreImpl implements HiveStore {
       if (_box != null && _box!.isOpen) {
         await _box!.clear();
       }
-    }
-    catch (e) {
-      print("Error clearing data: $e");
+    } catch (e) {
       throw HiveClearException(error: e);
     }
   }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../screens/sgin_up_screen.dart';
 import '../../screens/forget_password_screen.dart';
-import '../../../utils/validate/validate_email.dart';
-import '../../../utils/validate/validate_password.dart';
+import '../../../utils/validate/email_validation.dart';
+import '../../../utils/validate/password_validation.dart';
 import '../../../constants/auth_label_texts_constants.dart';
 import '../../../../../core/data/models/message_result.dart';
 import '../../../../home/presentation/screens/home_screen.dart';
@@ -142,7 +142,7 @@ class _SignInLayoutState extends State<SignInLayout> with AuthMixin<SignInLayout
       labelText: AuthLabelTextsConstants.email,
       hintText: AuthHintTextsConstants.email,
       prefixIcon: Icons.email,
-      validator: (value) => ValidateEmail.validator(value),
+      validator: (value) => EmailValidation.validator(value),
     );
   }
 
@@ -153,7 +153,7 @@ class _SignInLayoutState extends State<SignInLayout> with AuthMixin<SignInLayout
       hintText: AuthHintTextsConstants.password,
       prefixIcon: Icons.lock,
       obscureText: _isObscure,
-      validator: (value) => ValidatePassword.validator(value),
+      validator: (value) => PasswordValidation.validator(value),
       suffixIcon: buildPasswordVisibilityToggle(
           isObscure: _isObscure,
           onToggle: () => setState(() => _isObscure = !_isObscure)

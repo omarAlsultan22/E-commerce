@@ -27,8 +27,8 @@ class SignUpUseCase {
     required String userLocation,
   }) async {
     final userCredential = await _authRepository.signUp(
-      email: userEmail,
-      password: userPassword,
+      userEmail: userEmail,
+      userPassword: userPassword,
     );
 
     UserModel userModel = UserModel(

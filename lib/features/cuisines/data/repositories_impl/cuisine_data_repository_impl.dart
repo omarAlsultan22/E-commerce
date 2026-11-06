@@ -1,7 +1,7 @@
 import '../models/data_model.dart';
+import '../converters/cuisine_data_converter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/constants/app_durations.dart';
-import '../parsers/cuisine_data_converter.dart';
 import '../../../../core/data/models/paginated_result.dart';
 import '../../../../core/domain/data_sources/remote/firestore_service.dart';
 import 'package:international_cuisine/features/cuisines/domain/repositories/cuisine_data_repository.dart';
@@ -94,7 +94,7 @@ class CuisineDataRepositoryImpl implements CuisineDataRepository {
     required int rating
   }) async {
       return await _dataSource.updateDocument(
-        collectionPath: 'collectionId',
+        collectionPath: collectionId,
         data: {'rating': rating},
         docId: index,
       );

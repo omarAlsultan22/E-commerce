@@ -18,8 +18,8 @@ class SignInUseCase {
     required String userPassword,
   }) async {
     final userCredential = await _authRepository.signIn(
-        email: userEmail,
-        password: userPassword
+        userEmail: userEmail,
+        userPassword: userPassword
     );
     _sessionService.login(
         userCredential.user!.uid);

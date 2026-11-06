@@ -1,7 +1,7 @@
 import '../../domain/repositories/home_data_repository.dart';
 import '../../../../core/domain/data_sources/remote/firestore_service.dart';
 import 'package:international_cuisine/features/home/data/models/home_model.dart';
-import 'package:international_cuisine/features/home/utils/helpers/home_data_converter.dart';
+import 'package:international_cuisine/features/home/data/converters/home_data_converter.dart';
 
 
 class HomeDataRepositoryImpl implements HomeDataRepository {

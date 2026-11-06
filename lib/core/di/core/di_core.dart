@@ -15,12 +15,15 @@ import '../../data/data_sources/remote/firestore_service_impl.dart';
 
 class CoreDependencies {
   static void register() {
-    sl.registerLazySingleton<CacheHelper>(() => CacheHelperImpl());
     sl.registerLazySingleton<AuthService>(() => AuthServiceImpl());
-    sl.registerLazySingleton<SessionService>(() => SessionService());
+    sl.registerLazySingleton<CacheHelper>(() => sl<CacheHelperImpl>());
     sl.registerLazySingleton<FirestoreService>(() => FirestoreServiceImpl());
     sl.registerLazySingleton<IConnectivityService>(() => ConnectivityService());
-    sl.registerLazySingleton<ConnectivityProvider>(() => ConnectivityProvider());
-    sl.registerLazySingleton<HiveStore>(() => HiveStoreImpl(cacheHelper: sl<CacheHelper>()));
+    sl.registerLazySingleton<ConnectivityProvider>(() =>
+        ConnectivityProvider());
+    sl.registerLazySingleton<HiveStore>(() =>
+        HiveStoreImpl(cacheHelper: sl<CacheHelper>()));
+    sl.registerLazySingleton<SessionService>(() =>
+        SessionService(cacheHelper: sl<CacheHelper>()));
   }
 }

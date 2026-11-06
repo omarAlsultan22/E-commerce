@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../utils/helpers/image_helpers.dart';
+import '../../../../shared/utils/image_helpers.dart';
 import 'package:international_cuisine/core/constants/app_assets.dart';
 
 

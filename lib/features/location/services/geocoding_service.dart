@@ -2,12 +2,14 @@ import 'package:geocoding/geocoding.dart';
 
 
 class GeocodingService {
+  final Geocoding _geocoding = Geocoding();
+
   Future<Placemark> getAddressFromCoordinates({
     required double latitude,
     required double longitude,
   }) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
+      List<Placemark> placemarks = await _geocoding.placemarkFromCoordinates(
         latitude,
         longitude,
       );

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../../utils/validate/validate_email.dart';
-import '../../../utils/validate/validate_password.dart';
+import '../../../utils/validate/email_validation.dart';
+import '../../../utils/validate/password_validation.dart';
+import '../../../../../shared/utils/validator_input.dart';
 import '../../../../../core/data/models/message_result.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_paddings.dart';
 import 'package:international_cuisine/core/constants/app_label_texts.dart';
-import '../../../../../core/presentation/utils/validate/validator_input.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:international_cuisine/features/auth/presentation/mixins/auth_mixin.dart';
@@ -207,7 +207,7 @@ class _SignUpLayoutState extends State<SignUpLayout> with AuthMixin<SignUpLayout
       hintText: AuthHintTextsConstants.email,
       prefixIcon: Icons.email,
       validator: (value) =>
-          ValidateEmail.validator(value!),
+          EmailValidation.validator(value!),
     );
   }
 
@@ -219,7 +219,7 @@ class _SignUpLayoutState extends State<SignUpLayout> with AuthMixin<SignUpLayout
       hintText: AuthHintTextsConstants.password,
       prefixIcon: Icons.lock,
       obscureText: _isObscure,
-      validator: (value) => ValidatePassword.validator(value!),
+      validator: (value) => PasswordValidation.validator(value!),
       suffixIcon: buildPasswordVisibilityToggle(
           isObscure: _isObscure,
           onToggle: () => setState(() => _isObscure = !_isObscure)

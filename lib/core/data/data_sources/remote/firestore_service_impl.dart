@@ -4,7 +4,9 @@ import 'package:international_cuisine/core/domain/data_sources/remote/firestore_
 
 
 class FirestoreServiceImpl implements FirestoreService {
-  static final _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+  FirestoreServiceImpl({FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
 
   @override
   Future<String> addData({

@@ -4,24 +4,8 @@ import 'package:international_cuisine/core/domain/data_sources/local/cache_helpe
 
 
 class CacheHelperImpl implements CacheHelper {
-
-  static late SharedPreferences sharedPreferences;
-
-  static final CacheHelperImpl _instance = CacheHelperImpl._internal();
-
-  factory CacheHelperImpl() => _instance;
-
-  CacheHelperImpl._internal();
-
-  @override
-  Future<void> init() async {
-    try {
-      sharedPreferences = await SharedPreferences.getInstance();
-    }
-    catch (e) {
-      throw SharedPrefsInitializeException(error: e);
-    }
-  }
+  final SharedPreferences _prefs;
+  CacheHelperImpl({required SharedPreferences prefs}) : _prefs = prefs;
 
   @override
   Future<bool> setString({
@@ -29,7 +13,7 @@ class CacheHelperImpl implements CacheHelper {
     required String value
   }) async {
     try {
-      return await sharedPreferences.setString(key, value);
+      return await _prefs.setString(key, value);
     }
     catch (e) {
       throw SharedPrefsSaveException(error: e);
@@ -41,7 +25,7 @@ class CacheHelperImpl implements CacheHelper {
     required String key
   }) async {
     try {
-      return await sharedPreferences.getString(key) ?? '';
+      return await _prefs.getString(key) ?? '';
     }
     catch (e) {
       throw SharedPrefsReadException(error: e);
@@ -54,7 +38,7 @@ class CacheHelperImpl implements CacheHelper {
     required int value
   }) async {
     try {
-      return await sharedPreferences.setInt(key, value);
+      return await _prefs.setInt(key, value);
     }
     catch (e) {
       throw SharedPrefsSaveException(error: e);
@@ -66,7 +50,7 @@ class CacheHelperImpl implements CacheHelper {
     required String key
   }) async {
     try {
-      return await sharedPreferences.getInt(key);
+      return await _prefs.getInt(key);
     }
     catch (e) {
       throw SharedPrefsReadException(error: e);
@@ -76,7 +60,7 @@ class CacheHelperImpl implements CacheHelper {
   @override
   Future<bool> removeValue({required String key}) async {
     try {
-      return await sharedPreferences.remove(key);
+      return await _prefs.remove(key);
     }
     catch (e) {
       throw SharedPrefsRemoveException(error: e);

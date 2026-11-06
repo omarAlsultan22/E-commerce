@@ -1,9 +1,9 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../domain/utils/location_formatter.dart';
 import 'package:location/location.dart' as loc;
 import '../services/geocoding_service.dart';
 import '../services/location_service.dart';
 import 'package:geocoding/geocoding.dart';
-import '../utils/location_formatter.dart';
 import 'dart:async';
 
 
@@ -30,10 +30,10 @@ class LocationManager {
       final loc.LocationData? locationData = await _locationService.getCurrentLocation();
 
       if (locationData != null) {
-        final position = LatLng(locationData.latitude!, locationData.longitude!);
+        final position = LatLng(locationData.latitude, locationData.longitude);
         final placemark = await _geocodingService.getAddressFromCoordinates(
-          latitude: locationData.latitude!,
-          longitude: locationData.longitude!,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
         );
         final formattedAddress = LocationFormatter.formatArabicAddress(placemark);
 

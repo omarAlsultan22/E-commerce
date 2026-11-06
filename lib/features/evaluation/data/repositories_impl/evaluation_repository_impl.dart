@@ -6,18 +6,23 @@ import 'package:international_cuisine/core/errors/exceptions/evaluation_exceptio
 class EvaluationRepositoryImpl implements EvaluationRepository {
   final FirestoreService _dataSource;
 
-  EvaluationRepositoryImpl({required FirestoreService dataSource})
+  EvaluationRepositoryImpl({
+    required FirestoreService dataSource,
+  })
       : _dataSource = dataSource;
 
   static const String evaluationId = 'evaluation';
   static const String evaluationKey = 'evaluationText';
 
   @override
-  Future<void> sendEvaluation({required String evaluationValue}) async {
+  Future<void> sendEvaluation({
+    required String docId,
+    required String evaluationValue
+  }) async {
     try {
       await _dataSource.setData(
           collectionPath: evaluationId,
-          docId: '',
+          docId: docId,
           data: {
             evaluationKey: evaluationValue
           }

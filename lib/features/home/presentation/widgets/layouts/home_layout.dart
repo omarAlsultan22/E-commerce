@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../utils/helpers/image_preloader.dart';
-import '../../utils/helpers/cuisine_navigation_helper.dart';
-import '../../utils/helpers/slide_animation_controller.dart';
-import '../../utils/helpers/rotation_animation_controller.dart';
+import '../../helpers/image_preloader.dart';
+import '../../helpers/cuisine_navigation_helper.dart';
+import '../../controllers/slide_animation_controller.dart';
+import '../../controllers/rotation_animation_controller.dart';
 import '../../../../auth/presentation/screens/sgin_in_screen.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';

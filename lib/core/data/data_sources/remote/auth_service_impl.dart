@@ -4,7 +4,11 @@ import 'package:international_cuisine/core/domain/data_sources/remote/auth_servi
 
 
 class AuthServiceImpl implements AuthService {
-  static final _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth;
+  static const _duration = AppDurations.seconds;
+
+  AuthServiceImpl({FirebaseAuth? auth})
+      : _firebaseAuth = auth ?? FirebaseAuth.instance;
 
   @override
   Future<UserCredential> signIn({
@@ -14,7 +18,7 @@ class AuthServiceImpl implements AuthService {
     return await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password
-    ).timeout(AppDurations.seconds);
+    ).timeout(_duration);
   }
 
   @override
@@ -25,7 +29,7 @@ class AuthServiceImpl implements AuthService {
     return await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password
-    ).timeout(AppDurations.seconds);
+    ).timeout(_duration);
   }
 
   @override
@@ -47,6 +51,6 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<void> signOut() async {
-    await _firebaseAuth.signOut().timeout(AppDurations.seconds);
+    await _firebaseAuth.signOut().timeout(_duration);
   }
 }

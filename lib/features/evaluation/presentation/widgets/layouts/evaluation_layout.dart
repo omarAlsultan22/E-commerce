@@ -6,7 +6,7 @@ import '../../../../../core/constants/app_paddings.dart';
 import '../../../../../core/data/models/message_result.dart';
 import '../../../../auth/presentation/widgets/loading_widget.dart';
 import '../../../../../core/presentation/widgets/build_snack_bar.dart';
-import '../../../../../core/presentation/utils/helpers/image_helpers.dart';
+import '../../../../../shared/utils/image_helpers.dart';
 
 
 class EvaluationLayout extends StatefulWidget {

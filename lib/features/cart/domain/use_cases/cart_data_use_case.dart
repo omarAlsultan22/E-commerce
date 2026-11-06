@@ -49,6 +49,6 @@ class CartDataUseCase {
   }
 
   Future<void> clearCartExecute() async {
-    _repository.clearDataFromHive();
+    await _repository.clearDataFromHive();
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../utils/payment_formatters.dart';
+import '../formatters/payment_formatters.dart';
 import '../../constants/payment_strings.dart';
 import '../../constants/payment_constants.dart';
 import '../../constants/payment_dimensions.dart';

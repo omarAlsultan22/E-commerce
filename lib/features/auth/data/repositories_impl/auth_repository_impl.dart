@@ -16,12 +16,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserCredential> signIn({
-    required String email,
-    required String password
+    required String userEmail,
+    required String userPassword
   }) async {
     return await _service.signIn(
-      email: email,
-      password: password,
+      email: userEmail,
+      password: userPassword,
     ).then((value) {
       return value;
     });
@@ -29,17 +29,17 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserCredential> signUp({
-    required String email,
-    required String password
+    required String userEmail,
+    required String userPassword
   }) async {
     return await _service.signUp(
-      email: email,
-      password: password,
+      email: userEmail,
+      password: userPassword,
     );
   }
 
   @override
-  Future<void> updateProfile({
+  Future<User?> updateProfile({
     required String newEmail,
     required String currentPassword,
     required String newPassword
@@ -61,6 +61,7 @@ class AuthRepositoryImpl implements AuthRepository {
         user.updatePassword(newPassword).timeout(AppDurations.seconds);
       });
     }
+    return null;
   }
 
   @override

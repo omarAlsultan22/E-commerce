@@ -35,34 +35,37 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   bloc: ^9.2.1
   flutter_bloc: ^9.1.1
-  firebase_core: ^4.11.0
-  cloud_firestore: ^6.6.0
-  firebase_auth: ^6.5.4
-  cupertino_icons: ^1.0.9
+  firebase_core: ^5.1.0
+  cloud_firestore: ^7.1.0
+  firebase_auth: ^7.0.1
+  cupertino_icons: ^2.0.0
   flutter_inappwebview: ^6.1.5
   conditional_builder_null_safety: ^0.0.6
-  flutter_secure_storage: ^10.3.1
+  flutter_secure_storage: ^11.2.0
   quickalert: ^1.1.0
-  shared_preferences: ^2.5.5
+  shared_preferences: ^2.5.6
   http: ^1.6.0
-  dio: ^5.10.0
-  image_picker: ^1.2.3
-  firebase_storage: ^13.4.3
-  mailer: ^7.1.0
+  dio: ^5.11.1
+  image_picker: ^1.2.4
+  firebase_storage: ^14.0.1
+  mailer: ^7.2.2
   path: ^1.9.1
-  location: ^8.0.1
-  geocoding: ^4.0.0
-  permission_handler: ^12.0.3
-  google_maps_flutter: ^2.17.1
-  crypto: ^3.0.7
+  location: ^10.0.2
+  geocoding: ^5.0.1
+  permission_handler: ^13.0.2
+  google_maps_flutter: ^2.19.0
+  crypto: ^3.0.8
   provider: ^6.1.5+1
   font_awesome_flutter: ^11.0.0
-  connectivity_plus: ^7.2.0
+  connectivity_plus: ^7.3.2
   hive_flutter: ^1.1.0
   hive: ^2.2.3
-  cached_network_image: ^3.4.1
+  get_it: ^9.3.0
+  cached_network_image: ^4.0.6
   flutter_paymob: ^1.0.8
-  get_it: ^9.2.1
+  mock_exceptions: ^0.8.2
+  firebase_auth_mocks: ^0.16.0
+  fake_cloud_firestore: ^4.5.0
   flutter_localizations:
     sdk: flutter
 
@@ -71,6 +74,7 @@ dev_dependencies:
   flutter_native_splash: ^2.4.8
   flutter_launcher_icons: ^0.14.4
   hive_generator: ^2.0.1
+  mocktail: ^1.0.5
   analyzer: ^6.4.1
   build_runner: ^2.4.13
   flutter_test:

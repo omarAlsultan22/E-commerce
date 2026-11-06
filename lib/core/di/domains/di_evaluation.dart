@@ -2,6 +2,7 @@ import '../../../features/evaluation/data/repositories_impl/evaluation_repositor
 import '../../../features/evaluation/domain/repositories/evaluation_repositories.dart';
 import '../../../features/evaluation/presentation/cubits/evaluation_cubit.dart';
 import '../../../features/evaluation/domain/use_cases/evaluation_use_case.dart';
+import 'package:international_cuisine/core/services/session_service.dart';
 import '../../domain/data_sources/remote/firestore_service.dart';
 import '../../providers/connectivity_provider.dart';
 import '../service _locator.dart';
@@ -15,7 +16,11 @@ class EvaluationDependencies {
 
     // UseCase
     sl.registerLazySingleton<EvaluationUseCase>(() =>
-        EvaluationUseCase(repository: sl<EvaluationRepository>()));
+        EvaluationUseCase(
+            sessionService: sl<SessionService>(),
+            repository: sl<EvaluationRepository>()
+        )
+    );
 
     // Cubit
     sl.registerFactory<EvaluationCubit>(() =>

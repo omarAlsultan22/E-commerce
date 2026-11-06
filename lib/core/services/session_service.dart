@@ -1,16 +1,11 @@
-import '../di/service _locator.dart';
 import '../domain/data_sources/local/cache_helper.dart';
 
 
 class SessionService {
+  final CacheHelper _cacheHelper;
 
-  static final SessionService _instance = SessionService._internal();
-
-  factory SessionService() => _instance;
-
-  SessionService._internal();
-
-  static final _cacheHelper = sl<CacheHelper>();
+  SessionService({required CacheHelper cacheHelper})
+      : _cacheHelper = cacheHelper;
 
   static const _uId = 'user_id';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/features/home/data/models/home_model.dart';
-import 'package:international_cuisine/core/presentation/utils/helpers/image_helpers.dart';
+import 'package:international_cuisine/shared/utils/image_helpers.dart';
 
 
 class CuisineCardWidget extends StatelessWidget {

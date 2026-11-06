@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:international_cuisine/core/constants/app_assets.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_values.dart';
-import '../../../../core/presentation/utils/helpers/image_helpers.dart';
+import '../../../../shared/utils/image_helpers.dart';
 import 'package:international_cuisine/features/auth/presentation/widgets/loading_widget.dart';
 
 

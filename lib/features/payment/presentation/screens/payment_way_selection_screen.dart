@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/presentation/widgets/back_button_widget.dart';
-import '../../../invoice/presentation/screens/payment_invoice_screen.dart';
+import '../../../payment_invoice/presentation/screens/payment_invoice_screen.dart';
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
 import 'package:international_cuisine/features/payment/presentation/screens/payment_screen.dart';
 import 'package:international_cuisine/features/payment/presentation/widgets/payment_way_field_widget.dart';

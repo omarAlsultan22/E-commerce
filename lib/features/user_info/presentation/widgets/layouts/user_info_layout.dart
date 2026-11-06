@@ -1,5 +1,4 @@
 import 'package:international_cuisine/core/presentation/widgets/navigation/navigator_push.dart';
-import 'package:international_cuisine/core/presentation/utils/validate/validator_input.dart';
 import 'package:international_cuisine/features/auth/presentation/mixins/auth_mixin.dart';
 import 'package:international_cuisine/core/presentation/widgets/back_button_widget.dart';
 import 'package:international_cuisine/core/presentation/widgets/build_input_field.dart';
@@ -12,6 +11,7 @@ import 'package:international_cuisine/core/constants/app_spaces.dart';
 import 'package:international_cuisine/core/constants/app_colors.dart';
 import 'package:international_cuisine/core/constants/app_sizes.dart';
 import '../../../../../core/data/models/message_result.dart';
+import '../../../../../shared/utils/validator_input.dart';
 import '../../../../../core/data/models/user_model.dart';
 import 'package:flutter/material.dart';
 
